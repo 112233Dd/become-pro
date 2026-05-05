@@ -1155,6 +1155,205 @@ blockquote:hover {
   background: linear-gradient(90deg, var(--lime), #fff2a0);
 }
 
+.program-slide {
+  min-height: 92vh;
+  display: grid;
+  align-content: center;
+  gap: 34px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 82% 18%, rgba(245, 196, 0, 0.12), transparent 26%),
+    linear-gradient(145deg, #050506, #090909 52%, #120f06);
+}
+
+.program-slide .section-heading {
+  width: min(100%, var(--max));
+  margin: 0 auto;
+}
+
+.program-slide .section-heading p:not(.eyebrow) {
+  max-width: 760px;
+  color: #d6d0c0;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.problem-solution-layout {
+  width: min(100%, var(--max));
+  margin: 0 auto;
+  display: grid;
+  gap: 32px;
+}
+
+.slide-kicker {
+  margin: 0 0 14px;
+  color: #8f8a79;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.slide-kicker.accent {
+  color: var(--lime);
+}
+
+.slide-card-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.slide-card-grid.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.slide-card {
+  min-height: 205px;
+  padding: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.055);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
+}
+
+.slide-card.solution {
+  border-color: rgba(245, 196, 0, 0.22);
+  background:
+    linear-gradient(145deg, rgba(245, 196, 0, 0.12), rgba(255, 255, 255, 0.04)),
+    rgba(255, 255, 255, 0.045);
+}
+
+.slide-card span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 28px;
+  border-radius: 50%;
+  background: rgba(245, 196, 0, 0.17);
+  color: var(--lime);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.slide-card h3 {
+  margin: 0 0 12px;
+  color: var(--white);
+  font-size: 20px;
+}
+
+.slide-card p {
+  margin: 0;
+  color: #d6d0c0;
+  line-height: 1.65;
+}
+
+.program-flow {
+  background:
+    radial-gradient(circle at 18% 22%, rgba(245, 196, 0, 0.1), transparent 24%),
+    linear-gradient(145deg, #050609, #090b12 54%, #070706);
+}
+
+.flow-panel {
+  width: min(100%, var(--max));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(330px, 0.86fr);
+  gap: clamp(28px, 5vw, 72px);
+  padding: clamp(24px, 4vw, 42px);
+  border: 1px solid rgba(245, 196, 0, 0.16);
+  border-radius: 26px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025)),
+    rgba(10, 12, 17, 0.72);
+  box-shadow: 0 32px 100px rgba(0, 0, 0, 0.34);
+}
+
+.flow-copy h2 {
+  max-width: 760px;
+}
+
+.flow-copy p {
+  max-width: 690px;
+  color: #e0dacb;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.flow-copy .section-actions {
+  width: 100%;
+  margin-inline: 0;
+}
+
+.flow-list {
+  display: grid;
+  gap: 14px;
+  margin: 30px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.flow-list li {
+  position: relative;
+  padding-left: 24px;
+  color: #f0eadc;
+  font-weight: 780;
+  line-height: 1.5;
+}
+
+.flow-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.65em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--lime);
+}
+
+.flow-cards {
+  display: grid;
+  gap: 16px;
+}
+
+.flow-cards article {
+  min-height: 150px;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.flow-cards article.highlight {
+  border-color: rgba(245, 196, 0, 0.3);
+  background: rgba(245, 196, 0, 0.1);
+}
+
+.flow-cards span {
+  display: inline-flex;
+  margin-bottom: 18px;
+  padding: 6px 10px;
+  border: 1px solid rgba(245, 196, 0, 0.28);
+  border-radius: 999px;
+  color: var(--lime);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+.flow-cards h3 {
+  margin: 0 0 10px;
+  color: var(--white);
+  font-size: 22px;
+}
+
+.flow-cards p {
+  margin: 0;
+  color: #d9d3c2;
+  line-height: 1.6;
+}
+
 .audience-grid p {
   color: #5f5848;
 }
@@ -1659,6 +1858,7 @@ body[data-theme="light"] .overview-hero p {
 
   .hero,
   .programs-hero,
+  .flow-panel,
   .intro,
   .personal-panel,
   .coach,
@@ -1695,6 +1895,7 @@ body[data-theme="light"] .overview-hero p {
   }
 
   .program-grid,
+  .slide-card-grid.three,
   .audience-grid,
   .player-grid,
   .process-list {
@@ -1774,6 +1975,7 @@ body[data-theme="light"] .overview-hero p {
   .hero-stats,
   .path-grid,
   .program-grid,
+  .slide-card-grid.three,
   .audience-grid,
   .player-grid,
   .process-list,
@@ -1816,6 +2018,20 @@ body[data-theme="light"] .overview-hero p {
 
   .dashboard-focus {
     margin-top: 34px;
+  }
+
+  .program-slide {
+    min-height: auto;
+  }
+
+  .slide-card,
+  .flow-cards article {
+    min-height: auto;
+  }
+
+  .flow-panel {
+    padding: 22px;
+    border-radius: 18px;
   }
 
   .hero-media img {
