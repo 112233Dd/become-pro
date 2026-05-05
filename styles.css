@@ -1453,7 +1453,7 @@ blockquote:hover {
 
 .brand-face-card {
   display: grid;
-  min-height: 670px;
+  min-height: 760px;
   overflow: hidden;
 }
 
@@ -1531,7 +1531,10 @@ blockquote:hover {
 }
 
 .real-products-card {
+  display: grid;
+  align-content: start;
   padding: 28px;
+  min-height: 760px;
 }
 
 .section-heading.compact {
@@ -1545,9 +1548,10 @@ blockquote:hover {
 
 .product-showcase-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-auto-rows: 145px;
-  gap: 14px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: 118px;
+  grid-auto-flow: dense;
+  gap: 12px;
 }
 
 .product-tile {
@@ -1562,6 +1566,15 @@ blockquote:hover {
 .product-tile.large {
   grid-column: span 2;
   grid-row: span 2;
+}
+
+.product-tile:nth-child(6),
+.product-tile:nth-child(8) {
+  grid-row: span 2;
+}
+
+.product-tile:nth-child(9) {
+  grid-column: span 2;
 }
 
 .product-tile img {
@@ -1598,7 +1611,7 @@ blockquote:hover {
 
 .product-mini strong {
   color: var(--lime);
-  font-size: 42px;
+  font-size: 34px;
   line-height: 1;
 }
 
