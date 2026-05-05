@@ -130,14 +130,14 @@ img {
 .site-nav {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   padding: 7px;
   border: 1px solid rgba(255, 255, 255, 0.13);
   border-radius: 999px;
   background: rgba(5, 7, 9, 0.54);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
   color: var(--nav-text);
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 800;
 }
 
@@ -148,8 +148,9 @@ img {
 
 .site-nav a {
   position: relative;
-  padding: 10px 15px;
+  padding: 10px 12px;
   border-radius: 999px;
+  white-space: nowrap;
 }
 
 .site-nav a:hover,
