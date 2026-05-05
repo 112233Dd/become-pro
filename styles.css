@@ -1457,9 +1457,15 @@ blockquote:hover {
   overflow: hidden;
 }
 
-.brand-face-image {
-  min-height: 410px;
+.brand-face-gallery {
+  position: relative;
+  min-height: 430px;
+  overflow: hidden;
   background: #090909;
+}
+
+.brand-face-image {
+  height: 100%;
 }
 
 .brand-face-image img {
@@ -1468,6 +1474,38 @@ blockquote:hover {
   object-fit: cover;
   object-position: center 18%;
   filter: saturate(0.95) contrast(1.04);
+}
+
+.brand-face-image.main {
+  min-height: 430px;
+}
+
+.brand-face-thumbs {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.brand-face-thumbs span {
+  display: block;
+  height: 96px;
+  overflow: hidden;
+  border: 1px solid rgba(245, 196, 0, 0.32);
+  border-radius: 14px;
+  background: rgba(3, 3, 3, 0.72);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.34);
+}
+
+.brand-face-thumbs img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.92;
 }
 
 .brand-face-copy {
@@ -2557,6 +2595,19 @@ body[data-theme="light"] .overview-hero p {
 
   .brand-face-image {
     min-height: 340px;
+  }
+
+  .brand-face-gallery {
+    min-height: 380px;
+  }
+
+  .brand-face-thumbs {
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    padding: 12px;
+    background: rgba(3, 3, 3, 0.72);
   }
 
   .home-inline-cta {
