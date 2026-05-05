@@ -1414,6 +1414,311 @@ blockquote:hover {
   line-height: 1.65;
 }
 
+.home-products,
+.home-path,
+.home-why {
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 76% 14%, rgba(245, 196, 0, 0.12), transparent 26%),
+    linear-gradient(145deg, #050505, #08090b 54%, #130f05);
+}
+
+.home-products {
+  display: grid;
+  gap: 30px;
+  padding-top: 104px;
+}
+
+.home-products-grid {
+  width: min(100%, var(--max));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(300px, 0.78fr) minmax(0, 1.05fr);
+  gap: 28px;
+}
+
+.brand-face-card,
+.real-products-card,
+.home-inline-cta,
+.home-path-panel,
+.why-feature-card {
+  border: 1px solid rgba(245, 196, 0, 0.16);
+  border-radius: 24px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025)),
+    rgba(255, 255, 255, 0.035);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.3);
+}
+
+.brand-face-card {
+  display: grid;
+  min-height: 670px;
+  overflow: hidden;
+}
+
+.brand-face-image {
+  min-height: 410px;
+  background: #090909;
+}
+
+.brand-face-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 18%;
+  filter: saturate(0.95) contrast(1.04);
+}
+
+.brand-face-copy {
+  display: grid;
+  align-content: end;
+  gap: 14px;
+  padding: 28px;
+}
+
+.brand-face-copy h2,
+.real-products-card h2 {
+  margin: 0;
+  color: var(--white);
+  font-size: clamp(28px, 3vw, 44px);
+  line-height: 1.02;
+}
+
+.brand-face-copy p,
+.real-products-card p {
+  margin: 0;
+  color: #ddd7c8;
+  line-height: 1.65;
+}
+
+.real-products-card {
+  padding: 28px;
+}
+
+.section-heading.compact {
+  margin: 0 0 26px;
+}
+
+.section-heading.compact p:not(.eyebrow) {
+  max-width: 680px;
+  color: #d8d2c3;
+}
+
+.product-showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 145px;
+  gap: 14px;
+}
+
+.product-tile {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.product-tile.large {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.product-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.product-tile:hover img {
+  transform: scale(1.05);
+}
+
+.product-tile span {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  max-width: calc(100% - 24px);
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(3, 3, 3, 0.76);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.product-mini {
+  display: grid;
+  place-items: center;
+  gap: 8px;
+  padding: 18px;
+  text-align: center;
+}
+
+.product-mini strong {
+  color: var(--lime);
+  font-size: 42px;
+  line-height: 1;
+}
+
+.product-mini span {
+  position: static;
+  background: transparent;
+  padding: 0;
+}
+
+.home-inline-cta {
+  width: min(100%, var(--max));
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px;
+  background:
+    linear-gradient(90deg, rgba(245, 196, 0, 0.12), rgba(255, 255, 255, 0.04)),
+    rgba(245, 196, 0, 0.04);
+}
+
+.home-inline-cta h3 {
+  margin: 0 0 8px;
+  color: var(--white);
+  font-size: 22px;
+}
+
+.home-inline-cta p {
+  margin: 0;
+  color: #d8d2c3;
+}
+
+.home-path {
+  min-height: 92vh;
+  display: grid;
+  align-content: center;
+}
+
+.home-path-panel {
+  grid-template-columns: 0.82fr 1.18fr;
+}
+
+.home-path-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.home-path-cards article {
+  display: grid;
+  align-content: start;
+  gap: 16px;
+  min-height: 320px;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.home-path-cards article.featured {
+  border-color: rgba(245, 196, 0, 0.34);
+  background: rgba(245, 196, 0, 0.1);
+}
+
+.home-path-cards span {
+  color: var(--lime);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.home-path-cards h3 {
+  margin: 0;
+  color: var(--white);
+  font-size: 27px;
+}
+
+.home-path-cards p {
+  margin: 0;
+  color: #d8d2c3;
+  line-height: 1.65;
+}
+
+.home-path-cards .btn {
+  align-self: end;
+  margin-top: 18px;
+}
+
+.home-why {
+  min-height: 82vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.72fr);
+  align-items: start;
+  gap: clamp(28px, 5vw, 70px);
+}
+
+.why-copy {
+  max-width: 760px;
+}
+
+.why-copy h2 {
+  margin: 0;
+  color: var(--white);
+  font-size: clamp(42px, 5vw, 76px);
+  line-height: 1.02;
+}
+
+.why-copy p {
+  max-width: 710px;
+  color: #e0dacb;
+  font-size: 18px;
+  line-height: 1.75;
+}
+
+.why-feature-card {
+  padding: 32px;
+  background:
+    linear-gradient(145deg, rgba(245, 196, 0, 0.16), rgba(255, 255, 255, 0.04)),
+    rgba(245, 196, 0, 0.04);
+}
+
+.why-feature-card h3 {
+  margin: 0 0 18px;
+  color: var(--white);
+  font-size: clamp(25px, 2.4vw, 36px);
+  line-height: 1.1;
+}
+
+.why-feature-card p {
+  margin: 0 0 24px;
+  color: #e3ddcf;
+  line-height: 1.75;
+}
+
+.why-points {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  width: min(100%, 900px);
+}
+
+.why-points article {
+  padding: 18px;
+  border-left: 2px solid var(--lime);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.why-points span {
+  color: var(--lime);
+  font-weight: 900;
+}
+
+.why-points p {
+  margin: 8px 0 0;
+  color: #d8d2c3;
+  line-height: 1.55;
+}
+
 .audience-grid p {
   color: #5f5848;
 }
@@ -1919,6 +2224,9 @@ body[data-theme="light"] .overview-hero p {
   .hero,
   .programs-hero,
   .flow-panel,
+  .home-products-grid,
+  .home-path-panel,
+  .home-why,
   .intro,
   .personal-panel,
   .coach,
@@ -1957,6 +2265,7 @@ body[data-theme="light"] .overview-hero p {
   .program-grid,
   .slide-card-grid.three,
   .training-options-grid,
+  .home-path-cards,
   .audience-grid,
   .player-grid,
   .process-list {
@@ -2038,6 +2347,9 @@ body[data-theme="light"] .overview-hero p {
   .program-grid,
   .slide-card-grid.three,
   .training-options-grid,
+  .product-showcase-grid,
+  .home-path-cards,
+  .why-points,
   .audience-grid,
   .player-grid,
   .process-list,
@@ -2095,6 +2407,31 @@ body[data-theme="light"] .overview-hero p {
   .flow-panel {
     padding: 22px;
     border-radius: 18px;
+  }
+
+  .home-products {
+    padding-top: 84px;
+  }
+
+  .brand-face-card {
+    min-height: auto;
+  }
+
+  .brand-face-image {
+    min-height: 340px;
+  }
+
+  .home-inline-cta {
+    display: grid;
+  }
+
+  .product-tile.large {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .product-showcase-grid {
+    grid-auto-rows: 170px;
   }
 
   .hero-media img {
