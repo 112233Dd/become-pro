@@ -3,7 +3,7 @@ const nav = document.querySelector("[data-nav]");
 const navToggle = document.querySelector("[data-nav-toggle]");
 const form = document.querySelector("[data-form]");
 const formStatus = document.querySelector("[data-form-status]");
-const navLinks = [...document.querySelectorAll(".site-nav a[href^='#']")];
+const navLinks = [...document.querySelectorAll(".site-nav a")];
 const themeToggle = document.querySelector("[data-theme-toggle]");
 const themeLabel = document.querySelector("[data-theme-label]");
 
@@ -35,8 +35,18 @@ nav?.querySelectorAll("a").forEach((link) => {
   link.addEventListener("click", closeNav);
 });
 
+const currentPage = window.location.pathname.split("/").pop() || "index.html";
+
+navLinks.forEach((link) => {
+  const href = link.getAttribute("href") || "";
+  const linkPage = href.split("#")[0];
+  link.classList.toggle("is-active", linkPage === currentPage);
+});
+
+const sectionNavLinks = navLinks.filter((link) => link.getAttribute("href")?.startsWith("#"));
+
 const setActiveNavLink = (id) => {
-  navLinks.forEach((link) => {
+  sectionNavLinks.forEach((link) => {
     link.classList.toggle("is-active", link.getAttribute("href") === `#${id}`);
   });
 };
@@ -78,7 +88,7 @@ const sectionObserver = new IntersectionObserver(
   }
 );
 
-navLinks.forEach((link) => {
+sectionNavLinks.forEach((link) => {
   const section = document.querySelector(link.getAttribute("href"));
   if (section) sectionObserver.observe(section);
 });
