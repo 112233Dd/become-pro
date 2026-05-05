@@ -12,6 +12,37 @@
   --dark-text: #11100d;
   --max: 1180px;
   --radius: 8px;
+  --page-bg: var(--black);
+  --page-text: var(--white);
+  --header-bg: rgba(3, 3, 3, 0.66);
+  --header-bg-scrolled: rgba(3, 3, 3, 0.88);
+  --nav-text: #d8d3c7;
+  --dark-section-bg:
+    linear-gradient(135deg, rgba(245, 196, 0, 0.08), transparent 28%),
+    radial-gradient(circle at 80% 20%, rgba(214, 163, 0, 0.12), transparent 28%),
+    var(--black);
+  --light-section-bg: var(--soft);
+  --surface-bg: rgba(255, 255, 255, 0.055);
+  --field-bg: rgba(3, 3, 3, 0.72);
+  --field-text: var(--white);
+}
+
+body[data-theme="light"] {
+  --page-bg: #f7f6f1;
+  --page-text: #11100d;
+  --header-bg: rgba(247, 246, 241, 0.78);
+  --header-bg-scrolled: rgba(247, 246, 241, 0.94);
+  --nav-text: #343026;
+  --line: rgba(17, 16, 13, 0.12);
+  --muted: #5f5848;
+  --dark-section-bg:
+    linear-gradient(135deg, rgba(245, 196, 0, 0.12), transparent 30%),
+    radial-gradient(circle at 78% 16%, rgba(214, 163, 0, 0.15), transparent 28%),
+    #f7f6f1;
+  --light-section-bg: #fff;
+  --surface-bg: rgba(17, 16, 13, 0.045);
+  --field-bg: #fff;
+  --field-text: #11100d;
 }
 
 * {
@@ -25,8 +56,8 @@ html {
 body {
   margin: 0;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: var(--black);
-  color: var(--white);
+  background: var(--page-bg);
+  color: var(--page-text);
 }
 
 body.nav-open {
@@ -54,8 +85,8 @@ img {
   align-items: center;
   gap: 22px;
   padding: 16px clamp(18px, 4vw, 56px);
-  background: rgba(3, 3, 3, 0.66);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--line);
   backdrop-filter: blur(16px);
   transition: padding 0.25s ease, background 0.25s ease, border-color 0.25s ease;
 }
@@ -63,7 +94,7 @@ img {
 .site-header.is-scrolled {
   padding-top: 12px;
   padding-bottom: 12px;
-  background: rgba(3, 3, 3, 0.88);
+  background: var(--header-bg-scrolled);
   border-bottom-color: rgba(245, 196, 0, 0.18);
 }
 
@@ -100,7 +131,7 @@ img {
   display: flex;
   align-items: center;
   gap: 28px;
-  color: #d8d3c7;
+  color: var(--nav-text);
   font-size: 14px;
   font-weight: 800;
 }
@@ -157,6 +188,32 @@ img {
   background: rgba(245, 196, 0, 0.12);
 }
 
+.header-actions {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.theme-toggle {
+  min-height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-bg);
+  color: var(--page-text);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--lime);
+  color: var(--lime);
+}
+
 .nav-toggle {
   display: none;
 }
@@ -171,14 +228,12 @@ section {
 }
 
 .section-dark {
-  background:
-    linear-gradient(135deg, rgba(245, 196, 0, 0.08), transparent 28%),
-    radial-gradient(circle at 80% 20%, rgba(214, 163, 0, 0.12), transparent 28%),
-    var(--black);
+  background: var(--dark-section-bg);
+  color: var(--page-text);
 }
 
 .section-light {
-  background: var(--soft);
+  background: var(--light-section-bg);
   color: var(--dark-text);
 }
 
@@ -1103,8 +1158,8 @@ textarea {
   padding: 13px 14px;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: var(--radius);
-  background: rgba(3, 3, 3, 0.72);
-  color: var(--white);
+  background: var(--field-bg);
+  color: var(--field-text);
   font: inherit;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -1137,8 +1192,8 @@ textarea:focus {
   grid-template-columns: 1.4fr 0.8fr 0.8fr;
   gap: 28px;
   padding: 44px clamp(18px, 5vw, 72px);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  background: #030303;
+  border-top: 1px solid var(--line);
+  background: var(--page-bg);
 }
 
 .site-footer p {
@@ -1174,6 +1229,52 @@ textarea:focus {
   50% {
     transform: translateY(-16px) rotate(1deg);
   }
+}
+
+body[data-theme="light"] .hero-lead,
+body[data-theme="light"] .hero-note,
+body[data-theme="light"] .hero-trust,
+body[data-theme="light"] .feature-card p,
+body[data-theme="light"] .personal-panel p,
+body[data-theme="light"] .check-list li,
+body[data-theme="light"] .coach-copy p,
+body[data-theme="light"] .training-philosophy p,
+body[data-theme="light"] .faq p,
+body[data-theme="light"] .site-footer p,
+body[data-theme="light"] .footer-links {
+  color: #5f5848;
+}
+
+body[data-theme="light"] .btn-secondary {
+  border-color: rgba(17, 16, 13, 0.2);
+  color: var(--dark-text);
+  background: rgba(17, 16, 13, 0.04);
+}
+
+body[data-theme="light"] .feature-card,
+body[data-theme="light"] .personal-panel,
+body[data-theme="light"] .process-list li,
+body[data-theme="light"] .faq details,
+body[data-theme="light"] .training-philosophy,
+body[data-theme="light"] .coach-details span,
+body[data-theme="light"] .coach-details a,
+body[data-theme="light"] .overview-screen > * {
+  border-color: rgba(17, 16, 13, 0.12);
+  background: rgba(255, 255, 255, 0.76);
+  color: var(--dark-text);
+}
+
+body[data-theme="light"] .program-title,
+body[data-theme="light"] .overview-program-grid span,
+body[data-theme="light"] .overview-card h2,
+body[data-theme="light"] .overview-hero h1,
+body[data-theme="light"] .overview-card p,
+body[data-theme="light"] .overview-card li {
+  color: var(--dark-text);
+}
+
+body[data-theme="light"] .overview-hero p {
+  color: #4f493d;
 }
 
 @media (min-width: 1200px) and (min-height: 760px) {

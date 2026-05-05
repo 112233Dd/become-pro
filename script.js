@@ -4,12 +4,26 @@ const navToggle = document.querySelector("[data-nav-toggle]");
 const form = document.querySelector("[data-form]");
 const formStatus = document.querySelector("[data-form-status]");
 const navLinks = [...document.querySelectorAll(".site-nav a[href^='#']")];
+const themeToggle = document.querySelector("[data-theme-toggle]");
+const themeLabel = document.querySelector("[data-theme-label]");
+
+const setTheme = (theme) => {
+  document.body.dataset.theme = theme;
+  localStorage.setItem("becomeProTheme", theme);
+  if (themeLabel) themeLabel.textContent = theme === "light" ? "Черна тема" : "Бяла тема";
+};
+
+setTheme(localStorage.getItem("becomeProTheme") || "dark");
 
 const closeNav = () => {
   nav?.classList.remove("is-open");
   document.body.classList.remove("nav-open");
   navToggle?.setAttribute("aria-expanded", "false");
 };
+
+themeToggle?.addEventListener("click", () => {
+  setTheme(document.body.dataset.theme === "light" ? "dark" : "light");
+});
 
 navToggle?.addEventListener("click", () => {
   const isOpen = nav?.classList.toggle("is-open");
