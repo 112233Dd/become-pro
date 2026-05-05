@@ -341,6 +341,24 @@ p {
   margin-top: 24px;
 }
 
+.section-actions {
+  width: min(100%, var(--max));
+  margin: 26px auto 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.section-actions.center {
+  justify-content: center;
+}
+
+.intro-copy .section-actions,
+.coach .section-actions {
+  width: 100%;
+}
+
 .hero-trust {
   max-width: 720px;
   margin: 16px 0 0;
@@ -1621,8 +1639,13 @@ body[data-theme="light"] .overview-hero p {
   }
 
   .hero-actions,
-  .cta-actions {
+  .cta-actions,
+  .section-actions {
     display: grid;
+  }
+
+  .section-actions.center {
+    justify-content: stretch;
   }
 
   .hero-stats,
