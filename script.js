@@ -8,6 +8,7 @@ const selectedProgramInput = document.querySelector("[data-selected-program]");
 const navLinks = [...document.querySelectorAll(".site-nav a")];
 const themeToggle = document.querySelector("[data-theme-toggle]");
 const themeLabel = document.querySelector("[data-theme-label]");
+const faqSearch = document.querySelector("[data-faq-search]");
 
 const setTheme = (theme) => {
   document.body.dataset.theme = theme;
@@ -115,6 +116,22 @@ document.querySelectorAll(".faq details").forEach((item) => {
     document.querySelectorAll(".faq details").forEach((otherItem) => {
       if (otherItem !== item) otherItem.removeAttribute("open");
     });
+  });
+});
+
+faqSearch?.addEventListener("input", () => {
+  const query = faqSearch.value.trim().toLowerCase();
+
+  document.querySelectorAll(".faq-category-card").forEach((category) => {
+    let visibleItems = 0;
+
+    category.querySelectorAll("details").forEach((item) => {
+      const isVisible = !query || item.textContent.toLowerCase().includes(query);
+      item.hidden = !isVisible;
+      if (isVisible) visibleItems += 1;
+    });
+
+    category.closest(".faq-page").hidden = visibleItems === 0;
   });
 });
 
