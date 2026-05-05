@@ -3,6 +3,8 @@ const nav = document.querySelector("[data-nav]");
 const navToggle = document.querySelector("[data-nav-toggle]");
 const form = document.querySelector("[data-form]");
 const formStatus = document.querySelector("[data-form-status]");
+const requestTypeInput = document.querySelector("[data-request-type]");
+const selectedProgramInput = document.querySelector("[data-selected-program]");
 const navLinks = [...document.querySelectorAll(".site-nav a")];
 const themeToggle = document.querySelector("[data-theme-toggle]");
 const themeLabel = document.querySelector("[data-theme-label]");
@@ -14,6 +16,20 @@ const setTheme = (theme) => {
 };
 
 setTheme(localStorage.getItem("becomeProTheme") || "dark");
+
+const programNames = {
+  "first-touch-master": "Първо докосване",
+  "dribbling-master": "Дрибъл",
+  "finishing-master": "Завършващ удар",
+  "passing-master": "Подаване",
+};
+
+const params = new URLSearchParams(window.location.search);
+const requestType = params.get("type") === "program" ? "program" : "training";
+const selectedProgram = params.get("program") || "";
+
+if (requestTypeInput) requestTypeInput.value = requestType;
+if (selectedProgramInput) selectedProgramInput.value = programNames[selectedProgram] || selectedProgram;
 
 const closeNav = () => {
   nav?.classList.remove("is-open");
@@ -102,9 +118,49 @@ document.querySelectorAll(".faq details").forEach((item) => {
   });
 });
 
-form?.addEventListener("submit", (event) => {
+const getSupabaseClient = () => {
+  const config = window.BECOME_PRO_SUPABASE;
+  if (!config?.url || !config?.anonKey || !window.supabase) return null;
+  return window.supabase.createClient(config.url, config.anonKey);
+};
+
+form?.addEventListener("submit", async (event) => {
   event.preventDefault();
-  formStatus.textContent = "Анкетата е изпратена. Ще се свържем с вас за уточняване на ден и час.";
-  form.reset();
+  if (formStatus) formStatus.textContent = "Изпращаме заявката...";
+
+  const formData = new FormData(form);
+  const payload = {
+    request_type: formData.get("request_type") || "training",
+    selected_program: formData.get("selected_program") || null,
+    who: formData.get("who"),
+    name: formData.get("name"),
+    phone: formData.get("phone"),
+    page_url: window.location.href,
+    user_agent: navigator.userAgent,
+  };
+
+  try {
+    const client = getSupabaseClient();
+
+    if (!client) throw new Error("Supabase is not configured yet.");
+
+    const { error } = await client.from("training_requests").insert(payload);
+    if (error) throw error;
+
+    if (formStatus) {
+      formStatus.textContent =
+        "Анкетата е изпратена. Ще се свържем с вас за уточняване на ден и час.";
+    }
+
+    form.reset();
+    if (requestTypeInput) requestTypeInput.value = requestType;
+    if (selectedProgramInput) selectedProgramInput.value = programNames[selectedProgram] || selectedProgram;
+  } catch (error) {
+    console.error(error);
+    if (formStatus) {
+      formStatus.textContent =
+        "Заявката не се изпрати. Моля, пробвай отново или ни пиши директно на имейл.";
+    }
+  }
 });
 
