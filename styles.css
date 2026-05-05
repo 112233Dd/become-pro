@@ -1318,9 +1318,26 @@ blockquote:hover {
   gap: 16px;
 }
 
+.flow-cards-heading {
+  padding: 0 4px 6px;
+}
+
+.flow-cards-heading h3 {
+  margin: 0 0 8px;
+  color: var(--white);
+  font-size: clamp(24px, 2.1vw, 34px);
+  line-height: 1.12;
+}
+
+.flow-cards-heading p {
+  margin: 0;
+  color: #d9d3c2;
+  line-height: 1.55;
+}
+
 .flow-cards article {
-  min-height: 150px;
-  padding: 24px;
+  min-height: 134px;
+  padding: 22px 24px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.055);
