@@ -29,10 +29,6 @@
         <a href="contact.html">Контакти</a>
       </nav>
       <div class="header-actions">
-        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Смени тема">
-          <span class="theme-icon" aria-hidden="true"></span>
-          <span data-theme-label>Светла тема</span>
-        </button>
         <a class="header-cta" href="contact.html">Запази тренировка</a>
       </div>
     </header>
@@ -62,43 +58,26 @@
           </div>
         </div>
 
-        <div class="training-dashboard reveal" aria-label="Become Pro 1:1 Training Dashboard">
-          <div class="dashboard-card">
-            <div class="dashboard-topline">
-              <span>Become Pro Training</span>
-              <strong>1:1 Session</strong>
-            </div>
-            <div class="dashboard-focus">
-              <p>Session Focus</p>
-              <h2>First Touch + Speed</h2>
-              <span>Player Analysis / Live Corrections</span>
-            </div>
-            <div class="pitch-map" aria-hidden="true">
-              <span class="marker marker-one"></span>
-              <span class="marker marker-two"></span>
-              <span class="marker marker-three"></span>
-              <span class="run-line run-line-one"></span>
-              <span class="run-line run-line-two"></span>
-              <span class="ball-dot"></span>
-            </div>
-            <div class="dashboard-metrics">
-              <span>Technique</span>
-              <span>Explosiveness</span>
-              <span>Confidence</span>
-            </div>
-            <div class="dashboard-progress">
-              <div>
-                <span>Session Plan</span>
-                <strong>90 min</strong>
-              </div>
-              <span class="progress-track"><span></span></span>
-            </div>
-            <div class="dashboard-badges">
-              <span>Live Feedback</span>
-              <span>Player Specific</span>
-            </div>
-          </div>
-          <p>Индивидуален фокус, корекции и ясна задача за всяка тренировка.</p>
+        <div class="training-dashboard training-video-showcase reveal" aria-label="Реални видеа от индивидуални тренировки Become Pro">
+          <article class="training-video-card featured-video">
+            <video autoplay muted loop playsinline preload="metadata">
+              <source src="assets/videos/jump-complex-warmup.mp4" type="video/mp4" />
+            </video>
+            <span>Комплекс отскоци</span>
+          </article>
+          <article class="training-video-card">
+            <video autoplay muted loop playsinline preload="metadata">
+              <source src="assets/videos/one-touch-passing-drop.mp4" type="video/mp4" />
+            </video>
+            <span>Пасове с едно докосване</span>
+          </article>
+          <article class="training-video-card">
+            <video autoplay muted loop playsinline preload="metadata">
+              <source src="assets/videos/ball-mastery-numbers.mp4" type="video/mp4" />
+            </video>
+            <span>Ball Mastery с числа</span>
+          </article>
+          <p>Реални упражнения, индивидуален фокус и ясна задача за всяка тренировка.</p>
         </div>
       </section>
 
@@ -159,77 +138,48 @@
         </div>
       </section>
 
-      <section class="program-slide training-flow section-dark reveal">
-        <div class="flow-panel">
-          <div class="flow-copy">
-            <p class="eyebrow">Как работи в реална тренировка</p>
-            <h2>Не започваме с произволни упражнения. Започваме с играча.</h2>
-            <p>
-              Тренировката се изгражда около конкретната нужда: първо докосване, дрибъл,
-              завършване, скорост, експлозивност, увереност или игрово мислене.
-            </p>
-            <ul class="flow-list">
-              <li>Оценяваме нивото и най-важната нужда</li>
-              <li>Даваме упражнения с конкретна цел</li>
-              <li>Коригираме изпълнението в реално време</li>
-              <li>Завършваме с насока какво да се повтори самостоятелно</li>
-            </ul>
-            <div class="section-actions">
-              <a class="btn btn-primary" href="contact.html">Попълни анкетата</a>
-              <a class="btn btn-secondary" href="#training-fit">Виж подходящо ли е</a>
-            </div>
-          </div>
-          <div class="flow-cards">
-            <div class="flow-cards-heading">
-              <h3>Как работят онлайн програмите</h3>
-              <p>Всички програми са достъпни онлайн веднага след покупка.</p>
-            </div>
-            <article>
-              <span>01</span>
-              <h3>Избери своята програма</h3>
-              <p>Избери тренировъчна система, съобразена с твоята позиция, ниво, сезон и конкретна цел.</p>
-            </article>
-            <article class="highlight">
-              <span>02</span>
-              <h3>Направи сигурно плащане</h3>
-              <p>Плащането е бързо, лесно и защитено. Без абонаменти, без скрити условия и без излишни усложнения.</p>
-            </article>
-            <article>
-              <span>03</span>
-              <h3>Получи моментален достъп</h3>
-              <p>След покупка влизаш с имейла си и отключваш тренировките веднага.</p>
-            </article>
-            <article>
-              <span>04</span>
-              <h3>Тренирай с ясна цел</h3>
-              <p>Следвай плана, проследявай напредъка си и работи целенасочено към следващото ниво.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="photo-proof section-dark reveal" aria-label="Реални кадри от индивидуални тренировки">
-        <div class="photo-proof-copy">
-          <p class="eyebrow">Индивидуална работа</p>
-          <h2>Родителят вижда реален треньор, реална система и ясен подход.</h2>
-          <p>
-            Целта е играчът да получи конкретна корекция, а родителят да знае какво се случва
-            преди, по време и след тренировката.
+      <section class="training-process section-dark reveal" aria-label="Индивидуална работа на терен">
+        <div class="training-process-copy">
+          <p class="eyebrow">Индивидуални тренировки</p>
+          <h2>Индивидуална работа на терен</h2>
+          <p class="training-process-lead">
+            В индивидуалните тренировки не правим случайни упражнения. Работим върху конкретни
+            детайли от играта — техника, движение, увереност и решения в реални ситуации.
           </p>
+          <div class="training-process-text">
+            <p>
+              Всяка тренировка започва с ясна цел — какво трябва да подобрим и защо това е важно
+              за играча в мач.
+            </p>
+            <p>
+              По време на тренировката играчът получава конкретна обратна връзка, корекции и
+              упражнения, съобразени с неговата позиция, ниво и нужди.
+            </p>
+            <p>
+              След тренировката родителят и играчът знаят върху какво е работено, какво трябва
+              да се затвърди и каква е следващата стъпка.
+            </p>
+          </div>
         </div>
-        <div class="photo-proof-grid">
-          <figure class="photo-proof-card large">
-            <img src="assets/yordan-training-poster.png" alt="Become Pro индивидуална тренировка" />
-            <figcaption>Работа върху детайли</figcaption>
-          </figure>
-          <figure class="photo-proof-card">
-            <img src="assets/coach-yordan-zhelev.png" alt="Йордан Желев с топка" />
-            <figcaption>Треньорска обратна връзка</figcaption>
-          </figure>
-          <figure class="photo-proof-card">
-            <img src="assets/bp-training-square.png" alt="Become Pro тренировъчен постер" />
-            <figcaption>Структура и фокус</figcaption>
-          </figure>
+        <div class="training-process-cards">
+          <article>
+            <span>01</span>
+            <p>Преди тренировката</p>
+            <h3>Анализ и фокус</h3>
+            <p>Разбираме позицията, нивото и основната цел на играча.</p>
+          </article>
+          <article>
+            <span>02</span>
+            <p>По време на тренировката</p>
+            <h3>Корекция в реално време</h3>
+            <p>Играчът получава конкретни насоки какво да промени и защо.</p>
+          </article>
+          <article>
+            <span>03</span>
+            <p>След тренировката</p>
+            <h3>Ясна следваща стъпка</h3>
+            <p>Родителят и играчът знаят върху какво е работено и какво следва.</p>
+          </article>
         </div>
       </section>
 

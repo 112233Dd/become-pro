@@ -6,17 +6,10 @@ const formStatus = document.querySelector("[data-form-status]");
 const requestTypeInput = document.querySelector("[data-request-type]");
 const selectedProgramInput = document.querySelector("[data-selected-program]");
 const navLinks = [...document.querySelectorAll(".site-nav a")];
-const themeToggle = document.querySelector("[data-theme-toggle]");
-const themeLabel = document.querySelector("[data-theme-label]");
 const faqSearch = document.querySelector("[data-faq-search]");
 
-const setTheme = (theme) => {
-  document.body.dataset.theme = theme;
-  localStorage.setItem("becomeProTheme", theme);
-  if (themeLabel) themeLabel.textContent = theme === "light" ? "Черна тема" : "Бяла тема";
-};
-
-setTheme(localStorage.getItem("becomeProTheme") || "dark");
+document.body.dataset.theme = "dark";
+localStorage.removeItem("becomeProTheme");
 
 const programNames = {
   "first-touch-master": "Първо докосване",
@@ -37,10 +30,6 @@ const closeNav = () => {
   document.body.classList.remove("nav-open");
   navToggle?.setAttribute("aria-expanded", "false");
 };
-
-themeToggle?.addEventListener("click", () => {
-  setTheme(document.body.dataset.theme === "light" ? "dark" : "light");
-});
 
 navToggle?.addEventListener("click", () => {
   const isOpen = nav?.classList.toggle("is-open");
