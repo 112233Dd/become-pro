@@ -1080,46 +1080,6 @@ blockquote:hover {
   font-weight: 950;
 }
 
-.cart-toast {
-  position: fixed;
-  right: clamp(16px, 4vw, 34px);
-  bottom: clamp(16px, 4vw, 34px);
-  z-index: 80;
-  width: min(360px, calc(100vw - 32px));
-  padding: 16px 18px;
-  border: 1px solid rgba(245, 196, 0, 0.32);
-  border-radius: 16px;
-  background:
-    radial-gradient(circle at 88% 10%, rgba(245, 196, 0, 0.2), transparent 34%),
-    rgba(12, 12, 10, 0.96);
-  color: var(--white);
-  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.42);
-  transform: translateY(18px);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.22s ease, transform 0.22s ease;
-}
-
-.cart-toast.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.cart-toast strong {
-  display: block;
-  margin-bottom: 4px;
-  color: var(--lime);
-  font-size: 13px;
-  text-transform: uppercase;
-}
-
-.cart-toast p {
-  margin: 0;
-  color: #e8dfce;
-  font-size: 14px;
-  line-height: 1.45;
-}
-
 .product-hero {
   min-height: 100vh;
   display: grid;

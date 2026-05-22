@@ -36,16 +36,33 @@
     <main id="top">
       <section class="contact section-dark reveal" id="contact">
         <div class="contact-copy">
-          <p class="eyebrow">Анкета за записване</p>
-          <h2>Запиши индивидуална тренировка</h2>
+          <p class="eyebrow">Запитване</p>
+          <h2>Заяви програма или индивидуална тренировка</h2>
           <p>
-            Попълни кратката анкета и ще се свържем с теб, за да уточним удобен град, ден и час за
-            тренировката.
+            Попълни кратката форма и ще се свържем с теб, за да уточним целта, града,
+            подходящата програма или следващата индивидуална тренировка.
           </p>
         </div>
         <form class="contact-form training-survey" data-form>
-          <input type="hidden" name="request_type" value="training" data-request-type />
-          <input type="hidden" name="selected_program" value="" data-selected-program />
+          <label class="full">
+            Какво искаш да заявиш?
+            <select name="request_type" required data-request-type>
+              <option value="training">Индивидуална тренировка</option>
+              <option value="program">Онлайн програма</option>
+            </select>
+          </label>
+          <label class="full">
+            Онлайн програма
+            <select name="selected_program" data-selected-program>
+              <option value="">Все още не съм сигурен/сигурна</option>
+              <option>Технически пакет</option>
+              <option>Силова програма — Ниво 1</option>
+              <option>Силова програма — Ниво 2</option>
+              <option>Силова програма — Ниво 3</option>
+              <option>Лятна програма</option>
+              <option>Мачов пакет</option>
+            </select>
+          </label>
           <label class="full">
             Кого искате да запишете?
             <select name="who" required>
@@ -54,9 +71,28 @@
               <option>Себе си</option>
             </select>
           </label>
-          <label class="full">Име<input type="text" name="name" required /></label>
+          <label class="full">Име и фамилия на контакт<input type="text" name="name" required /></label>
+          <label class="full">Имейл<input type="email" name="email" required /></label>
           <label class="full">Телефонен номер<input type="tel" name="phone" required /></label>
-          <button class="btn btn-primary full" type="submit">Изпрати анкета</button>
+          <label>Име на футболиста<input type="text" name="player_name" /></label>
+          <label>Възраст на футболиста<input type="number" name="player_age" min="6" max="30" /></label>
+          <label>
+            Град
+            <select name="city">
+              <option value="">Избери град</option>
+              <option>София</option>
+              <option>Пловдив</option>
+              <option>Стара Загора</option>
+              <option>Друго</option>
+            </select>
+          </label>
+          <label>Позиция<input type="text" name="position" placeholder="Напр. нападател, крило, халф" /></label>
+          <label class="full">
+            Каква е основната цел или нужда?
+            <textarea name="goal" rows="4" placeholder="Напр. първо докосване, увереност, скорост, завършване, избор на програма"></textarea>
+          </label>
+          <label class="full">Удобно време за контакт<input type="text" name="preferred_time" placeholder="Напр. след 18:00 или през уикенда" /></label>
+          <button class="btn btn-primary full" type="submit">Изпрати заявка</button>
           <p class="form-status" data-form-status aria-live="polite"></p>
         </form>
       </section>

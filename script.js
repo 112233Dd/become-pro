@@ -20,56 +20,6 @@ const programNames = {
   "matchday-pack": "Мачов пакет",
 };
 
-const cartButtons = [...document.querySelectorAll("[data-cart-add]")];
-
-const getProgramCart = () => {
-  try {
-    return JSON.parse(localStorage.getItem("becomeProProgramCart") || "[]");
-  } catch {
-    return [];
-  }
-};
-
-const setProgramCart = (items) => {
-  localStorage.setItem("becomeProProgramCart", JSON.stringify(items));
-};
-
-const showCartToast = (programName) => {
-  let toast = document.querySelector("[data-cart-toast]");
-
-  if (!toast) {
-    toast = document.createElement("div");
-    toast.className = "cart-toast";
-    toast.dataset.cartToast = "";
-    toast.innerHTML = "<strong>Добавено в количка</strong><p></p>";
-    document.body.appendChild(toast);
-  }
-
-  const message = toast.querySelector("p");
-  if (message) message.textContent = `${programName} е добавена. Плащането ще бъде активирано отделно.`;
-
-  toast.classList.add("is-visible");
-  window.clearTimeout(showCartToast.timeoutId);
-  showCartToast.timeoutId = window.setTimeout(() => {
-    toast.classList.remove("is-visible");
-  }, 3200);
-};
-
-cartButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const programId = button.dataset.cartAdd;
-    const programName = programNames[programId] || "Програма";
-    const cart = getProgramCart();
-
-    if (!cart.some((item) => item.id === programId)) {
-      cart.push({ id: programId, name: programName });
-      setProgramCart(cart);
-    }
-
-    showCartToast(programName);
-  });
-});
-
 const params = new URLSearchParams(window.location.search);
 const requestType = params.get("type") === "program" ? "program" : "training";
 const selectedProgram = params.get("program") || "";
@@ -187,7 +137,7 @@ form?.addEventListener("submit", async (event) => {
   if (formStatus) formStatus.textContent = "Изпращаме заявката...";
 
   const formData = new FormData(form);
-  const payload = {
+  const basePayload = {
     request_type: formData.get("request_type") || "training",
     selected_program: formData.get("selected_program") || null,
     who: formData.get("who"),
@@ -196,6 +146,16 @@ form?.addEventListener("submit", async (event) => {
     page_url: window.location.href,
     user_agent: navigator.userAgent,
   };
+  const payload = {
+    ...basePayload,
+    email: formData.get("email") || null,
+    player_name: formData.get("player_name") || null,
+    player_age: formData.get("player_age") || null,
+    city: formData.get("city") || null,
+    position: formData.get("position") || null,
+    goal: formData.get("goal") || null,
+    preferred_time: formData.get("preferred_time") || null,
+  };
 
   try {
     const client = getSupabaseClient();
@@ -203,11 +163,19 @@ form?.addEventListener("submit", async (event) => {
     if (!client) throw new Error("Supabase is not configured yet.");
 
     const { error } = await client.from("training_requests").insert(payload);
-    if (error) throw error;
+    if (error) {
+      const canRetryWithBasePayload =
+        error.message?.includes("schema cache") || error.message?.includes("column");
+
+      if (!canRetryWithBasePayload) throw error;
+
+      const retry = await client.from("training_requests").insert(basePayload);
+      if (retry.error) throw retry.error;
+    }
 
     if (formStatus) {
       formStatus.textContent =
-        "Анкетата е изпратена. Ще се свържем с вас за уточняване на ден и час.";
+        "Заявката е изпратена. Ще се свържем с вас, за да уточним следващата стъпка.";
     }
 
     form.reset();
