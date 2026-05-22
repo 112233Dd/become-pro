@@ -12,11 +12,63 @@ document.body.dataset.theme = "dark";
 localStorage.removeItem("becomeProTheme");
 
 const programNames = {
-  "first-touch-master": "Първо докосване",
-  "dribbling-master": "Дрибъл",
-  "finishing-master": "Завършващ удар",
-  "passing-master": "Подаване",
+  "technical-pack": "Технически пакет",
+  "strength-level-1": "Силова програма — Ниво 1",
+  "strength-level-2": "Силова програма — Ниво 2",
+  "strength-level-3": "Силова програма — Ниво 3",
+  "summer-program": "Лятна програма",
+  "matchday-pack": "Мачов пакет",
 };
+
+const cartButtons = [...document.querySelectorAll("[data-cart-add]")];
+
+const getProgramCart = () => {
+  try {
+    return JSON.parse(localStorage.getItem("becomeProProgramCart") || "[]");
+  } catch {
+    return [];
+  }
+};
+
+const setProgramCart = (items) => {
+  localStorage.setItem("becomeProProgramCart", JSON.stringify(items));
+};
+
+const showCartToast = (programName) => {
+  let toast = document.querySelector("[data-cart-toast]");
+
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.className = "cart-toast";
+    toast.dataset.cartToast = "";
+    toast.innerHTML = "<strong>Добавено в количка</strong><p></p>";
+    document.body.appendChild(toast);
+  }
+
+  const message = toast.querySelector("p");
+  if (message) message.textContent = `${programName} е добавена. Плащането ще бъде активирано отделно.`;
+
+  toast.classList.add("is-visible");
+  window.clearTimeout(showCartToast.timeoutId);
+  showCartToast.timeoutId = window.setTimeout(() => {
+    toast.classList.remove("is-visible");
+  }, 3200);
+};
+
+cartButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const programId = button.dataset.cartAdd;
+    const programName = programNames[programId] || "Програма";
+    const cart = getProgramCart();
+
+    if (!cart.some((item) => item.id === programId)) {
+      cart.push({ id: programId, name: programName });
+      setProgramCart(cart);
+    }
+
+    showCartToast(programName);
+  });
+});
 
 const params = new URLSearchParams(window.location.search);
 const requestType = params.get("type") === "program" ? "program" : "training";

@@ -1,4 +1,30 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/programs/technical-pack",
+      "destination": "/programs/technical-pack/index.html"
+    },
+    {
+      "source": "/programs/strength-level-1",
+      "destination": "/programs/strength-level-1/index.html"
+    },
+    {
+      "source": "/programs/strength-level-2",
+      "destination": "/programs/strength-level-2/index.html"
+    },
+    {
+      "source": "/programs/strength-level-3",
+      "destination": "/programs/strength-level-3/index.html"
+    },
+    {
+      "source": "/programs/summer-program",
+      "destination": "/programs/summer-program/index.html"
+    },
+    {
+      "source": "/programs/matchday-pack",
+      "destination": "/programs/matchday-pack/index.html"
+    }
+  ]
 }
