@@ -21,11 +21,15 @@ const programNames = {
 };
 
 const params = new URLSearchParams(window.location.search);
-const requestType = params.get("type") === "program" ? "program" : "training";
+const requestTypeParam = params.get("type");
+const requestType = requestTypeParam === "program" || requestTypeParam === "training" ? requestTypeParam : "";
 const selectedProgram = params.get("program") || "";
 
-if (requestTypeInput) requestTypeInput.value = requestType;
-if (selectedProgramInput) selectedProgramInput.value = programNames[selectedProgram] || selectedProgram;
+if (requestTypeInput && requestType) requestTypeInput.value = requestType;
+if (selectedProgramInput && selectedProgram) selectedProgramInput.value = programNames[selectedProgram] || selectedProgram;
+
+const initialRequestTypeValue = requestTypeInput?.value || "training";
+const initialSelectedProgramValue = selectedProgramInput?.value || "";
 
 const closeNav = () => {
   nav?.classList.remove("is-open");
@@ -179,8 +183,8 @@ form?.addEventListener("submit", async (event) => {
     }
 
     form.reset();
-    if (requestTypeInput) requestTypeInput.value = requestType;
-    if (selectedProgramInput) selectedProgramInput.value = programNames[selectedProgram] || selectedProgram;
+    if (requestTypeInput) requestTypeInput.value = initialRequestTypeValue;
+    if (selectedProgramInput) selectedProgramInput.value = initialSelectedProgramValue;
   } catch (error) {
     console.error(error);
     if (formStatus) {
