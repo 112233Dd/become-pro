@@ -75,6 +75,33 @@ const shopPrograms = [
       "по-добра дисциплина, повече постоянство и по-ясна подготовка преди следващия период.",
     intro:
       "Лятната програма помага на играча да използва времето извън сезона по-смислено, с ясна структура вместо пауза без посока.",
+    descriptionCards: [
+      [
+        "01",
+        "Какво представлява",
+        "Цялостна програма за футболисти, които искат да използват периода извън сезона с ясна структура, вместо да губят форма и посока.",
+      ],
+      [
+        "02",
+        "За кого е подходяща",
+        "За играчи, които искат структурирана подготовка през лятото/паузата и имат нужда от конкретен план за самостоятелна работа.",
+      ],
+      [
+        "03",
+        "Как се използва",
+        "Следваш програмата самостоятелно, изпълняваш упражненията по ред и надграждаш постепенно според зададената структура.",
+      ],
+      [
+        "04",
+        "Какъв проблем решава",
+        "Премахва хаоса от случайните тренировки и дава ясна посока за работа върху техника, физика, дисциплина и постоянство.",
+      ],
+      [
+        "05",
+        "Какъв резултат гоним",
+        "По-добра подготовка, повече увереност, по-добра дисциплина и по-ясна основа преди следващия тренировъчен период.",
+      ],
+    ],
   },
   {
     id: "matchday-pack",
@@ -199,6 +226,19 @@ const renderProductDetail = () => {
 
   const program = shopPrograms.find((item) => item.id === root.dataset.programId) || shopPrograms[0];
   const related = shopPrograms.filter((item) => item.id !== program.id).slice(0, 5);
+  const descriptionCards =
+    program.descriptionCards ||
+    [
+      ["01", "Какво представлява", program.intro],
+      ["02", "За кого е подходяща", program.suitable],
+      [
+        "03",
+        "Как се използва",
+        "Следваш програмата самостоятелно, изпълняваш упражненията с внимание към детайла и надграждаш според структурата.",
+      ],
+      ["04", "Какъв проблем решава", `Помага при ${program.problem}, като дава по-ясна посока на индивидуалната работа.`],
+      ["05", "Какъв резултат гоним", `Целта е ${program.result}`],
+    ];
 
   document.title = `${program.title} | Become Pro`;
   const metaDescription = document.querySelector('meta[name="description"]');
@@ -235,17 +275,18 @@ const renderProductDetail = () => {
       </div>
     </section>
 
-    <section class="product-description product-detail-description section-dark reveal">
-      <div class="section-heading">
+    <section class="product-description product-detail-description section-dark reveal product-description-wide">
+      <div class="section-heading center">
         <p class="eyebrow">Описание на програмата</p>
         <h2>Какво е, за кого е и каква работа върши.</h2>
       </div>
       <div class="product-description-grid">
-        <article><h3>Какво представлява</h3><p>${program.intro}</p></article>
-        <article><h3>За кого е подходяща</h3><p>${program.suitable}</p></article>
-        <article><h3>Как се използва</h3><p>Следваш програмата самостоятелно, изпълняваш упражненията с внимание към детайла и надграждаш според структурата.</p></article>
-        <article><h3>Какъв проблем решава</h3><p>Помага при ${program.problem}, като дава по-ясна посока на индивидуалната работа.</p></article>
-        <article><h3>Какъв резултат гоним</h3><p>Целта е ${program.result}</p></article>
+        ${descriptionCards
+          .map(
+            ([number, title, text]) =>
+              `<article>${number ? `<span>${number}</span>` : ""}<h3>${title}</h3><p>${text}</p></article>`
+          )
+          .join("")}
       </div>
     </section>
 

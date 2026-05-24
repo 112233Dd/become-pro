@@ -1466,6 +1466,17 @@ blockquote:hover {
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
+.product-detail-description.product-description-wide {
+  display: block;
+  width: min(100%, var(--max));
+  margin-inline: auto;
+}
+
+.product-description-wide .product-description-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+}
+
 .testimonial-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -1484,16 +1495,63 @@ blockquote:hover {
   padding: 24px;
 }
 
+.product-description-wide .product-description-grid article {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  min-height: 230px;
+  padding: 20px;
+}
+
+.product-description-wide .product-description-grid span {
+  display: inline-grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  margin-bottom: 16px;
+  border: 1px solid rgba(245, 196, 0, 0.42);
+  border-radius: 999px;
+  color: var(--lime);
+  font-size: 12px;
+  font-weight: 950;
+}
+
 .product-description-grid h3 {
   margin-bottom: 12px;
   color: var(--white);
   font-size: 18px;
 }
 
+.product-description-wide .product-description-grid h3 {
+  margin-bottom: 10px;
+  font-size: 20px;
+  line-height: 1.16;
+}
+
 .product-description-grid p {
   margin: 0;
   color: #d7ceba;
   line-height: 1.55;
+}
+
+.product-description-wide .product-description-grid p {
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+@media (max-width: 1180px) {
+  .product-description-wide .product-description-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .product-description-wide .product-description-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-description-wide .product-description-grid article {
+    min-height: 0;
+  }
 }
 
 .product-process-grid article {
@@ -2795,6 +2853,10 @@ blockquote:hover {
   height: 100%;
 }
 
+.brand-face-image.main img {
+  object-position: center center;
+}
+
 .brand-face-thumbs {
   position: absolute;
   left: clamp(14px, 2vw, 22px);
@@ -2821,6 +2883,14 @@ blockquote:hover {
   object-fit: cover;
   object-position: center;
   opacity: 0.92;
+}
+
+.brand-face-thumbs span:first-child img {
+  object-position: center 42%;
+}
+
+.brand-face-thumbs span:last-child img {
+  object-position: center 54%;
 }
 
 .brand-face-copy {
