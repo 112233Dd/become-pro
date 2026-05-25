@@ -178,6 +178,8 @@ const supabaseRequest = async (path, options = {}) => {
   return text ? JSON.parse(text) : null;
 };
 
+const hasSupabaseAdmin = () => Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
+
 const orderRowsFromPrograms = ({ programs, customer, status, sessionId, paymentIntentId }) =>
   programs.map((program) => ({
     customer_name: customer.customerName,
@@ -283,6 +285,7 @@ module.exports = {
   createStripeCheckoutSession,
   getOrigin,
   getProgramsByIds,
+  hasSupabaseAdmin,
   readJsonBody,
   readRawBody,
   sendEmail,

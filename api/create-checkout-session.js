@@ -2,6 +2,7 @@ const {
   createStripeCheckoutSession,
   getOrigin,
   getProgramsByIds,
+  hasSupabaseAdmin,
   readJsonBody,
   sendJson,
   upsertOrders,
@@ -28,7 +29,7 @@ module.exports = async (req, res) => {
       return sendJson(res, 400, { error: "Моля, попълни име, имейл и телефон." });
     }
 
-    ["STRIPE_SECRET_KEY", "SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY"].forEach((name) => {
+    ["STRIPE_SECRET_KEY"].forEach((name) => {
       if (!process.env[name]) throw new Error(`Missing environment variable: ${name}`);
     });
 
@@ -38,13 +39,15 @@ module.exports = async (req, res) => {
       origin: getOrigin(req),
     });
 
-    await upsertOrders({
-      programs,
-      customer,
-      status: "pending",
-      sessionId: session.id,
-      paymentIntentId: session.payment_intent || null,
-    });
+    if (hasSupabaseAdmin()) {
+      await upsertOrders({
+        programs,
+        customer,
+        status: "pending",
+        sessionId: session.id,
+        paymentIntentId: session.payment_intent || null,
+      });
+    }
 
     return sendJson(res, 200, { url: session.url, sessionId: session.id });
   } catch (error) {

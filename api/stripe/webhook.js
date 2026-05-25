@@ -1,5 +1,6 @@
 const {
   getProgramsByIds,
+  hasSupabaseAdmin,
   readRawBody,
   sendEmail,
   sendJson,
@@ -91,13 +92,15 @@ module.exports = async (req, res) => {
       const programs = programsFromMetadata(metadata);
       const customer = customerFromMetadata(metadata);
 
-      await upsertOrders({
-        programs,
-        customer,
-        status: "paid",
-        sessionId: session.id,
-        paymentIntentId: session.payment_intent || null,
-      });
+      if (hasSupabaseAdmin()) {
+        await upsertOrders({
+          programs,
+          customer,
+          status: "paid",
+          sessionId: session.id,
+          paymentIntentId: session.payment_intent || null,
+        });
+      }
 
       await sendFulfillmentEmails({ programs, customer, session });
     }
@@ -108,13 +111,15 @@ module.exports = async (req, res) => {
       const programs = programsFromMetadata(metadata);
       const customer = customerFromMetadata(metadata);
 
-      await upsertOrders({
-        programs,
-        customer,
-        status: "failed",
-        sessionId: null,
-        paymentIntentId: paymentIntent.id,
-      });
+      if (hasSupabaseAdmin()) {
+        await upsertOrders({
+          programs,
+          customer,
+          status: "failed",
+          sessionId: null,
+          paymentIntentId: paymentIntent.id,
+        });
+      }
     }
 
     if (event.type === "checkout.session.expired") {
@@ -123,13 +128,15 @@ module.exports = async (req, res) => {
       const programs = programsFromMetadata(metadata);
       const customer = customerFromMetadata(metadata);
 
-      await upsertOrders({
-        programs,
-        customer,
-        status: "cancelled",
-        sessionId: session.id,
-        paymentIntentId: session.payment_intent || null,
-      });
+      if (hasSupabaseAdmin()) {
+        await upsertOrders({
+          programs,
+          customer,
+          status: "cancelled",
+          sessionId: session.id,
+          paymentIntentId: session.payment_intent || null,
+        });
+      }
     }
 
     return sendJson(res, 200, { received: true });
