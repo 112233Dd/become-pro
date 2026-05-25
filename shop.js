@@ -125,6 +125,9 @@ const getProgramUrl = (program) => `${window.location.pathname.includes("/progra
 const getCartUrl = () => `${window.location.pathname.includes("/programs/") ? "../../" : ""}cart.html`;
 const getCheckoutUrl = (program) =>
   `${window.location.pathname.includes("/programs/") ? "../../" : ""}checkout.html?program=${program.id}`;
+const parseProgramPrice = (program) => Number(String(program.price).replace(/[^\d.]/g, "")) || 0;
+const formatProgramPrice = (value) => `€${value.toFixed(2)}`;
+const getCheckoutBaseUrl = () => `${window.location.pathname.includes("/programs/") ? "../../" : ""}checkout.html`;
 
 const readCart = () => {
   try {
@@ -135,6 +138,17 @@ const readCart = () => {
 };
 
 const writeCart = (items) => localStorage.setItem(SHOP_CART_KEY, JSON.stringify(items));
+
+const getCartPrograms = () =>
+  readCart()
+    .map((id) => shopPrograms.find((program) => program.id === id))
+    .filter(Boolean);
+
+const getCheckoutPrograms = () => {
+  const params = new URLSearchParams(window.location.search);
+  const directProgram = shopPrograms.find((program) => program.id === params.get("program"));
+  return directProgram ? [directProgram] : getCartPrograms();
+};
 
 const addToCart = (programId) => {
   const cart = readCart();
@@ -348,9 +362,8 @@ const renderCartPage = () => {
   const root = document.querySelector("[data-cart-page]");
   if (!root) return;
 
-  const selected = readCart()
-    .map((id) => shopPrograms.find((program) => program.id === id))
-    .filter(Boolean);
+  const selected = getCartPrograms();
+  const total = selected.reduce((sum, program) => sum + parseProgramPrice(program), 0);
 
   if (!selected.length) {
     root.innerHTML = `
@@ -392,9 +405,9 @@ const renderCartPage = () => {
         </div>
         <aside class="cart-summary">
           <span>Общо</span>
-          <strong>${selected.length} програма${selected.length > 1 ? "и" : ""}</strong>
-          <p>Плащането ще бъде финализирано през checkout/request процеса, без сайтът да съхранява банкови данни.</p>
-          <a class="btn btn-primary" href="checkout.html">Продължи към checkout</a>
+          <strong>${formatProgramPrice(total)}</strong>
+          <p>Плащането минава през сигурна Stripe Checkout страница. Become Pro не съхранява данни от банкови карти.</p>
+          <a class="btn btn-primary" href="checkout.html">Продължи към плащане</a>
         </aside>
       </div>
     </section>
@@ -405,23 +418,49 @@ const renderCheckoutPage = () => {
   const root = document.querySelector("[data-checkout-page]");
   if (!root) return;
 
-  const params = new URLSearchParams(window.location.search);
-  const directProgram = shopPrograms.find((program) => program.id === params.get("program"));
-  const selected = directProgram
-    ? [directProgram]
-    : readCart()
-        .map((id) => shopPrograms.find((program) => program.id === id))
-        .filter(Boolean);
+  const selected = getCheckoutPrograms();
   const programName = selected.map((program) => program.title).join(", ");
+  const total = selected.reduce((sum, program) => sum + parseProgramPrice(program), 0);
+
+  if (!selected.length) {
+    root.innerHTML = `
+      <section class="checkout-page section-dark">
+        <div class="section-heading center">
+          <p class="eyebrow">Checkout</p>
+          <h1>Няма избрана програма.</h1>
+          <p>Избери програма или добави продукт в количката, за да продължиш към плащане.</p>
+          <a class="btn btn-primary" href="programs.html#programs">Виж програмите</a>
+        </div>
+      </section>
+    `;
+    return;
+  }
 
   root.innerHTML = `
     <section class="checkout-page section-dark">
       <div class="checkout-copy">
         <p class="eyebrow">Checkout</p>
-        <h1>Заявка за покупка</h1>
-        <p>Попълни данните си. След това ще получиш потвърждение и инструкции за достъп до програмата.</p>
+        <h1>Плащане с карта</h1>
+        <p>Попълни данните си и ще бъдеш пренасочен към сигурна Stripe Checkout страница. Линкът към програмата се изпраща по имейл само след потвърдено плащане.</p>
+        <div class="checkout-order-summary">
+          <span>Обобщение</span>
+          ${selected
+            .map(
+              (program) => `
+                <article>
+                  <img src="${getAssetPath(program)}" alt="Корица на ${program.title}" />
+                  <div>
+                    <strong>${program.title}</strong>
+                    <p>${program.price}</p>
+                  </div>
+                </article>
+              `,
+            )
+            .join("")}
+          <strong class="checkout-total">${formatProgramPrice(total)}</strong>
+        </div>
       </div>
-      <form class="contact-form training-survey checkout-form" data-form>
+      <form class="contact-form training-survey checkout-form" data-checkout-form>
         <input type="hidden" name="request_type" value="program" data-request-type />
         <input type="hidden" name="selected_program" value="${programName}" data-selected-program />
         <label class="full">Избрана програма<input type="text" value="${programName || "Все още няма избрана програма"}" readonly /></label>
@@ -437,11 +476,50 @@ const renderCheckoutPage = () => {
         <label>Име на футболиста<input type="text" name="player_name" /></label>
         <label>Възраст на футболиста<input type="number" name="player_age" min="6" max="30" /></label>
         <label class="full">Коментар<textarea name="goal" rows="4" placeholder="Напр. коя програма искаш, въпрос за достъп, възраст/позиция на играча"></textarea></label>
-        <button class="btn btn-primary full" type="submit">Изпрати заявка за покупка</button>
-        <p class="form-status" data-form-status aria-live="polite"></p>
+        <button class="btn btn-primary full" type="submit">Плати с карта</button>
+        <p class="form-status" data-checkout-status aria-live="polite"></p>
       </form>
     </section>
   `;
+};
+
+const handleCheckoutSubmit = async (form) => {
+  const selected = getCheckoutPrograms();
+  const status = form.querySelector("[data-checkout-status]");
+  const submitButton = form.querySelector("button[type='submit']");
+
+  if (!selected.length) {
+    if (status) status.textContent = "Няма избрана програма.";
+    return;
+  }
+
+  const formData = new FormData(form);
+  const payload = {
+    items: selected.map((program) => program.id),
+    customer: {
+      customerName: String(formData.get("name") || "").trim(),
+      customerEmail: String(formData.get("email") || "").trim(),
+      customerPhone: String(formData.get("phone") || "").trim(),
+      playerName: String(formData.get("player_name") || "").trim(),
+      playerAge: String(formData.get("player_age") || "").trim(),
+    },
+  };
+
+  try {
+    if (status) status.textContent = "Създаваме защитена Stripe checkout страница...";
+    if (submitButton) submitButton.disabled = true;
+    const response = await fetch("/api/create-checkout-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data = await response.json();
+    if (!response.ok || !data.url) throw new Error(data.error || "Не успяхме да стартираме плащането.");
+    window.location.href = data.url;
+  } catch (error) {
+    if (status) status.textContent = error.message || "Възникна проблем при плащането. Опитай отново.";
+    if (submitButton) submitButton.disabled = false;
+  }
 };
 
 document.addEventListener("click", (event) => {
@@ -450,6 +528,13 @@ document.addEventListener("click", (event) => {
 
   const removeButton = event.target.closest("[data-shop-remove]");
   if (removeButton) removeFromCart(removeButton.dataset.shopRemove);
+});
+
+document.addEventListener("submit", (event) => {
+  const checkoutForm = event.target.closest("[data-checkout-form]");
+  if (!checkoutForm) return;
+  event.preventDefault();
+  handleCheckoutSubmit(checkoutForm);
 });
 
 renderProductDetail();

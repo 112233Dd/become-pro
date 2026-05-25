@@ -3,6 +3,26 @@
   "trailingSlash": false,
   "rewrites": [
     {
+      "source": "/cart",
+      "destination": "/cart.html"
+    },
+    {
+      "source": "/checkout",
+      "destination": "/checkout.html"
+    },
+    {
+      "source": "/checkout/success",
+      "destination": "/checkout/success/index.html"
+    },
+    {
+      "source": "/checkout/cancel",
+      "destination": "/checkout/cancel/index.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    },
+    {
       "source": "/programs/technical-pack",
       "destination": "/programs/technical-pack/index.html"
     },

@@ -38,3 +38,49 @@ create policy "Public visitors can create training requests"
 
 create index if not exists training_requests_created_at_idx
   on public.training_requests (created_at desc);
+
+create table if not exists public.orders (
+  id uuid primary key default gen_random_uuid(),
+  customer_name text not null,
+  customer_email text not null,
+  customer_phone text,
+  player_name text,
+  player_age text,
+  program_id text not null,
+  program_name text not null,
+  program_price numeric(10, 2) not null,
+  program_link text not null,
+  payment_status text not null default 'pending' check (payment_status in ('pending', 'paid', 'failed', 'cancelled')),
+  payment_provider text not null default 'stripe',
+  stripe_checkout_session_id text,
+  stripe_payment_intent_id text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.orders add column if not exists customer_name text;
+alter table public.orders add column if not exists customer_email text;
+alter table public.orders add column if not exists customer_phone text;
+alter table public.orders add column if not exists player_name text;
+alter table public.orders add column if not exists player_age text;
+alter table public.orders add column if not exists program_id text;
+alter table public.orders add column if not exists program_name text;
+alter table public.orders add column if not exists program_price numeric(10, 2);
+alter table public.orders add column if not exists program_link text;
+alter table public.orders add column if not exists payment_status text default 'pending';
+alter table public.orders add column if not exists payment_provider text default 'stripe';
+alter table public.orders add column if not exists stripe_checkout_session_id text;
+alter table public.orders add column if not exists stripe_payment_intent_id text;
+alter table public.orders add column if not exists created_at timestamptz default now();
+alter table public.orders add column if not exists updated_at timestamptz default now();
+
+create unique index if not exists orders_stripe_session_program_idx
+  on public.orders (stripe_checkout_session_id, program_id);
+
+create index if not exists orders_created_at_idx
+  on public.orders (created_at desc);
+
+create index if not exists orders_payment_status_idx
+  on public.orders (payment_status);
+
+alter table public.orders enable row level security;

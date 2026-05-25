@@ -1,3 +1,7 @@
 downloads-contact-sheet.jpg
 .codex-tools/
 .deploy-become-pro/
+.env
+.env.*
+!.env.example
+node_modules/
