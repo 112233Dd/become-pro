@@ -1,4 +1,4 @@
-const { getCookie, hasSupabaseAdmin, sendJson, supabaseRequest, verifyAdminToken } = require("../_shared");
+const { getCookie, hasSupabaseAdmin, listStripeOrders, sendJson, supabaseRequest, verifyAdminToken } = require("../_shared");
 
 module.exports = async (req, res) => {
   if (req.method !== "GET") {
@@ -9,10 +9,13 @@ module.exports = async (req, res) => {
   try {
     const session = verifyAdminToken(getCookie(req, "bp_admin"));
     if (!session) return sendJson(res, 401, { error: "Unauthorized." });
-    if (!hasSupabaseAdmin()) return sendJson(res, 200, { orders: [], setupRequired: true });
+    if (!hasSupabaseAdmin()) {
+      const orders = await listStripeOrders();
+      return sendJson(res, 200, { orders, source: "stripe" });
+    }
 
     const orders = await supabaseRequest("orders?select=*&order=created_at.desc");
-    return sendJson(res, 200, { orders });
+    return sendJson(res, 200, { orders, source: "supabase" });
   } catch (error) {
     return sendJson(res, 500, { error: error.message || "Orders could not be loaded." });
   }

@@ -208,6 +208,68 @@ const upsertOrders = async ({ programs, customer, status, sessionId, paymentInte
   });
 };
 
+const stripeRequest = async (path, options = {}) => {
+  const response = await fetch(`https://api.stripe.com/v1/${path}`, {
+    ...options,
+    headers: {
+      Authorization: `Bearer ${required("STRIPE_SECRET_KEY")}`,
+      ...(options.headers || {}),
+    },
+  });
+
+  const payload = await response.json();
+  if (!response.ok) throw new Error(payload.error?.message || "Stripe request failed.");
+  return payload;
+};
+
+const listStripeOrders = async () => {
+  const payload = await stripeRequest("checkout/sessions?limit=100");
+  return (payload.data || []).flatMap((session) => {
+    const metadata = session.metadata || {};
+    let programs = [];
+
+    try {
+      programs = getProgramsByIds(String(metadata.programId || "").split(","));
+    } catch (error) {
+      programs = [
+        {
+          id: metadata.programId || "unknown",
+          name: metadata.programName || "Unknown program",
+          price: Number(session.amount_total || 0) / 100,
+          programLink: PROGRAM_LINK,
+        },
+      ];
+    }
+
+    const status =
+      session.payment_status === "paid"
+        ? "paid"
+        : session.status === "expired"
+          ? "cancelled"
+          : session.status === "complete"
+            ? "paid"
+            : "pending";
+
+    return programs.map((program) => ({
+      customer_name: metadata.customerName || session.customer_details?.name || session.customer_email || "-",
+      customer_email: metadata.customerEmail || session.customer_details?.email || session.customer_email || "",
+      customer_phone: metadata.customerPhone || session.customer_details?.phone || "",
+      player_name: metadata.playerName || "",
+      player_age: metadata.playerAge || "",
+      program_id: program.id,
+      program_name: program.name,
+      program_price: program.price,
+      program_link: program.programLink || PROGRAM_LINK,
+      payment_status: status,
+      payment_provider: "stripe",
+      stripe_checkout_session_id: session.id,
+      stripe_payment_intent_id: session.payment_intent || "",
+      created_at: new Date((session.created || 0) * 1000).toISOString(),
+      updated_at: new Date((session.created || 0) * 1000).toISOString(),
+    }));
+  });
+};
+
 const sendEmail = async ({ to, subject, text }) => {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.EMAIL_FROM;
@@ -286,6 +348,7 @@ module.exports = {
   getOrigin,
   getProgramsByIds,
   hasSupabaseAdmin,
+  listStripeOrders,
   readJsonBody,
   readRawBody,
   sendEmail,
