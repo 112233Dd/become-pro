@@ -309,6 +309,7 @@ const sendSmtpEmail = async ({ to, subject, text }) => {
   return new Promise((resolve, reject) => {
     let buffer = "";
     const socket = tls.connect(port, host, { servername: host });
+    socket.setMaxListeners(30);
 
     const fail = (error) => {
       socket.destroy();
