@@ -102,7 +102,11 @@ module.exports = async (req, res) => {
         });
       }
 
-      await sendFulfillmentEmails({ programs, customer, session });
+      try {
+        await sendFulfillmentEmails({ programs, customer, session });
+      } catch (emailError) {
+        console.error("Fulfillment email failed", emailError);
+      }
     }
 
     if (event.type === "payment_intent.payment_failed") {

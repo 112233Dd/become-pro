@@ -1,4 +1,5 @@
 const crypto = require("crypto");
+const tls = require("tls");
 
 const PROGRAM_LINK = "https://drive.google.com/file/d/1MvHeNRPxktsNkckeYC9lLXhs84ztUir4/view?usp=sharing";
 const ORDER_STATUSES = new Set(["pending", "paid", "failed", "cancelled"]);
@@ -270,7 +271,108 @@ const listStripeOrders = async () => {
   });
 };
 
-const sendEmail = async ({ to, subject, text }) => {
+const encodeHeader = (value) => `=?UTF-8?B?${Buffer.from(String(value), "utf8").toString("base64")}?=`;
+
+const sanitizeAddress = (value) => String(value || "").replace(/[\r\n]+/g, " ").trim();
+
+const dotStuff = (value) =>
+  String(value || "")
+    .replace(/\r?\n/g, "\r\n")
+    .split("\r\n")
+    .map((line) => (line.startsWith(".") ? `.${line}` : line))
+    .join("\r\n");
+
+const sendSmtpEmail = async ({ to, subject, text }) => {
+  const host = process.env.SMTP_HOST || "smtp.gmail.com";
+  const port = Number(process.env.SMTP_PORT || 465);
+  const user = process.env.SMTP_USER || process.env.GMAIL_USER;
+  const pass = process.env.SMTP_PASS || process.env.GMAIL_APP_PASSWORD;
+  const from = process.env.EMAIL_FROM || user;
+
+  if (!user || !pass || !from || !to) return { skipped: true };
+
+  const fromAddress = sanitizeAddress(from);
+  const toAddress = sanitizeAddress(to);
+  const envelopeFrom = fromAddress.match(/<([^>]+)>/)?.[1] || fromAddress;
+  const message = [
+    `From: ${fromAddress}`,
+    `To: ${toAddress}`,
+    `Subject: ${encodeHeader(subject)}`,
+    "MIME-Version: 1.0",
+    "Content-Type: text/plain; charset=UTF-8",
+    "Content-Transfer-Encoding: 8bit",
+    `Date: ${new Date().toUTCString()}`,
+    "",
+    dotStuff(text),
+  ].join("\r\n");
+
+  return new Promise((resolve, reject) => {
+    let buffer = "";
+    const socket = tls.connect(port, host, { servername: host });
+
+    const fail = (error) => {
+      socket.destroy();
+      reject(error);
+    };
+
+    const readResponse = () =>
+      new Promise((resolveResponse, rejectResponse) => {
+        const onData = (chunk) => {
+          buffer += chunk.toString("utf8");
+          const lines = buffer.split(/\r?\n/).filter(Boolean);
+          const lastLine = lines[lines.length - 1] || "";
+          if (/^\d{3}\s/.test(lastLine)) {
+            socket.off("data", onData);
+            const response = buffer;
+            buffer = "";
+            resolveResponse(response);
+          }
+        };
+
+        const onError = (error) => {
+          socket.off("data", onData);
+          rejectResponse(error);
+        };
+
+        socket.once("error", onError);
+        socket.on("data", onData);
+      });
+
+    const expect = async (code) => {
+      const response = await readResponse();
+      if (!response.startsWith(String(code))) throw new Error(`SMTP expected ${code}, received: ${response}`);
+      return response;
+    };
+
+    const command = async (line, code) => {
+      socket.write(`${line}\r\n`);
+      return expect(code);
+    };
+
+    socket.once("error", fail);
+    socket.once("secureConnect", async () => {
+      try {
+        await expect(220);
+        await command(`EHLO ${host}`, 250);
+        await command("AUTH LOGIN", 334);
+        await command(Buffer.from(user, "utf8").toString("base64"), 334);
+        await command(Buffer.from(pass, "utf8").toString("base64"), 235);
+        await command(`MAIL FROM:<${envelopeFrom}>`, 250);
+        await command(`RCPT TO:<${toAddress}>`, 250);
+        await command("DATA", 354);
+        socket.write(`${message}\r\n.\r\n`);
+        await expect(250);
+        await command("QUIT", 221);
+        socket.end();
+        resolve({ ok: true, provider: "smtp" });
+      } catch (error) {
+        fail(error);
+      }
+    });
+  });
+};
+
+const sendResendEmail = async ({ to, subject, text }) => {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.EMAIL_FROM;
   if (!apiKey || !from || !to) return { skipped: true };
@@ -286,6 +388,11 @@ const sendEmail = async ({ to, subject, text }) => {
 
   if (!response.ok) throw new Error(`Email send failed: ${await response.text()}`);
   return response.json();
+};
+
+const sendEmail = async ({ to, subject, text }) => {
+  if (process.env.RESEND_API_KEY) return sendResendEmail({ to, subject, text });
+  return sendSmtpEmail({ to, subject, text });
 };
 
 const verifyStripeSignature = (rawBody, signatureHeader) => {
