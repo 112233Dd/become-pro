@@ -3191,7 +3191,8 @@ blockquote:hover {
   transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
 }
 
-.start-path-card.featured {
+.start-path-card.featured,
+.start-path-card.field {
   grid-column: span 2;
   min-height: clamp(280px, 22vw, 340px);
 }
@@ -3237,10 +3238,6 @@ blockquote:hover {
 
 .start-path-card.field .path-card-media img {
   object-position: 64% 42%;
-}
-
-.start-path-card.combo .path-card-media img {
-  object-position: center 48%;
 }
 
 .path-card-media.split {
@@ -5235,7 +5232,8 @@ textarea:focus {
   }
 
   .start-path-card,
-  .start-path-card.featured {
+  .start-path-card.featured,
+  .start-path-card.field {
     grid-column: span 1;
     min-height: 260px;
   }
@@ -5416,7 +5414,8 @@ textarea:focus {
   }
 
   .start-path-card,
-  .start-path-card.featured {
+  .start-path-card.featured,
+  .start-path-card.field {
     min-height: 236px;
   }
 
