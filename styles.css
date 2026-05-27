@@ -3178,7 +3178,8 @@ blockquote:hover {
 .start-path-card {
   position: relative;
   display: grid;
-  min-height: clamp(212px, 16vw, 246px);
+  min-height: clamp(216px, 16vw, 250px);
+  isolation: isolate;
   overflow: hidden;
   border: 1px solid rgba(245, 196, 0, 0.2);
   border-radius: 16px;
@@ -3192,7 +3193,7 @@ blockquote:hover {
 
 .start-path-card.featured {
   grid-column: span 2;
-  min-height: clamp(260px, 20vw, 310px);
+  min-height: clamp(280px, 22vw, 340px);
 }
 
 .start-path-card:hover {
@@ -3231,11 +3232,15 @@ blockquote:hover {
 }
 
 .start-path-card.featured .path-card-media img {
-  object-position: center 30%;
+  object-position: center 50%;
 }
 
 .start-path-card.field .path-card-media img {
   object-position: 64% 42%;
+}
+
+.start-path-card.combo .path-card-media img {
+  object-position: center 48%;
 }
 
 .path-card-media.split {
@@ -3265,6 +3270,7 @@ blockquote:hover {
   min-height: inherit;
   padding: clamp(16px, 2vw, 24px);
   min-width: 0;
+  max-width: 100%;
 }
 
 .path-label {
@@ -3282,13 +3288,14 @@ blockquote:hover {
 }
 
 .path-card-copy strong {
-  max-width: 430px;
+  max-width: min(430px, 100%);
   color: var(--white);
   font-size: clamp(20px, 1.85vw, 30px);
   font-weight: 950;
   line-height: 1.02;
-  overflow-wrap: normal;
+  overflow-wrap: anywhere;
   hyphens: auto;
+  text-wrap: balance;
   text-shadow: 0 14px 42px rgba(0, 0, 0, 0.64);
 }
 
@@ -4765,6 +4772,7 @@ textarea:focus {
   }
 
   .hero {
+    grid-template-columns: minmax(0, 1fr);
     min-height: auto;
     padding-top: 98px;
   }
