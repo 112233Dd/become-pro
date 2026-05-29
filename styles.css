@@ -849,7 +849,7 @@ blockquote:hover {
 .program-card {
   position: relative;
   display: grid;
-  grid-template-rows: auto auto auto minmax(78px, auto) 1fr auto;
+  grid-template-rows: auto auto auto 1fr auto;
   align-content: stretch;
   gap: 16px;
   height: 100%;
@@ -975,12 +975,12 @@ blockquote:hover {
 
 .program-desc {
   font-size: 15px;
-  min-height: 70px;
 }
 
 .program-meta {
   display: grid;
   gap: 8px;
+  align-self: start;
   padding: 14px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
@@ -990,8 +990,8 @@ blockquote:hover {
 .program-meta p {
   margin: 0;
   color: #d9d2c2;
-  font-size: 13px;
-  line-height: 1.48;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .program-meta strong {

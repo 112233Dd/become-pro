@@ -399,10 +399,8 @@ const renderProgramCard = (program, compact = false) => `
     </span>
     <span class="program-label">${compact ? "Онлайн програма" : "Become Pro"}</span>
     <span class="program-title">${program.title}</span>
-    <p class="program-desc">${program.description}</p>
     <div class="program-meta">
-      <p><strong>Цена:</strong> ${program.price}</p>
-      <p><strong>Фокус:</strong> ${program.focus}</p>
+      <p>${program.description}</p>
     </div>
     <div class="program-actions">
       <a class="program-buy" href="${getProgramUrl(program)}">Виж програмата</a>
