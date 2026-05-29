@@ -20,7 +20,7 @@ const productCatalog = {
     name: "Силова програма — Ниво 1",
     price: 49.99,
     priceCents: 4999,
-    image: "/assets/program-cover-strength-level-1.png",
+    image: "/assets/program-cover-strength-level-1.jfif",
     programLink: PROGRAM_LINK,
     description:
       "Начална силова програма за футболисти, които искат стабилна основа, правилна техника и по-добър контрол на тялото.",
@@ -30,7 +30,7 @@ const productCatalog = {
     name: "Силова програма — Ниво 2",
     price: 49.99,
     priceCents: 4999,
-    image: "/assets/program-cover-strength-level-2.png",
+    image: "/assets/program-cover-strength-level-2.jfif",
     programLink: PROGRAM_LINK,
     description:
       "Следващо ниво за футболисти, които вече имат основа и искат повече сила, експлозивност и устойчивост.",
@@ -40,7 +40,7 @@ const productCatalog = {
     name: "Силова програма — Ниво 3",
     price: 49.99,
     priceCents: 4999,
-    image: "/assets/program-cover-strength-level-3.png",
+    image: "/assets/program-cover-strength-level-3.jfif",
     programLink: PROGRAM_LINK,
     description:
       "Напреднала програма за футболисти, които искат по-висока физическа готовност, мощност и атлетизъм.",

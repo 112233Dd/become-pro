@@ -943,6 +943,29 @@ blockquote:hover {
   text-transform: uppercase;
 }
 
+.program-badge {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 950;
+  line-height: 1.1;
+}
+
+.program-badge-featured {
+  border: 1px solid rgba(255, 231, 141, 0.76);
+  color: #1b1300;
+  background:
+    linear-gradient(135deg, #fff3a7 0%, #f5c400 45%, #b97900 100%);
+  box-shadow:
+    0 0 24px rgba(245, 196, 0, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.48);
+}
+
 .program-desc,
 .program-result {
   margin: 0;
@@ -1057,6 +1080,14 @@ blockquote:hover {
 
 .program-card-featured::after {
   background: linear-gradient(90deg, rgba(245, 196, 0, 0.25), var(--lime), rgba(245, 196, 0, 0.25));
+}
+
+.program-card-summer {
+  border-color: rgba(255, 221, 94, 0.56);
+  background:
+    radial-gradient(circle at 78% 10%, rgba(255, 212, 74, 0.22), transparent 28%),
+    linear-gradient(145deg, rgba(245, 196, 0, 0.18), rgba(255, 255, 255, 0.035)),
+    rgba(255, 255, 255, 0.04);
 }
 
 .program-card-strength {
