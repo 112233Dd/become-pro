@@ -1809,7 +1809,17 @@ blockquote:hover {
 }
 
 .cart-item strong {
+  display: block;
+  margin-top: 7px;
   color: var(--lime);
+}
+
+.cart-item-quantity {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+  text-transform: uppercase;
 }
 
 .cart-item button {
@@ -1830,6 +1840,19 @@ blockquote:hover {
   padding: 24px;
 }
 
+.cart-summary-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+  padding-bottom: 14px;
+}
+
+.cart-summary-row + .cart-summary-row {
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 .cart-summary span {
   display: block;
   color: var(--muted);
@@ -1838,10 +1861,13 @@ blockquote:hover {
   text-transform: uppercase;
 }
 
-.cart-summary strong {
+.cart-summary-row strong {
   display: block;
-  margin: 10px 0;
   color: var(--lime);
+  font-size: 18px;
+}
+
+.cart-summary-total strong {
   font-size: 28px;
 }
 

@@ -1,4 +1,5 @@
 const SHOP_CART_KEY = "becomeProProgramCart";
+const LEGACY_SHOP_CART_KEYS = ["becomepro-cart", "becomepro_cart"];
 
 const shopPrograms = [
   {
@@ -290,15 +291,31 @@ const getProgramUrl = (program) => `${window.location.pathname.includes("/progra
 const getCartUrl = () => `${window.location.pathname.includes("/programs/") ? "../../" : ""}cart.html`;
 const parseProgramPrice = (program) => Number(String(program.price).replace(/[^\d.]/g, "")) || 0;
 const formatProgramPrice = (value) => `€${value.toFixed(2)}`;
+const normalizeCartItems = (items) =>
+  [...new Set(Array.isArray(items) ? items : [])].filter(
+    (id) => typeof id === "string" && shopPrograms.some((program) => program.id === id),
+  );
+
+const writeCart = (items) => {
+  try {
+    localStorage.setItem(SHOP_CART_KEY, JSON.stringify(normalizeCartItems(items)));
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 const readCart = () => {
   try {
-    return JSON.parse(localStorage.getItem(SHOP_CART_KEY) || "[]");
+    const currentValue = localStorage.getItem(SHOP_CART_KEY);
+    const legacyValue = LEGACY_SHOP_CART_KEYS.map((key) => localStorage.getItem(key)).find(Boolean);
+    const items = normalizeCartItems(JSON.parse(currentValue || legacyValue || "[]"));
+    if (!currentValue && legacyValue) writeCart(items);
+    return items;
   } catch {
     return [];
   }
 };
-
-const writeCart = (items) => localStorage.setItem(SHOP_CART_KEY, JSON.stringify(items));
 
 const getCartPrograms = () =>
   readCart()
@@ -312,9 +329,14 @@ const getCheckoutPrograms = () => {
 };
 
 const addToCart = (programId) => {
+  if (!shopPrograms.some((program) => program.id === programId)) return;
   const cart = readCart();
-  if (!cart.includes(programId)) writeCart([...cart, programId]);
+  if (!cart.includes(programId) && !writeCart([...cart, programId])) {
+    showShopToast("Количката не можа да бъде запазена. Моля, опитайте отново.");
+    return;
+  }
   showShopToast("Програмата е добавена в количката.");
+  renderCartPage();
   renderCartCount();
 };
 
@@ -364,8 +386,8 @@ const startStripeCheckout = async (programIds, trigger) => {
     const data = await response.json();
     if (!response.ok || !data.url) throw new Error(data.error || "Не успяхме да стартираме плащането.");
     window.location.href = data.url;
-  } catch (error) {
-    showShopToast(error.message || "Възникна грешка при плащането.");
+  } catch {
+    showShopToast("Възникна проблем при стартиране на плащането. Моля, опитайте отново.");
     if (button) {
       button.textContent = button.dataset.originalText || originalText || "Купи сега";
       button.removeAttribute("aria-busy");
@@ -403,7 +425,7 @@ const benefitCards = [
 
 const processSteps = [
   "Избираш програмата",
-  "Плащаш онлайн или заявяваш покупка",
+  "Плащаш онлайн",
   "Получаваш линк на имейл",
   "Отваряш програмата в Google Drive",
   "Започваш да следваш структурата",
@@ -653,7 +675,7 @@ const renderCartPage = () => {
         <div class="section-heading center">
           <p class="eyebrow">Количка</p>
           <h1>Количката е празна.</h1>
-          <p>Избери онлайн програма и я добави тук, за да продължиш към заявка за покупка.</p>
+          <p>Избери онлайн програма и я добави тук, за да продължиш към сигурно плащане.</p>
           <a class="btn btn-primary" href="programs.html#programs">Виж програмите</a>
         </div>
       </section>
@@ -677,6 +699,7 @@ const renderCartPage = () => {
                   <div>
                     <h3>${program.title}</h3>
                     <p>${program.description}</p>
+                    <span class="cart-item-quantity">Количество: 1</span>
                     <strong>${program.price}</strong>
                   </div>
                   <button type="button" data-shop-remove="${program.id}">Премахни</button>
@@ -686,8 +709,14 @@ const renderCartPage = () => {
             .join("")}
         </div>
         <aside class="cart-summary">
-          <span>Общо</span>
-          <strong>${formatProgramPrice(total)}</strong>
+          <div class="cart-summary-row">
+            <span>Брой програми</span>
+            <strong>${selected.length}</strong>
+          </div>
+          <div class="cart-summary-row cart-summary-total">
+            <span>Общо</span>
+            <strong>${formatProgramPrice(total)}</strong>
+          </div>
           <p>Плащането минава през сигурна Stripe Checkout страница. Become Pro не съхранява данни от банкови карти.</p>
           <button class="btn btn-primary" type="button" data-shop-checkout>Продължи към плащане</button>
         </aside>
