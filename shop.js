@@ -392,6 +392,53 @@ const testimonials = [
   },
 ];
 
+const getProgramBonusItems = (program) => {
+  const lifetimeAccess = [
+    "Достъп завинаги",
+    "След покупка програмата остава твоя завинаги и можеш да се връщаш към материалите, когато имаш нужда.",
+  ];
+
+  const viberCommunity = [
+    "Viber група",
+    "Получаваш достъп до общност с мотивирани играчи и допълнителна подкрепа около самостоятелната работа.",
+  ];
+
+  const clearDirection = [
+    "Ясна посока",
+    "Знаеш върху какво работиш, защо го правиш и как да използваш програмата извън клубните тренировки.",
+  ];
+
+  const bonusByProgram = {
+    "technical-pack": [
+      [
+        "Ball Mastery",
+        "Допълнителна програма с много докосвания и работа върху контрола на топката.",
+      ],
+      viberCommunity,
+      lifetimeAccess,
+    ],
+    "summer-program": [
+      ["Ball Mastery", "Над 80 упражнения и над 1000 докосвания на тренировка."],
+      ["Хранителен наръчник", "Практични насоки какво да ядеш преди и след мач."],
+      [
+        "Viber група с ежедневни задачи",
+        "Допълнителни задачи за футболна интелигентност, мотивация и развитие през периода на програмата.",
+      ],
+      lifetimeAccess,
+    ],
+    "matchday-pack": [
+      [
+        "Бонус тренировки преди мач",
+        "Индивидуални задачи, които можеш да използваш в деня преди мача като част от подготовката.",
+      ],
+      viberCommunity,
+      lifetimeAccess,
+    ],
+  };
+
+  return bonusByProgram[program.id] || [clearDirection, viberCommunity, lifetimeAccess];
+};
+
 const renderProgramCard = (program, compact = false) => `
   <article class="program-card product-related-card">
     <span class="program-image">
@@ -415,6 +462,7 @@ const renderProductDetail = () => {
 
   const program = shopPrograms.find((item) => item.id === root.dataset.programId) || shopPrograms[0];
   const related = shopPrograms.filter((item) => item.id !== program.id).slice(0, 5);
+  const bonusItems = getProgramBonusItems(program);
   const includedSection = program.includedSection
     ? `
       <section class="product-included section-dark reveal">
@@ -432,6 +480,17 @@ const renderProductDetail = () => {
       </section>
     `
     : "";
+  const bonusSection = `
+    <section class="product-bonus section-dark reveal">
+      <div class="section-heading center">
+        <p class="eyebrow">Бонус</p>
+        <h2>Допълнително към програмата</h2>
+      </div>
+      <div class="product-bonus-grid">
+        ${bonusItems.map(([title, text]) => `<article><h3>${title}</h3><p>${text}</p></article>`).join("")}
+      </div>
+    </section>
+  `;
   const descriptionCards =
     program.descriptionCards ||
     [
@@ -505,6 +564,8 @@ const renderProductDetail = () => {
     </section>
 
     ${includedSection}
+
+    ${bonusSection}
 
     <section class="product-process section-dark reveal">
       <div class="section-heading center">
