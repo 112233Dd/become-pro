@@ -16,6 +16,17 @@ const customerFromMetadata = (metadata = {}) => ({
   playerAge: metadata.playerAge || "",
 });
 
+const customerFromSession = (session = {}) => {
+  const metadata = session.metadata || {};
+  return {
+    customerName: metadata.customerName || session.customer_details?.name || "Become Pro клиент",
+    customerEmail: metadata.customerEmail || session.customer_details?.email || session.customer_email || "",
+    customerPhone: metadata.customerPhone || session.customer_details?.phone || "",
+    playerName: metadata.playerName || "",
+    playerAge: metadata.playerAge || "",
+  };
+};
+
 const programsFromMetadata = (metadata = {}) => getProgramsByIds(String(metadata.programId || "").split(","));
 
 const formatProgramsForEmail = (programs) =>
@@ -90,7 +101,7 @@ module.exports = async (req, res) => {
       const session = event.data.object;
       const metadata = session.metadata || {};
       const programs = programsFromMetadata(metadata);
-      const customer = customerFromMetadata(metadata);
+      const customer = customerFromSession(session);
 
       if (hasSupabaseAdmin()) {
         await upsertOrders({
@@ -130,7 +141,7 @@ module.exports = async (req, res) => {
       const session = event.data.object;
       const metadata = session.metadata || {};
       const programs = programsFromMetadata(metadata);
-      const customer = customerFromMetadata(metadata);
+      const customer = customerFromSession(session);
 
       if (hasSupabaseAdmin()) {
         await upsertOrders({

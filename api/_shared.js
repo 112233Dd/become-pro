@@ -125,12 +125,15 @@ const createStripeCheckoutSession = async ({ programs, customer, origin }) => {
   body.append("mode", "payment");
   body.append("success_url", `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`);
   body.append("cancel_url", `${origin}/checkout/cancel?session_id={CHECKOUT_SESSION_ID}`);
-  body.append("customer_email", customer.customerEmail);
+  if (customer.customerEmail) body.append("customer_email", customer.customerEmail);
+  body.append("customer_creation", "always");
+  body.append("billing_address_collection", "auto");
+  body.append("phone_number_collection[enabled]", "true");
   body.append("payment_method_types[]", "card");
 
   Object.entries(metadata).forEach(([key, value]) => {
-    body.append(`metadata[${key}]`, value);
-    body.append(`payment_intent_data[metadata][${key}]`, value);
+    body.append(`metadata[${key}]`, value || "");
+    body.append(`payment_intent_data[metadata][${key}]`, value || "");
   });
 
   programs.forEach((program, index) => {

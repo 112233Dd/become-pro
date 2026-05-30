@@ -288,12 +288,8 @@ const shopPrograms = [
 const getAssetPath = (program) => `${window.location.pathname.includes("/programs/") ? "../../" : ""}${program.image}`;
 const getProgramUrl = (program) => `${window.location.pathname.includes("/programs/") ? "../" : "programs/"}${program.id}/index.html`;
 const getCartUrl = () => `${window.location.pathname.includes("/programs/") ? "../../" : ""}cart.html`;
-const getCheckoutUrl = (program) =>
-  `${window.location.pathname.includes("/programs/") ? "../../" : ""}checkout.html?program=${program.id}`;
 const parseProgramPrice = (program) => Number(String(program.price).replace(/[^\d.]/g, "")) || 0;
 const formatProgramPrice = (value) => `€${value.toFixed(2)}`;
-const getCheckoutBaseUrl = () => `${window.location.pathname.includes("/programs/") ? "../../" : ""}checkout.html`;
-
 const readCart = () => {
   try {
     return JSON.parse(localStorage.getItem(SHOP_CART_KEY) || "[]");
@@ -340,6 +336,42 @@ const showShopToast = (message) => {
   toast.classList.add("is-visible");
   window.clearTimeout(showShopToast.timeoutId);
   showShopToast.timeoutId = window.setTimeout(() => toast.classList.remove("is-visible"), 2400);
+};
+
+const startStripeCheckout = async (programIds, trigger) => {
+  const items = [...new Set((programIds || []).filter(Boolean))];
+  if (!items.length) {
+    showShopToast("Няма избрана програма.");
+    return;
+  }
+
+  const button = trigger?.closest?.("button, a") || trigger || null;
+  const originalText = button?.textContent;
+
+  try {
+    if (button) {
+      button.dataset.originalText = originalText || "";
+      button.textContent = "Отваряме Stripe...";
+      button.setAttribute("aria-busy", "true");
+      if ("disabled" in button) button.disabled = true;
+    }
+
+    const response = await fetch("/api/create-checkout-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ items }),
+    });
+    const data = await response.json();
+    if (!response.ok || !data.url) throw new Error(data.error || "Не успяхме да стартираме плащането.");
+    window.location.href = data.url;
+  } catch (error) {
+    showShopToast(error.message || "Възникна грешка при плащането.");
+    if (button) {
+      button.textContent = button.dataset.originalText || originalText || "Купи сега";
+      button.removeAttribute("aria-busy");
+      if ("disabled" in button) button.disabled = false;
+    }
+  }
 };
 
 const renderCartCount = () => {
@@ -532,7 +564,7 @@ const renderProductDetail = () => {
         </div>
         <div class="product-actions">
           <button class="btn btn-secondary" type="button" data-shop-add="${program.id}">Добави в количка</button>
-          <a class="btn btn-primary" href="${getCheckoutUrl(program)}">Купи сега</a>
+          <button class="btn btn-primary" type="button" data-shop-buy="${program.id}">Купи сега</button>
         </div>
       </div>
     </section>
@@ -602,7 +634,7 @@ const renderProductDetail = () => {
       <p>Избери програмата, получи достъп по имейл и започни да тренираш с ясна структура и фокус.</p>
       <div class="product-actions">
         <button class="btn btn-secondary" type="button" data-shop-add="${program.id}">Добави в количка</button>
-        <a class="btn btn-primary" href="${getCheckoutUrl(program)}">Купи сега</a>
+        <button class="btn btn-primary" type="button" data-shop-buy="${program.id}">Купи сега</button>
       </div>
     </section>
   `;
@@ -657,7 +689,7 @@ const renderCartPage = () => {
           <span>Общо</span>
           <strong>${formatProgramPrice(total)}</strong>
           <p>Плащането минава през сигурна Stripe Checkout страница. Become Pro не съхранява данни от банкови карти.</p>
-          <a class="btn btn-primary" href="checkout.html">Продължи към плащане</a>
+          <button class="btn btn-primary" type="button" data-shop-checkout>Продължи към плащане</button>
         </aside>
       </div>
     </section>
@@ -669,7 +701,6 @@ const renderCheckoutPage = () => {
   if (!root) return;
 
   const selected = getCheckoutPrograms();
-  const programName = selected.map((program) => program.title).join(", ");
   const total = selected.reduce((sum, program) => sum + parseProgramPrice(program), 0);
 
   if (!selected.length) {
@@ -687,11 +718,11 @@ const renderCheckoutPage = () => {
   }
 
   root.innerHTML = `
-    <section class="checkout-page section-dark">
+    <section class="checkout-page section-dark checkout-redirect">
       <div class="checkout-copy">
         <p class="eyebrow">Checkout</p>
         <h1>Плащане с карта</h1>
-        <p>Попълни данните си и ще бъдеш пренасочен към сигурна Stripe Checkout страница. Линкът към програмата се изпраща по имейл само след потвърдено плащане.</p>
+        <p>Създаваме сигурна Stripe Checkout страница. Become Pro не съхранява данни от банкови карти.</p>
         <div class="checkout-order-summary">
           <span>Обобщение</span>
           ${selected
@@ -710,66 +741,15 @@ const renderCheckoutPage = () => {
           <strong class="checkout-total">${formatProgramPrice(total)}</strong>
         </div>
       </div>
-      <form class="contact-form training-survey checkout-form" data-checkout-form>
-        <input type="hidden" name="request_type" value="program" data-request-type />
-        <input type="hidden" name="selected_program" value="${programName}" data-selected-program />
-        <label class="full">Избрана програма<input type="text" value="${programName || "Все още няма избрана програма"}" readonly /></label>
-        <label class="full">Кого записваш?
-          <select name="who" required>
-            <option>Моето дете</option>
-            <option>Себе си</option>
-          </select>
-        </label>
-        <label class="full">Име и фамилия<input type="text" name="name" required /></label>
-        <label class="full">Имейл<input type="email" name="email" required /></label>
-        <label class="full">Телефонен номер<input type="tel" name="phone" required /></label>
-        <label>Име на футболиста<input type="text" name="player_name" /></label>
-        <label>Възраст на футболиста<input type="number" name="player_age" min="6" max="30" /></label>
-        <label class="full">Коментар<textarea name="goal" rows="4" placeholder="Напр. коя програма искаш, въпрос за достъп, възраст/позиция на играча"></textarea></label>
-        <button class="btn btn-primary full" type="submit">Плати с карта</button>
-        <p class="form-status" data-checkout-status aria-live="polite"></p>
-      </form>
+      <div class="checkout-order-summary checkout-direct-card">
+        <span>Stripe Checkout</span>
+        <p>Ако не бъдеш пренасочен автоматично, натисни бутона по-долу.</p>
+        <button class="btn btn-primary" type="button" data-shop-checkout="${selected.map((program) => program.id).join(",")}">Продължи към Stripe</button>
+      </div>
     </section>
   `;
-};
-
-const handleCheckoutSubmit = async (form) => {
-  const selected = getCheckoutPrograms();
-  const status = form.querySelector("[data-checkout-status]");
-  const submitButton = form.querySelector("button[type='submit']");
-
-  if (!selected.length) {
-    if (status) status.textContent = "Няма избрана програма.";
-    return;
-  }
-
-  const formData = new FormData(form);
-  const payload = {
-    items: selected.map((program) => program.id),
-    customer: {
-      customerName: String(formData.get("name") || "").trim(),
-      customerEmail: String(formData.get("email") || "").trim(),
-      customerPhone: String(formData.get("phone") || "").trim(),
-      playerName: String(formData.get("player_name") || "").trim(),
-      playerAge: String(formData.get("player_age") || "").trim(),
-    },
-  };
-
-  try {
-    if (status) status.textContent = "Създаваме защитена Stripe checkout страница...";
-    if (submitButton) submitButton.disabled = true;
-    const response = await fetch("/api/create-checkout-session", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    const data = await response.json();
-    if (!response.ok || !data.url) throw new Error(data.error || "Не успяхме да стартираме плащането.");
-    window.location.href = data.url;
-  } catch (error) {
-    if (status) status.textContent = error.message || "Възникна проблем при плащането. Опитай отново.";
-    if (submitButton) submitButton.disabled = false;
-  }
+  window.setTimeout(() => startStripeCheckout(selected.map((program) => program.id)), 300);
+  return;
 };
 
 document.addEventListener("click", (event) => {
@@ -778,13 +758,18 @@ document.addEventListener("click", (event) => {
 
   const removeButton = event.target.closest("[data-shop-remove]");
   if (removeButton) removeFromCart(removeButton.dataset.shopRemove);
-});
 
-document.addEventListener("submit", (event) => {
-  const checkoutForm = event.target.closest("[data-checkout-form]");
-  if (!checkoutForm) return;
-  event.preventDefault();
-  handleCheckoutSubmit(checkoutForm);
+  const buyButton = event.target.closest("[data-shop-buy]");
+  if (buyButton) startStripeCheckout([buyButton.dataset.shopBuy], buyButton);
+
+  const checkoutButton = event.target.closest("[data-shop-checkout]");
+  if (checkoutButton) {
+    const directItems = String(checkoutButton.dataset.shopCheckout || "")
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+    startStripeCheckout(directItems.length ? directItems : readCart(), checkoutButton);
+  }
 });
 
 renderProductDetail();

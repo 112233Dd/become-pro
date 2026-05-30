@@ -25,10 +25,6 @@ module.exports = async (req, res) => {
       playerAge: String(body.customer?.playerAge || "").trim(),
     };
 
-    if (!customer.customerName || !customer.customerEmail || !customer.customerPhone) {
-      return sendJson(res, 400, { error: "Моля, попълни име, имейл и телефон." });
-    }
-
     ["STRIPE_SECRET_KEY"].forEach((name) => {
       if (!process.env[name]) throw new Error(`Missing environment variable: ${name}`);
     });
