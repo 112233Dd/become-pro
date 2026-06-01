@@ -107,3 +107,32 @@ test("admin login API accepts the configured password without reading an email f
     assert.equal(failureResponse.statusCode, 401);
   });
 });
+
+test("admin orders dashboard exposes search, filters, refresh, and empty state", () => {
+  const ordersHtml = read("admin-orders.html");
+
+  assert.match(ordersHtml, /data-admin-search/);
+  assert.match(ordersHtml, /data-admin-filter/);
+  assert.match(ordersHtml, /data-admin-refresh/);
+  assert.match(ordersHtml, /data-admin-empty/);
+  assert.match(ordersHtml, /data-admin-error/);
+  assert.match(ordersHtml, /data-admin-status-filter\s*=\s*["']all["']/);
+  assert.match(ordersHtml, /data-admin-status-filter\s*=\s*["']paid["']/);
+  assert.match(ordersHtml, /data-admin-status-filter\s*=\s*["']pending["']/);
+  assert.match(ordersHtml, /data-admin-status-filter\s*=\s*["']failed["']/);
+  assert.match(ordersHtml, /data-admin-status-filter\s*=\s*["']expired["']/);
+  assert.match(ordersHtml, /Stripe Session ID/);
+  assert.match(ordersHtml, /Program Link/);
+});
+
+test("admin orders client filters by status and search term", () => {
+  const ordersScript = read("admin-orders.js");
+
+  assert.match(ordersScript, /selectedStatus/);
+  assert.match(ordersScript, /searchTerm/);
+  assert.match(ordersScript, /statusFilterButtons/);
+  assert.match(ordersScript, /searchInput/);
+  assert.match(ordersScript, /refreshButton/);
+  assert.match(ordersScript, /escapeHtml/);
+  assert.match(ordersScript, /window\.location\.replace\(["']\/admin\/login["']\)/);
+});

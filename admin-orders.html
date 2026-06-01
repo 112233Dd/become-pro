@@ -27,7 +27,26 @@
       <section class="admin-orders" data-admin-orders>
         <div class="admin-toolbar">
           <strong data-admin-count>0 поръчки</strong>
+          <button class="btn btn-secondary admin-refresh" type="button" data-admin-refresh>Refresh orders</button>
         </div>
+
+        <div class="admin-controls">
+          <label class="admin-search">
+            <span>Търсене</span>
+            <input type="search" placeholder="Име, имейл или програма" data-admin-search />
+          </label>
+          <div class="admin-filter" data-admin-filter aria-label="Филтър по статус">
+            <button class="is-active" type="button" data-admin-status-filter="all">All</button>
+            <button type="button" data-admin-status-filter="paid">Paid</button>
+            <button type="button" data-admin-status-filter="pending">Pending</button>
+            <button type="button" data-admin-status-filter="failed">Failed</button>
+            <button type="button" data-admin-status-filter="expired">Expired</button>
+          </div>
+        </div>
+
+        <p class="admin-state admin-empty" data-admin-empty hidden>Все още няма поръчки.</p>
+        <p class="admin-state admin-error" data-admin-error hidden></p>
+
         <div class="admin-table-wrap">
           <table class="admin-table">
             <thead>

@@ -2030,6 +2030,75 @@ blockquote:hover {
   font-size: 18px;
 }
 
+.admin-refresh {
+  min-height: 42px;
+  padding-inline: 16px;
+}
+
+.admin-controls {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) auto;
+  gap: 14px;
+  align-items: end;
+}
+
+.admin-search {
+  display: grid;
+  gap: 8px;
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.admin-search input {
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  color: var(--white);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.admin-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.admin-filter button {
+  min-height: 42px;
+  padding: 0 13px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 999px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.055);
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.admin-filter button.is-active {
+  border-color: rgba(245, 196, 0, 0.72);
+  color: #101008;
+  background: var(--lime);
+  box-shadow: 0 0 22px rgba(245, 196, 0, 0.14);
+}
+
+.admin-state {
+  margin: 0;
+  padding: 16px 18px;
+  border-radius: 16px;
+  color: #eee6d8;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.admin-error {
+  border: 1px solid rgba(255, 85, 85, 0.28);
+  color: #ffd0d0;
+  background: rgba(255, 85, 85, 0.08);
+}
+
 .admin-table-wrap {
   overflow-x: auto;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -2076,6 +2145,16 @@ blockquote:hover {
   font-weight: 900;
 }
 
+.admin-table tr.is-paid td {
+  background: rgba(48, 210, 120, 0.045);
+}
+
+.admin-table tr.is-failed td,
+.admin-table tr.is-expired td,
+.admin-table tr.is-cancelled td {
+  color: rgba(238, 230, 216, 0.68);
+}
+
 .order-status {
   display: inline-grid;
   min-width: 78px;
@@ -2089,13 +2168,28 @@ blockquote:hover {
 }
 
 .status-failed,
-.status-cancelled {
+.status-cancelled,
+.status-expired {
   color: var(--white);
   background: rgba(255, 85, 85, 0.7);
 }
 
 .status-pending {
   background: #e6d4a8;
+}
+
+@media (max-width: 760px) {
+  .admin-page {
+    padding-top: 96px;
+  }
+
+  .admin-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-filter {
+    justify-content: flex-start;
+  }
 }
 
 .shop-toast {
