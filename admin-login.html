@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login | Become Pro</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/index.html" aria-label="Become Pro начало">
+      <span class="brand-mark"><img src="/assets/become-pro-logo.png" alt="" /></span>
+      <strong>BECOME PRO</strong>
+    </a>
+    <div class="header-actions"><a class="header-cta" href="/programs.html#programs">Програми</a></div>
+  </header>
+
+  <main class="admin-page section-dark">
+    <section class="admin-shell admin-login-shell">
+      <div class="section-heading">
+        <p class="eyebrow">Admin</p>
+        <h1>Вход</h1>
+        <p>Защитен достъп до поръчките в Become Pro.</p>
+      </div>
+
+      <form class="admin-login-card" data-admin-login>
+        <label>Парола<input type="password" name="password" required autocomplete="current-password" /></label>
+        <button class="btn btn-primary" type="submit">Вход</button>
+        <p class="form-status" data-admin-status aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <script src="/admin-login.js"></script>
+</body>
+</html>

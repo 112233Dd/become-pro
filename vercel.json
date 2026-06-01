@@ -20,7 +20,15 @@
     },
     {
       "source": "/admin",
-      "destination": "/admin.html"
+      "destination": "/admin/orders"
+    },
+    {
+      "source": "/admin/login",
+      "destination": "/admin-login.html"
+    },
+    {
+      "source": "/admin/orders",
+      "destination": "/admin-orders.html"
     },
     {
       "source": "/programs/technical-pack",
