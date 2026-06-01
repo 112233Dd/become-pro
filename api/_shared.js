@@ -2,7 +2,7 @@ const crypto = require("crypto");
 const tls = require("tls");
 
 const PROGRAM_LINK = "https://drive.google.com/file/d/1MvHeNRPxktsNkckeYC9lLXhs84ztUir4/view?usp=sharing";
-const ORDER_STATUSES = new Set(["pending", "paid", "failed", "cancelled"]);
+const ORDER_STATUSES = new Set(["pending", "paid", "failed", "expired"]);
 
 const productCatalog = {
   "technical-pack": {
@@ -249,7 +249,7 @@ const listStripeOrders = async () => {
       session.payment_status === "paid"
         ? "paid"
         : session.status === "expired"
-          ? "cancelled"
+          ? "expired"
           : session.status === "complete"
             ? "paid"
             : "pending";

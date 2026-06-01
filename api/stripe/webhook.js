@@ -147,7 +147,7 @@ module.exports = async (req, res) => {
         await upsertOrders({
           programs,
           customer,
-          status: "cancelled",
+          status: "expired",
           sessionId: session.id,
           paymentIntentId: session.payment_intent || null,
         });

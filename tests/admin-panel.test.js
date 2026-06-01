@@ -136,3 +136,15 @@ test("admin orders client filters by status and search term", () => {
   assert.match(ordersScript, /escapeHtml/);
   assert.match(ordersScript, /window\.location\.replace\(["']\/admin\/login["']\)/);
 });
+
+test("order status model includes expired instead of cancelled for new records", () => {
+  const sharedApi = read("api/_shared.js");
+  const webhookApi = read("api/stripe/webhook.js");
+  const schema = read("supabase/schema.sql");
+
+  assert.match(sharedApi, /"expired"/);
+  assert.doesNotMatch(sharedApi, /ORDER_STATUSES\s*=\s*new Set\(\[[^\]]*"cancelled"/);
+  assert.match(sharedApi, /session\.status === "expired"\s*\?\s*"expired"/);
+  assert.match(webhookApi, /status:\s*"expired"/);
+  assert.match(schema, /'expired'/);
+});

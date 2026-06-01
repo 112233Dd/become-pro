@@ -50,7 +50,7 @@ create table if not exists public.orders (
   program_name text not null,
   program_price numeric(10, 2) not null,
   program_link text not null,
-  payment_status text not null default 'pending' check (payment_status in ('pending', 'paid', 'failed', 'cancelled')),
+  payment_status text not null default 'pending' check (payment_status in ('pending', 'paid', 'failed', 'expired')),
   payment_provider text not null default 'stripe',
   stripe_checkout_session_id text,
   stripe_payment_intent_id text,
@@ -73,6 +73,17 @@ alter table public.orders add column if not exists stripe_checkout_session_id te
 alter table public.orders add column if not exists stripe_payment_intent_id text;
 alter table public.orders add column if not exists created_at timestamptz default now();
 alter table public.orders add column if not exists updated_at timestamptz default now();
+
+update public.orders
+set payment_status = 'expired'
+where payment_status = 'cancelled';
+
+alter table public.orders
+  drop constraint if exists orders_payment_status_check;
+
+alter table public.orders
+  add constraint orders_payment_status_check
+  check (payment_status in ('pending', 'paid', 'failed', 'expired'));
 
 create unique index if not exists orders_stripe_session_program_idx
   on public.orders (stripe_checkout_session_id, program_id);
