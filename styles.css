@@ -3689,14 +3689,17 @@ blockquote:hover {
 }
 
 .home-path-panel {
-  grid-template-columns: minmax(280px, 0.7fr) minmax(0, 1.3fr);
+  grid-template-columns: minmax(280px, 0.68fr) minmax(0, 1.32fr);
+  align-items: center;
   gap: clamp(24px, 3.5vw, 56px);
 }
 
 .home-path-cards {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: clamp(16px, 2vw, 24px);
+  width: 100%;
 }
 
 .home-path-cards article {
@@ -3704,20 +3707,28 @@ blockquote:hover {
   grid-template-rows: auto auto 1fr auto;
   gap: 14px;
   min-width: 0;
-  min-height: 330px;
-  padding: clamp(18px, 1.6vw, 22px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  min-height: 300px;
+  padding: clamp(20px, 2vw, 28px);
+  border: 1px solid rgba(245, 196, 0, 0.46);
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.05);
+  background:
+    radial-gradient(circle at 15% 0%, rgba(245, 196, 0, 0.15), transparent 34%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(245, 196, 0, 0.08));
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
 }
 
-.home-path-cards article.featured {
-  border-color: rgba(245, 196, 0, 0.34);
-  background: rgba(245, 196, 0, 0.1);
+.home-path-cards article:hover {
+  transform: translateY(-4px);
+  border-color: rgba(245, 196, 0, 0.85);
+  background:
+    radial-gradient(circle at 15% 0%, rgba(245, 196, 0, 0.24), transparent 38%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(245, 196, 0, 0.12));
+  box-shadow: 0 24px 58px rgba(0, 0, 0, 0.38), 0 0 26px rgba(245, 196, 0, 0.14);
 }
 
 .home-path-cards span {
-  color: var(--lime);
+  color: var(--gold);
   font-size: 12px;
   font-weight: 900;
 }
@@ -3736,6 +3747,7 @@ blockquote:hover {
   color: #d8d2c3;
   font-size: 15px;
   line-height: 1.58;
+  max-width: 34ch;
 }
 
 .home-path-cards .btn {
