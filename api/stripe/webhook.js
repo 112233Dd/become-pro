@@ -27,7 +27,13 @@ const customerFromSession = (session = {}) => {
   };
 };
 
-const programsFromMetadata = (metadata = {}) => getProgramsByIds(String(metadata.programId || "").split(","));
+const programsFromMetadata = (metadata = {}) => {
+  const ids = String(metadata.programId || "")
+    .split(",")
+    .map((id) => id.trim())
+    .filter(Boolean);
+  return ids.length ? getProgramsByIds(ids) : [];
+};
 
 const formatProgramsForEmail = (programs) =>
   programs.map((program) => `${program.name}\n${program.programLink}`).join("\n\n");
@@ -103,6 +109,8 @@ module.exports = async (req, res) => {
       const programs = programsFromMetadata(metadata);
       const customer = customerFromSession(session);
 
+      if (!programs.length) return sendJson(res, 200, { received: true });
+
       if (hasSupabaseAdmin()) {
         await upsertOrders({
           programs,
@@ -126,7 +134,7 @@ module.exports = async (req, res) => {
       const programs = programsFromMetadata(metadata);
       const customer = customerFromMetadata(metadata);
 
-      if (hasSupabaseAdmin()) {
+      if (programs.length && hasSupabaseAdmin()) {
         await upsertOrders({
           programs,
           customer,
@@ -143,7 +151,7 @@ module.exports = async (req, res) => {
       const programs = programsFromMetadata(metadata);
       const customer = customerFromSession(session);
 
-      if (hasSupabaseAdmin()) {
+      if (programs.length && hasSupabaseAdmin()) {
         await upsertOrders({
           programs,
           customer,

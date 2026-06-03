@@ -1,8 +1,17 @@
 const crypto = require("crypto");
 const tls = require("tls");
 
-const PROGRAM_LINK = "https://drive.google.com/file/d/1MvHeNRPxktsNkckeYC9lLXhs84ztUir4/view?usp=sharing";
+const PROGRAM_LINK = "https://drive.google.com/file/d/1OXwQyMSRqO-e10RVv-fl16YiF1fMA0Lk/view?usp=sharing";
+const PROGRAM_LINKS = {
+  "technical-pack": "https://drive.google.com/file/d/1OXwQyMSRqO-e10RVv-fl16YiF1fMA0Lk/view?usp=sharing",
+  "strength-level-1": "https://drive.google.com/file/d/1qS-VwiYIMCZ0Mw2mxOouFr7Y97Mq7iNl/view?usp=sharing",
+  "strength-level-2": "https://drive.google.com/file/d/1MK_AsqPkBwZWU0-6hVgBk3iROQ0DMRfm/view?usp=sharing",
+  "strength-level-3": "https://drive.google.com/file/d/1atcTXsukVSr3lWvggcfEdqvHCbTZIfLF/view?usp=sharing",
+  "summer-program": "https://drive.google.com/file/d/10PK5AIcqO8xb1Xx4gzKWxIUG_pS96HO_/view?usp=sharing",
+  "matchday-pack": "https://drive.google.com/file/d/16x5DuIX8f7p7UyZNQ972EKU1YSEGLBQX/view?usp=sharing",
+};
 const ORDER_STATUSES = new Set(["pending", "paid", "failed", "expired"]);
+const STRIPE_API_VERSION = "2026-02-25.clover";
 
 const productCatalog = {
   "technical-pack": {
@@ -11,7 +20,7 @@ const productCatalog = {
     price: 49.99,
     priceCents: 4999,
     image: "/assets/program-cover-technical-pack.png",
-    programLink: PROGRAM_LINK,
+    programLink: PROGRAM_LINKS["technical-pack"],
     description:
       "Пълна техническа система за футболисти, които искат по-добър контрол, по-уверени действия с топката и повече качество в игра.",
   },
@@ -21,7 +30,7 @@ const productCatalog = {
     price: 49.99,
     priceCents: 4999,
     image: "/assets/program-cover-strength-level-1.jfif",
-    programLink: PROGRAM_LINK,
+    programLink: PROGRAM_LINKS["strength-level-1"],
     description:
       "Начална силова програма за футболисти, които искат стабилна основа, правилна техника и по-добър контрол на тялото.",
   },
@@ -31,7 +40,7 @@ const productCatalog = {
     price: 49.99,
     priceCents: 4999,
     image: "/assets/program-cover-strength-level-2.jfif",
-    programLink: PROGRAM_LINK,
+    programLink: PROGRAM_LINKS["strength-level-2"],
     description:
       "Следващо ниво за футболисти, които вече имат основа и искат повече сила, експлозивност и устойчивост.",
   },
@@ -41,7 +50,7 @@ const productCatalog = {
     price: 49.99,
     priceCents: 4999,
     image: "/assets/program-cover-strength-level-3.jfif",
-    programLink: PROGRAM_LINK,
+    programLink: PROGRAM_LINKS["strength-level-3"],
     description:
       "Напреднала програма за футболисти, които искат по-висока физическа готовност, мощност и атлетизъм.",
   },
@@ -51,7 +60,7 @@ const productCatalog = {
     price: 49.99,
     priceCents: 4999,
     image: "/assets/program-cover-summer.png",
-    programLink: PROGRAM_LINK,
+    programLink: PROGRAM_LINKS["summer-program"],
     description:
       "Структурирана програма за футболисти, които искат да използват лятото правилно и да се върнат по-подготвени.",
   },
@@ -61,7 +70,7 @@ const productCatalog = {
     price: 49.99,
     priceCents: 4999,
     image: "/assets/program-cover-matchday.png",
-    programLink: PROGRAM_LINK,
+    programLink: PROGRAM_LINKS["matchday-pack"],
     description:
       "Пакет за играчи, които искат по-добра рутина преди мач, повече спокойствие и по-добра мачова готовност.",
   },
@@ -150,6 +159,7 @@ const createStripeCheckoutSession = async ({ programs, customer, origin }) => {
     headers: {
       Authorization: `Bearer ${required("STRIPE_SECRET_KEY")}`,
       "Content-Type": "application/x-www-form-urlencoded",
+      "Stripe-Version": STRIPE_API_VERSION,
     },
     body,
   });
@@ -217,6 +227,7 @@ const stripeRequest = async (path, options = {}) => {
     ...options,
     headers: {
       Authorization: `Bearer ${required("STRIPE_SECRET_KEY")}`,
+      "Stripe-Version": STRIPE_API_VERSION,
       ...(options.headers || {}),
     },
   });
@@ -455,6 +466,8 @@ const getCookie = (req, name) => {
 module.exports = {
   productCatalog,
   PROGRAM_LINK,
+  PROGRAM_LINKS,
+  STRIPE_API_VERSION,
   createStripeCheckoutSession,
   getOrigin,
   getProgramsByIds,
