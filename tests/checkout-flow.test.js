@@ -88,3 +88,42 @@ test("success and cancel pages exist for Stripe redirects", () => {
   assert.match(cancelPage, /cart\.html/);
   assert.match(cancelPage, /programs\.html#programs/);
 });
+
+test("all programs use the temporary live EUR 0.50 price in storefront and Stripe", () => {
+  const shop = read("shop.js");
+  const shared = read("api/_shared.js");
+
+  assert.equal((shop.match(/price:\s*"€0\.50"/g) || []).length, 6);
+  assert.equal((shared.match(/price:\s*0\.5,/g) || []).length, 6);
+  assert.equal((shared.match(/priceCents:\s*50,/g) || []).length, 6);
+  assert.doesNotMatch(shop, /€49\.99/);
+  assert.doesNotMatch(shared, /priceCents:\s*4999/);
+});
+
+test("training CTA opens the survey and Results is publicly named Players", () => {
+  const training = read("training.html");
+  const players = read("players.html");
+  const publicPages = [
+    "index.html",
+    "programs.html",
+    "training.html",
+    "coach.html",
+    "players.html",
+    "faq.html",
+    "contact.html",
+    "cart.html",
+    "checkout.html",
+    "checkout/success/index.html",
+    "checkout/cancel/index.html",
+    "programs/technical-pack/index.html",
+    "programs/strength-level-1/index.html",
+    "programs/strength-level-2/index.html",
+    "programs/strength-level-3/index.html",
+    "programs/summer-program/index.html",
+    "programs/matchday-pack/index.html",
+  ].map(read);
+
+  assert.match(training, /href="contact\.html">Попълни анкетата<\/a>/);
+  assert.match(players, /<title>Играчи \| Become Pro<\/title>/);
+  publicPages.forEach((page) => assert.doesNotMatch(page, />Резултати<\/a>/));
+});

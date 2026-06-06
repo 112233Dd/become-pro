@@ -17,8 +17,8 @@ const productCatalog = {
   "technical-pack": {
     id: "technical-pack",
     name: "Технически пакет",
-    price: 49.99,
-    priceCents: 4999,
+    price: 0.5,
+    priceCents: 50,
     image: "/assets/program-cover-technical-pack.png",
     programLink: PROGRAM_LINKS["technical-pack"],
     description:
@@ -27,8 +27,8 @@ const productCatalog = {
   "strength-level-1": {
     id: "strength-level-1",
     name: "Силова програма — Ниво 1",
-    price: 49.99,
-    priceCents: 4999,
+    price: 0.5,
+    priceCents: 50,
     image: "/assets/program-cover-strength-level-1.jfif",
     programLink: PROGRAM_LINKS["strength-level-1"],
     description:
@@ -37,8 +37,8 @@ const productCatalog = {
   "strength-level-2": {
     id: "strength-level-2",
     name: "Силова програма — Ниво 2",
-    price: 49.99,
-    priceCents: 4999,
+    price: 0.5,
+    priceCents: 50,
     image: "/assets/program-cover-strength-level-2.jfif",
     programLink: PROGRAM_LINKS["strength-level-2"],
     description:
@@ -47,8 +47,8 @@ const productCatalog = {
   "strength-level-3": {
     id: "strength-level-3",
     name: "Силова програма — Ниво 3",
-    price: 49.99,
-    priceCents: 4999,
+    price: 0.5,
+    priceCents: 50,
     image: "/assets/program-cover-strength-level-3.jfif",
     programLink: PROGRAM_LINKS["strength-level-3"],
     description:
@@ -57,8 +57,8 @@ const productCatalog = {
   "summer-program": {
     id: "summer-program",
     name: "Лятна програма",
-    price: 49.99,
-    priceCents: 4999,
+    price: 0.5,
+    priceCents: 50,
     image: "/assets/program-cover-summer.png",
     programLink: PROGRAM_LINKS["summer-program"],
     description:
@@ -67,8 +67,8 @@ const productCatalog = {
   "matchday-pack": {
     id: "matchday-pack",
     name: "Мачов пакет",
-    price: 49.99,
-    priceCents: 4999,
+    price: 0.5,
+    priceCents: 50,
     image: "/assets/program-cover-matchday.png",
     programLink: PROGRAM_LINKS["matchday-pack"],
     description:
