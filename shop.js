@@ -328,7 +328,22 @@ const getCheckoutPrograms = () => {
   return directProgram ? [directProgram] : getCartPrograms();
 };
 
-const addToCart = (programId) => {
+const markAddedButton = (button) => {
+  if (!button) return;
+  const originalText = button.dataset.shopOriginalText || button.textContent.trim();
+  button.dataset.shopOriginalText = originalText;
+  button.textContent = "Добавено";
+  button.classList.add("is-added");
+  button.setAttribute("aria-pressed", "true");
+  window.clearTimeout(button.shopAddedTimeoutId);
+  button.shopAddedTimeoutId = window.setTimeout(() => {
+    button.textContent = button.dataset.shopOriginalText || originalText;
+    button.classList.remove("is-added");
+    button.removeAttribute("aria-pressed");
+  }, 1600);
+};
+
+const addToCart = (programId, trigger) => {
   if (!shopPrograms.some((program) => program.id === programId)) return;
   const cart = readCart();
   if (!cart.includes(programId) && !writeCart([...cart, programId])) {
@@ -338,6 +353,7 @@ const addToCart = (programId) => {
   showShopToast("Програмата е добавена в количката.");
   renderCartPage();
   renderCartCount();
+  markAddedButton(trigger);
 };
 
 const removeFromCart = (programId) => {
@@ -790,9 +806,43 @@ const renderCheckoutPage = () => {
   return;
 };
 
+let lastMobileAddToCartAt = 0;
+
+const handleAddToCartAction = (addButton, event) => {
+  if (!addButton) return false;
+  event?.preventDefault?.();
+  event?.stopPropagation?.();
+  addToCart(addButton.dataset.shopAdd, addButton);
+  return true;
+};
+
+document.addEventListener("pointerup", (event) => {
+  if (event.pointerType === "mouse") return;
+  const addButton = event.target.closest?.("[data-shop-add]");
+  if (!addButton) return;
+  lastMobileAddToCartAt = Date.now();
+  handleAddToCartAction(addButton, event);
+});
+
+document.addEventListener(
+  "touchend",
+  (event) => {
+    if ("PointerEvent" in window) return;
+    const addButton = event.target.closest?.("[data-shop-add]");
+    if (!addButton) return;
+    lastMobileAddToCartAt = Date.now();
+    handleAddToCartAction(addButton, event);
+  },
+  { passive: false }
+);
+
 document.addEventListener("click", (event) => {
   const addButton = event.target.closest("[data-shop-add]");
-  if (addButton) addToCart(addButton.dataset.shopAdd);
+  if (addButton) {
+    if (Date.now() - lastMobileAddToCartAt < 500) return;
+    handleAddToCartAction(addButton, event);
+    return;
+  }
 
   const removeButton = event.target.closest("[data-shop-remove]");
   if (removeButton) removeFromCart(removeButton.dataset.shopRemove);

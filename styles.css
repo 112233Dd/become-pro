@@ -1091,6 +1091,14 @@ blockquote:hover {
   background: rgba(245, 196, 0, 0.08);
 }
 
+.program-cart.is-added,
+.btn-secondary.is-added {
+  border-color: rgba(245, 196, 0, 0.72);
+  color: #080806;
+  background: var(--lime);
+  box-shadow: 0 12px 28px rgba(245, 196, 0, 0.18);
+}
+
 .program-card-featured {
   border-color: rgba(245, 196, 0, 0.36);
   background:
@@ -5172,16 +5180,24 @@ textarea:focus {
   }
 
   .site-header {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr auto auto;
     padding-inline: 14px;
+    gap: 8px;
   }
 
   .header-actions {
-    display: none;
+    display: flex;
   }
 
   .header-cta {
-    display: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 9px 10px;
+    font-size: 12px;
+    line-height: 1;
+    white-space: nowrap;
   }
 
   .hero {

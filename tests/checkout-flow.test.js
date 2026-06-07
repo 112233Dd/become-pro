@@ -67,6 +67,19 @@ test("online program buttons use cart and Stripe checkout instead of the trainin
   );
 });
 
+test("add-to-cart controls support mobile touch feedback", () => {
+  const shop = read("shop.js");
+
+  assert.match(shop, /markAddedButton/);
+  assert.match(shop, /button\.textContent\s*=\s*"Добавено"/);
+  assert.match(shop, /document\.addEventListener\(\s*"pointerup"/);
+  assert.match(shop, /document\.addEventListener\(\s*"touchend"/);
+  assert.match(shop, /lastMobileAddToCartAt/);
+  assert.match(shop, /handleAddToCartAction\(addButton,\s*event\)/);
+  assert.match(shop, /event\?\.preventDefault\?\.\(\)/);
+  assert.match(shop, /event\?\.stopPropagation\?\.\(\)/);
+});
+
 test("cart page renders products, prices, total, remove actions, and checkout CTA", () => {
   const cartHtml = read("cart.html");
   const shop = read("shop.js");
