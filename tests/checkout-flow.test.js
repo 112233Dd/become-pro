@@ -4,22 +4,67 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const root = path.resolve(__dirname, "..");
+const ADD_TO_CART_BUTTON =
+  /<button\b[^>]*data-shop-add\s*=\s*["']\$\{program\.id\}["'][^>]*>\s*Добави в количка\s*<\/button>/i;
+const BUY_PROGRAM_BUTTON =
+  /<button\b[^>]*data-shop-buy\s*=\s*["']\$\{program\.id\}["'][^>]*>\s*Купи програмата\s*<\/button>/i;
+const STATIC_PROGRAM_CARD =
+  /<article\b[^>]*\bclass\s*=\s*["'][^"']*\bprogram-card\b[^"']*["'][^>]*>/i;
 
 function read(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), "utf8");
 }
 
+function extractNamedDeclaration(source, name) {
+  const declarationPattern = new RegExp(`^(?:const|let|var)\\s+${name}\\b|^function\\s+${name}\\b`, "m");
+  const declaration = declarationPattern.exec(source);
+
+  assert.ok(declaration, `Missing ${name} declaration`);
+
+  const start = declaration.index;
+  const remainder = source.slice(start + declaration[0].length);
+  const nextDeclaration = /^(?:const|let|var)\s+\w+\b|^function\s+\w+\b/m.exec(remainder);
+  const end = nextDeclaration ? start + declaration[0].length + nextDeclaration.index : source.length;
+
+  assert.ok(end > start, `Invalid ${name} declaration boundaries`);
+  return source.slice(start, end);
+}
+
+function extractHtmlSection(source, className) {
+  const openingPattern = new RegExp(
+    `<section\\b[^>]*\\bclass\\s*=\\s*["'][^"']*\\b${className}\\b[^"']*["'][^>]*>`,
+    "i",
+  );
+  const opening = openingPattern.exec(source);
+
+  assert.ok(opening, `Missing .${className} section`);
+
+  const start = opening.index;
+  const endMarker = "</section>";
+  const endMarkerIndex = source.indexOf(endMarker, start + opening[0].length);
+
+  assert.notEqual(endMarkerIndex, -1, `Missing closing tag for .${className}`);
+
+  const end = endMarkerIndex + endMarker.length;
+  assert.ok(end > start, `Invalid .${className} section boundaries`);
+  return source.slice(start, end);
+}
+
 test("online program buttons use cart and Stripe checkout instead of the training form", () => {
   const shop = read("shop.js");
-  const checkoutSlice = shop.slice(shop.indexOf("const startStripeCheckout"), shop.indexOf("const renderProductGrid"));
+  const checkoutSlice = extractNamedDeclaration(shop, "startStripeCheckout");
 
-  assert.match(shop, /data-shop-add/);
-  assert.match(shop, /data-shop-buy/);
-  assert.match(shop, /data-shop-checkout/);
-  assert.match(shop, /localStorage\.setItem\(SHOP_CART_KEY/);
-  assert.match(shop, /data-cart-count/);
-  assert.match(checkoutSlice, /fetch\("\/api\/create-checkout-session"/);
-  assert.doesNotMatch(checkoutSlice, /contact\.html|training\.html|survey|questionnaire|anket/i);
+  assert.match(shop, /data-shop-add/, "Missing add-to-cart control");
+  assert.match(shop, /data-shop-buy/, "Missing direct-buy control");
+  assert.match(shop, /data-shop-checkout/, "Missing checkout control");
+  assert.match(shop, /localStorage\.setItem\(SHOP_CART_KEY/, "Cart is not persisted");
+  assert.match(shop, /data-cart-count/, "Missing cart count hook");
+  assert.match(checkoutSlice, /fetch\(\s*["']\/api\/create-checkout-session["']/, "Checkout API is not called");
+  assert.doesNotMatch(
+    checkoutSlice,
+    /contact\.html|training\.html|survey|questionnaire|anket/i,
+    "Checkout still redirects to the training flow",
+  );
 });
 
 test("cart page renders products, prices, total, remove actions, and checkout CTA", () => {
@@ -98,6 +143,81 @@ test("all programs use the temporary live EUR 0.50 price in storefront and Strip
   assert.equal((shared.match(/priceCents:\s*50,/g) || []).length, 6);
   assert.doesNotMatch(shop, /€49\.99/);
   assert.doesNotMatch(shared, /priceCents:\s*4999/);
+});
+
+test("all six storefront programs render the visible EUR 0.50 price", () => {
+  const shop = read("shop.js");
+  const cardRenderer = extractNamedDeclaration(shop, "renderProgramCard");
+
+  assert.match(
+    cardRenderer,
+    /<([a-z][\w-]*)\b[^>]*\bclass\s*=\s*["'][^"']*\bprogram-price\b[^"']*["'][^>]*>\s*\$\{program\.price\}\s*<\/\1>/i,
+    "Program cards must render program.price inside .program-price",
+  );
+});
+
+test("storefront renders all six shop programs through the shared card renderer", () => {
+  const shop = read("shop.js");
+  const catalog = extractNamedDeclaration(shop, "shopPrograms");
+  const storefrontRenderer = extractNamedDeclaration(shop, "renderProgramStorefront");
+
+  assert.equal((catalog.match(/\bid\s*:/g) || []).length, 6, "shopPrograms must contain six programs");
+  assert.equal((catalog.match(/price\s*:\s*["']€0\.50["']/g) || []).length, 6, "Every program must cost €0.50");
+  assert.match(storefrontRenderer, /\bshopPrograms\b/, "Storefront must use shopPrograms");
+  assert.match(storefrontRenderer, /\.map\s*\(/, "Storefront must iterate over all programs");
+  assert.match(storefrontRenderer, /\brenderProgramCard\s*\(/, "Storefront must use the shared card renderer");
+});
+
+test("renderProgramStorefront mounts the shared cards when the storefront marker exists", () => {
+  const shop = read("shop.js");
+  const storefrontRenderer = extractNamedDeclaration(shop, "renderProgramStorefront");
+  const productDetailRenderer = extractNamedDeclaration(shop, "renderProductDetail");
+  const initialization = shop.replace(storefrontRenderer, "").replace(productDetailRenderer, "");
+
+  assert.match(
+    storefrontRenderer,
+    /document\.querySelector\(\s*["']\[data-program-storefront\]["']\s*\)/,
+    "Storefront must query its mount marker",
+  );
+  assert.match(storefrontRenderer, /\binnerHTML\s*=/, "Storefront must render into its mount");
+  assert.match(initialization, /\brenderProgramStorefront\s*\(\s*\)\s*;/, "Storefront renderer must be initialized");
+  assert.match(initialization, /\brenderProductDetail\s*\(\s*\)\s*;/, "Product detail renderer must remain initialized");
+});
+
+test("storefront and related program cards expose exact purchase controls", () => {
+  const shop = read("shop.js");
+  const cardRenderer = extractNamedDeclaration(shop, "renderProgramCard");
+
+  assert.match(cardRenderer, ADD_TO_CART_BUTTON, "Card renderer needs the exact add-to-cart label");
+  assert.match(cardRenderer, BUY_PROGRAM_BUTTON, "Card renderer needs the exact buy label");
+});
+
+test("product detail hero uses the exact buy label", () => {
+  const shop = read("shop.js");
+  const hero = extractHtmlSection(shop, "product-detail-hero");
+
+  assert.match(hero, BUY_PROGRAM_BUTTON, "Product hero needs the exact buy label");
+});
+
+test("product detail final CTA uses the exact buy label", () => {
+  const shop = read("shop.js");
+  const finalCta = extractHtmlSection(shop, "product-final-cta");
+
+  assert.match(finalCta, BUY_PROGRAM_BUTTON, "Final CTA needs the exact buy label");
+});
+
+test("programs page exposes the storefront mount marker", () => {
+  const programs = read("programs.html");
+  const storefront = extractHtmlSection(programs, "program-shop");
+
+  assert.match(storefront, /data-program-storefront/, "Programs page needs the storefront mount marker");
+});
+
+test("programs page contains no static program card articles", () => {
+  const programs = read("programs.html");
+  const storefront = extractHtmlSection(programs, "program-shop");
+
+  assert.doesNotMatch(storefront, STATIC_PROGRAM_CARD, "Programs page still contains static program cards");
 });
 
 test("training CTA opens the survey and Results is publicly named Players", () => {

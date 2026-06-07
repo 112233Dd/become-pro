@@ -495,20 +495,29 @@ const getProgramBonusItems = (program) => {
 
 const renderProgramCard = (program, compact = false) => `
   <article class="program-card product-related-card">
-    <span class="program-image">
+    <a class="program-image" href="${getProgramUrl(program)}">
       <img src="${getAssetPath(program)}" alt="Корица на ${program.title}" />
-    </span>
+    </a>
     <span class="program-label">${compact ? "Онлайн програма" : "Become Pro"}</span>
-    <span class="program-title">${program.title}</span>
+    <a class="program-title" href="${getProgramUrl(program)}">${program.title}</a>
+    <span class="program-price">${program.price}</span>
     <div class="program-meta">
       <p>${program.description}</p>
     </div>
     <div class="program-actions">
       <a class="program-buy" href="${getProgramUrl(program)}">Виж програмата</a>
       <button class="program-cart" type="button" data-shop-add="${program.id}">Добави в количка</button>
+      <button class="program-buy" type="button" data-shop-buy="${program.id}">Купи програмата</button>
     </div>
   </article>
 `;
+
+const renderProgramStorefront = () => {
+  const root = document.querySelector("[data-program-storefront]");
+  if (!root) return;
+
+  root.innerHTML = shopPrograms.map((program) => renderProgramCard(program)).join("");
+};
 
 const renderProductDetail = () => {
   const root = document.querySelector("[data-product-detail]");
@@ -586,7 +595,7 @@ const renderProductDetail = () => {
         </div>
         <div class="product-actions">
           <button class="btn btn-secondary" type="button" data-shop-add="${program.id}">Добави в количка</button>
-          <button class="btn btn-primary" type="button" data-shop-buy="${program.id}">Купи сега</button>
+          <button class="btn btn-primary" type="button" data-shop-buy="${program.id}">Купи програмата</button>
         </div>
       </div>
     </section>
@@ -656,7 +665,7 @@ const renderProductDetail = () => {
       <p>Избери програмата, получи достъп по имейл и започни да тренираш с ясна структура и фокус.</p>
       <div class="product-actions">
         <button class="btn btn-secondary" type="button" data-shop-add="${program.id}">Добави в количка</button>
-        <button class="btn btn-primary" type="button" data-shop-buy="${program.id}">Купи сега</button>
+        <button class="btn btn-primary" type="button" data-shop-buy="${program.id}">Купи програмата</button>
       </div>
     </section>
   `;
@@ -801,6 +810,7 @@ document.addEventListener("click", (event) => {
   }
 });
 
+renderProgramStorefront();
 renderProductDetail();
 renderCartPage();
 renderCheckoutPage();
