@@ -1,6 +1,23 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/admin",
+      "destination": "/admin/orders",
+      "permanent": false
+    },
+    {
+      "source": "/admin/login",
+      "destination": "/admin-login",
+      "permanent": false
+    },
+    {
+      "source": "/admin/orders",
+      "destination": "/admin-orders",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     {
       "source": "/cart",
