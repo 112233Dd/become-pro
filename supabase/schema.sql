@@ -27,17 +27,40 @@ alter table public.training_requests add column if not exists city text;
 alter table public.training_requests add column if not exists position text;
 alter table public.training_requests add column if not exists goal text;
 alter table public.training_requests add column if not exists preferred_time text;
+alter table public.training_requests add column if not exists applicant_type text;
+alter table public.training_requests add column if not exists status text not null default 'new';
+
+update public.training_requests
+set applicant_type = who
+where applicant_type is null;
+
+alter table public.training_requests
+  alter column applicant_type set not null;
+
+alter table public.training_requests
+  drop constraint if exists training_requests_applicant_type_check;
+
+alter table public.training_requests
+  add constraint training_requests_applicant_type_check
+  check (applicant_type in ('Моето дете', 'Себе си'));
+
+alter table public.training_requests
+  drop constraint if exists training_requests_status_check;
+
+alter table public.training_requests
+  add constraint training_requests_status_check
+  check (status in ('new', 'contacted', 'booked', 'declined'));
 
 alter table public.training_requests enable row level security;
 
-create policy "Public visitors can create training requests"
-  on public.training_requests
-  for insert
-  to anon
-  with check (true);
+drop policy if exists "Public visitors can create training requests"
+  on public.training_requests;
 
 create index if not exists training_requests_created_at_idx
   on public.training_requests (created_at desc);
+
+create index if not exists training_requests_status_idx
+  on public.training_requests (status);
 
 create table if not exists public.orders (
   id uuid primary key default gen_random_uuid(),

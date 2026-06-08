@@ -3,8 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Контакти | Become Pro</title>
-    <meta name="description" content="Онлайн футболни програми и индивидуални тренировки за футболисти." />
+    <title>Индивидуални тренировки | Become Pro</title>
+    <meta
+      name="description"
+      content="Запиши футболист за индивидуална тренировка с Become Pro."
+    />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -12,14 +15,20 @@
     <meta name="theme-color" content="#050505" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Become Pro" />
-    <meta property="og:title" content="Become Pro" />
-    <meta property="og:description" content="Онлайн футболни програми и индивидуални тренировки за футболисти." />
+    <meta property="og:title" content="Индивидуални тренировки | Become Pro" />
+    <meta
+      property="og:description"
+      content="Запиши футболист за индивидуална тренировка с Become Pro."
+    />
     <meta property="og:image" content="https://become-pro-ivory.vercel.app/assets/og-image.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Become Pro" />
-    <meta name="twitter:description" content="Онлайн футболни програми и индивидуални тренировки за футболисти." />
+    <meta name="twitter:title" content="Индивидуални тренировки | Become Pro" />
+    <meta
+      name="twitter:description"
+      content="Запиши футболист за индивидуална тренировка с Become Pro."
+    />
     <meta name="twitter:image" content="https://become-pro-ivory.vercel.app/assets/og-image.png" />
-<link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <header class="site-header" data-header>
@@ -47,67 +56,41 @@
     <main id="top">
       <section class="contact section-dark reveal" id="contact">
         <div class="contact-copy">
-          <p class="eyebrow">Запитване</p>
-          <h2>Заяви програма или индивидуална тренировка</h2>
-          <p>
-            Попълни кратката форма и ще се свържем с теб, за да уточним целта, града,
-            подходящата програма или следващата индивидуална тренировка.
-          </p>
+          <p class="eyebrow">Индивидуални тренировки</p>
+          <h1>Запиши се за индивидуални тренировки</h1>
+          <p>Попълни кратката форма и ще се свържем с теб до 24 часа, за да уточним удобен ден, час и локация.</p>
         </div>
-        <form class="contact-form training-survey" data-form>
-          <label class="full">
-            Какво искаш да заявиш?
-            <select name="request_type" required data-request-type>
-              <option value="training">Индивидуална тренировка</option>
-              <option value="program">Онлайн програма</option>
-            </select>
-          </label>
-          <label class="full">
-            Онлайн програма
-            <select name="selected_program" data-selected-program>
-              <option value="">Все още не съм сигурен/сигурна</option>
-              <option>Технически пакет</option>
-              <option>Силова програма — Ниво 1</option>
-              <option>Силова програма — Ниво 2</option>
-              <option>Силова програма — Ниво 3</option>
-              <option>Лятна програма</option>
-              <option>Мачов пакет</option>
-            </select>
-          </label>
+
+        <form class="contact-form training-survey training-request-form" data-form>
           <label class="full">
             Кого искате да запишете?
-            <select name="who" required>
+            <select name="applicant_type" required>
               <option value="">Избери отговор</option>
-              <option>Моето дете</option>
-              <option>Себе си</option>
+              <option value="Моето дете">Моето дете</option>
+              <option value="Себе си">Себе си</option>
             </select>
           </label>
-          <label class="full">Име и фамилия на контакт<input type="text" name="name" required /></label>
-          <label class="full">Имейл<input type="email" name="email" required /></label>
-          <label class="full">Телефонен номер<input type="tel" name="phone" required /></label>
-          <label>Име на футболиста<input type="text" name="player_name" /></label>
-          <label>Възраст на футболиста<input type="number" name="player_age" min="6" max="30" /></label>
-          <label>
-            Град
-            <select name="city">
-              <option value="">Избери град</option>
-              <option>София</option>
-              <option>Пловдив</option>
-              <option>Стара Загора</option>
-              <option>Друго</option>
-            </select>
-          </label>
-          <label>Позиция<input type="text" name="position" placeholder="Напр. нападател, крило, халф" /></label>
           <label class="full">
-            Каква е основната цел или нужда?
-            <textarea name="goal" rows="4" placeholder="Напр. първо докосване, увереност, скорост, завършване, избор на програма"></textarea>
+            Име
+            <input type="text" name="name" autocomplete="name" required />
           </label>
-          <label class="full">Удобно време за контакт<input type="text" name="preferred_time" placeholder="Напр. след 18:00 или през уикенда" /></label>
-          <button class="btn btn-primary full" type="submit">Изпрати заявка</button>
+          <label class="full">
+            Град
+            <input type="text" name="city" autocomplete="address-level2" required />
+          </label>
+          <label class="full">
+            Телефонен номер
+            <input type="tel" name="phone" autocomplete="tel" required />
+          </label>
+          <button class="btn btn-primary full" type="submit">Запази място</button>
+          <p class="form-privacy full">
+            Данните се използват единствено за връзка относно индивидуалните тренировки.
+          </p>
           <p class="form-status" data-form-status aria-live="polite"></p>
         </form>
       </section>
     </main>
+
     <footer class="site-footer">
       <div>
         <a class="brand" href="index.html">
@@ -131,11 +114,6 @@
       </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase-config.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
-
-
-

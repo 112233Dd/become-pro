@@ -3,23 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Поръчки | Become Pro</title>
-    <meta name="description" content="Онлайн футболни програми и индивидуални тренировки за футболисти." />
-    <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <meta name="theme-color" content="#050505" />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Become Pro" />
-    <meta property="og:title" content="Become Pro" />
-    <meta property="og:description" content="Онлайн футболни програми и индивидуални тренировки за футболисти." />
-    <meta property="og:image" content="https://become-pro-ivory.vercel.app/assets/og-image.png" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Become Pro" />
-    <meta name="twitter:description" content="Онлайн футболни програми и индивидуални тренировки за футболисти." />
-    <meta name="twitter:image" content="https://become-pro-ivory.vercel.app/assets/og-image.png" />
+  <title>Админ панел | Become Pro</title>
   <meta name="robots" content="noindex,nofollow" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
@@ -28,21 +14,31 @@
       <span class="brand-mark"><img src="/assets/become-pro-logo.png" alt="" /></span>
       <strong>BECOME PRO</strong>
     </a>
-    <div class="header-actions"><button class="header-cta" type="button" data-admin-logout>Изход</button></div>
+    <div class="header-actions">
+      <button class="header-cta" type="button" data-admin-logout>Изход</button>
+    </div>
   </header>
 
   <main class="admin-page section-dark">
     <section class="admin-shell">
       <div class="section-heading">
         <p class="eyebrow">Admin</p>
-        <h1>Поръчки</h1>
-        <p>Защитен панел за преглед на онлайн поръчките и техния статус.</p>
+        <h1>Become Pro панел</h1>
+        <p>Поръчки от онлайн програмите и заявки за индивидуални тренировки.</p>
       </div>
 
       <section class="admin-orders" data-admin-orders>
-        <div class="admin-toolbar">
-          <strong data-admin-count>0 поръчки</strong>
-          <button class="btn btn-secondary admin-refresh" type="button" data-admin-refresh>Refresh orders</button>
+        <div class="admin-section-heading">
+          <div>
+            <p class="eyebrow">Онлайн програми</p>
+            <h2>Поръчки</h2>
+          </div>
+          <div class="admin-toolbar">
+            <strong data-admin-count>0 поръчки</strong>
+            <button class="btn btn-secondary admin-refresh" type="button" data-admin-refresh>
+              Обнови поръчките
+            </button>
+          </div>
         </div>
 
         <div class="admin-controls">
@@ -51,11 +47,11 @@
             <input type="search" placeholder="Име, имейл или програма" data-admin-search />
           </label>
           <div class="admin-filter" data-admin-filter aria-label="Филтър по статус">
-            <button class="is-active" type="button" data-admin-status-filter="all">All</button>
-            <button type="button" data-admin-status-filter="paid">Paid</button>
-            <button type="button" data-admin-status-filter="pending">Pending</button>
-            <button type="button" data-admin-status-filter="failed">Failed</button>
-            <button type="button" data-admin-status-filter="expired">Expired</button>
+            <button class="is-active" type="button" data-admin-status-filter="all">Всички</button>
+            <button type="button" data-admin-status-filter="paid">Платени</button>
+            <button type="button" data-admin-status-filter="pending">Чакащи</button>
+            <button type="button" data-admin-status-filter="failed">Неуспешни</button>
+            <button type="button" data-admin-status-filter="expired">Изтекли</button>
           </div>
         </div>
 
@@ -78,6 +74,60 @@
               </tr>
             </thead>
             <tbody data-admin-table></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="admin-orders admin-training-requests" data-training-requests>
+        <div class="admin-section-heading">
+          <div>
+            <p class="eyebrow">Работа на терен</p>
+            <h2>Заявки за индивидуални тренировки</h2>
+          </div>
+          <div class="admin-toolbar">
+            <strong data-training-request-count>0 заявки</strong>
+            <button class="btn btn-secondary admin-refresh" type="button" data-training-request-refresh>
+              Обнови заявките
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-controls">
+          <label class="admin-search">
+            <span>Търсене</span>
+            <input
+              type="search"
+              placeholder="Име, град или телефон"
+              data-training-request-search
+            />
+          </label>
+          <div class="admin-filter" aria-label="Филтър на заявките">
+            <button class="is-active" type="button" data-training-request-status-filter="all">Всички</button>
+            <button type="button" data-training-request-status-filter="new">Нови</button>
+            <button type="button" data-training-request-status-filter="contacted">Свързани</button>
+            <button type="button" data-training-request-status-filter="booked">Записани</button>
+            <button type="button" data-training-request-status-filter="declined">Отказани</button>
+          </div>
+        </div>
+
+        <p class="admin-state admin-empty" data-training-request-empty hidden>
+          Все още няма заявки за индивидуални тренировки.
+        </p>
+        <p class="admin-state admin-error" data-training-request-error hidden></p>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table admin-training-table">
+            <thead>
+              <tr>
+                <th>Дата и час</th>
+                <th>Кого записват</th>
+                <th>Име</th>
+                <th>Град</th>
+                <th>Телефон</th>
+                <th>Статус</th>
+              </tr>
+            </thead>
+            <tbody data-training-request-table></tbody>
           </table>
         </div>
       </section>

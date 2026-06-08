@@ -7,9 +7,27 @@ const refreshButton = document.querySelector("[data-admin-refresh]");
 const emptyState = document.querySelector("[data-admin-empty]");
 const errorState = document.querySelector("[data-admin-error]");
 
+const trainingTableBody = document.querySelector("[data-training-request-table]");
+const trainingCountNode = document.querySelector("[data-training-request-count]");
+const trainingSearchInput = document.querySelector("[data-training-request-search]");
+const trainingStatusButtons = [...document.querySelectorAll("[data-training-request-status-filter]")];
+const trainingRefreshButton = document.querySelector("[data-training-request-refresh]");
+const trainingEmptyState = document.querySelector("[data-training-request-empty]");
+const trainingErrorState = document.querySelector("[data-training-request-error]");
+
 let orders = [];
 let selectedStatus = "all";
 let searchTerm = "";
+let trainingRequests = [];
+let selectedTrainingStatus = "all";
+let trainingSearchTerm = "";
+
+const trainingStatusLabels = {
+  new: "Нова",
+  contacted: "Свързан",
+  booked: "Записан",
+  declined: "Отказан",
+};
 
 const orderField = (order, snakeKey, camelKey) => order?.[snakeKey] ?? order?.[camelKey] ?? "";
 
@@ -43,15 +61,13 @@ const formatDate = (value) => {
   return new Intl.DateTimeFormat("bg-BG", { dateStyle: "medium", timeStyle: "short" }).format(date);
 };
 
-const formatPrice = (value) => {
-  const amount = Number(value || 0);
-  return new Intl.NumberFormat("bg-BG", { style: "currency", currency: "EUR" }).format(amount);
-};
+const formatPrice = (value) =>
+  new Intl.NumberFormat("bg-BG", { style: "currency", currency: "EUR" }).format(Number(value || 0));
 
-const setError = (message = "") => {
-  if (!errorState) return;
-  errorState.hidden = !message;
-  errorState.textContent = message;
+const setError = (node, message = "") => {
+  if (!node) return;
+  node.hidden = !message;
+  node.textContent = message;
 };
 
 const getFilteredOrders = () =>
@@ -64,15 +80,11 @@ const getFilteredOrders = () =>
     ]
       .join(" ")
       .toLowerCase();
-
-    const matchesStatus = selectedStatus === "all" || status === selectedStatus;
-    const matchesSearch = !searchTerm || haystack.includes(searchTerm);
-    return matchesStatus && matchesSearch;
+    return (selectedStatus === "all" || status === selectedStatus) && (!searchTerm || haystack.includes(searchTerm));
   });
 
 const renderOrders = () => {
   if (!tableBody) return;
-
   const filteredOrders = getFilteredOrders();
   if (countNode) countNode.textContent = `${filteredOrders.length} поръчки`;
   if (emptyState) emptyState.hidden = filteredOrders.length > 0;
@@ -81,24 +93,16 @@ const renderOrders = () => {
     .map((order) => {
       const status = normalizeStatus(orderField(order, "payment_status", "paymentStatus"));
       const programLink = safeProgramLink(orderField(order, "program_link", "programLink"));
-      const customerName = orderField(order, "customer_name", "customerName") || "-";
-      const customerEmail = orderField(order, "customer_email", "customerEmail") || "-";
-      const customerPhone = orderField(order, "customer_phone", "customerPhone") || "-";
-      const programName = orderField(order, "program_name", "programName") || "-";
-      const programPrice = orderField(order, "program_price", "programPrice");
-      const sessionId = orderField(order, "stripe_checkout_session_id", "stripeCheckoutSessionId") || "-";
-      const createdAt = orderField(order, "created_at", "createdAt");
-
       return `
         <tr class="is-${escapeHtml(status)}">
-          <td>${escapeHtml(formatDate(createdAt))}</td>
-          <td><strong>${escapeHtml(customerName)}</strong></td>
-          <td>${escapeHtml(customerEmail)}</td>
-          <td>${escapeHtml(customerPhone)}</td>
-          <td>${escapeHtml(programName)}</td>
-          <td>${escapeHtml(formatPrice(programPrice))}</td>
+          <td>${escapeHtml(formatDate(orderField(order, "created_at", "createdAt")))}</td>
+          <td><strong>${escapeHtml(orderField(order, "customer_name", "customerName") || "-")}</strong></td>
+          <td>${escapeHtml(orderField(order, "customer_email", "customerEmail") || "-")}</td>
+          <td>${escapeHtml(orderField(order, "customer_phone", "customerPhone") || "-")}</td>
+          <td>${escapeHtml(orderField(order, "program_name", "programName") || "-")}</td>
+          <td>${escapeHtml(formatPrice(orderField(order, "program_price", "programPrice")))}</td>
           <td><mark class="order-status status-${escapeHtml(status)}">${escapeHtml(status)}</mark></td>
-          <td><code>${escapeHtml(sessionId)}</code></td>
+          <td><code>${escapeHtml(orderField(order, "stripe_checkout_session_id", "stripeCheckoutSessionId") || "-")}</code></td>
           <td>${programLink ? `<a href="${escapeHtml(programLink)}" target="_blank" rel="noreferrer">Отвори</a>` : "-"}</td>
         </tr>
       `;
@@ -106,34 +110,129 @@ const renderOrders = () => {
     .join("");
 };
 
-const setLoading = (isLoading) => {
-  if (!refreshButton) return;
-  refreshButton.disabled = isLoading;
-  refreshButton.textContent = isLoading ? "Зареждане..." : "Refresh orders";
+const getFilteredTrainingRequests = () =>
+  trainingRequests.filter((request) => {
+    const status = request.status || "new";
+    const haystack = [request.applicant_type, request.name, request.city, request.phone].join(" ").toLowerCase();
+    return (
+      (selectedTrainingStatus === "all" || status === selectedTrainingStatus) &&
+      (!trainingSearchTerm || haystack.includes(trainingSearchTerm))
+    );
+  });
+
+const renderTrainingRequests = () => {
+  if (!trainingTableBody) return;
+  const filteredRequests = getFilteredTrainingRequests();
+  if (trainingCountNode) trainingCountNode.textContent = `${filteredRequests.length} заявки`;
+  if (trainingEmptyState) trainingEmptyState.hidden = filteredRequests.length > 0;
+
+  trainingTableBody.innerHTML = filteredRequests
+    .map((request) => {
+      const status = request.status || "new";
+      const options = Object.entries(trainingStatusLabels)
+        .map(
+          ([value, label]) =>
+            `<option value="${value}"${value === status ? " selected" : ""}>${escapeHtml(label)}</option>`,
+        )
+        .join("");
+
+      return `
+        <tr class="training-status-${escapeHtml(status)}">
+          <td>${escapeHtml(formatDate(request.created_at))}</td>
+          <td>${escapeHtml(request.applicant_type || "-")}</td>
+          <td><strong>${escapeHtml(request.name || "-")}</strong></td>
+          <td>${escapeHtml(request.city || "-")}</td>
+          <td><a href="tel:${escapeHtml(request.phone || "")}">${escapeHtml(request.phone || "-")}</a></td>
+          <td>
+            <select
+              class="training-request-status status-${escapeHtml(status)}"
+              data-training-request-status
+              data-request-id="${escapeHtml(request.id)}"
+              aria-label="Статус на заявката"
+            >
+              ${options}
+            </select>
+          </td>
+        </tr>
+      `;
+    })
+    .join("");
+};
+
+const setLoading = (button, isLoading, idleText, loadingText) => {
+  if (!button) return;
+  button.disabled = isLoading;
+  button.textContent = isLoading ? loadingText : idleText;
+};
+
+const handleUnauthorized = (response) => {
+  if (response.status !== 401) return false;
+  window.location.replace("/admin/login");
+  return true;
 };
 
 const loadOrders = async () => {
-  setLoading(true);
-  setError("");
-
+  setLoading(refreshButton, true, "Обнови поръчките", "Зареждане...");
+  setError(errorState);
   try {
     const response = await fetch("/api/admin/orders");
     const data = await response.json();
-
-    if (response.status === 401) {
-      window.location.replace("/admin/login");
-      return;
-    }
-
+    if (handleUnauthorized(response)) return;
     if (!response.ok) throw new Error(data.error || "Не успяхме да заредим поръчките.");
     orders = Array.isArray(data.orders) ? data.orders : [];
     renderOrders();
   } catch (error) {
     orders = [];
     renderOrders();
-    setError(error.message || "Възникна проблем при зареждане на поръчките.");
+    setError(errorState, error.message || "Възникна проблем при зареждане на поръчките.");
   } finally {
-    setLoading(false);
+    setLoading(refreshButton, false, "Обнови поръчките", "Зареждане...");
+  }
+};
+
+const loadTrainingRequests = async () => {
+  setLoading(trainingRefreshButton, true, "Обнови заявките", "Зареждане...");
+  setError(trainingErrorState);
+  try {
+    const response = await fetch("/api/admin/training-requests");
+    const data = await response.json();
+    if (handleUnauthorized(response)) return;
+    if (!response.ok) throw new Error(data.error || "Не успяхме да заредим заявките.");
+    trainingRequests = Array.isArray(data.requests) ? data.requests : [];
+    renderTrainingRequests();
+  } catch (error) {
+    trainingRequests = [];
+    renderTrainingRequests();
+    setError(trainingErrorState, error.message || "Възникна проблем при зареждане на заявките.");
+  } finally {
+    setLoading(trainingRefreshButton, false, "Обнови заявките", "Зареждане...");
+  }
+};
+
+const updateTrainingRequestStatus = async (select) => {
+  const id = select.dataset.requestId;
+  const previousStatus = trainingRequests.find((request) => request.id === id)?.status || "new";
+  select.disabled = true;
+
+  try {
+    const response = await fetch("/api/admin/training-requests", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, status: select.value }),
+    });
+    const data = await response.json();
+    if (handleUnauthorized(response)) return;
+    if (!response.ok) throw new Error(data.error || "Статусът не беше запазен.");
+
+    trainingRequests = trainingRequests.map((request) =>
+      request.id === id ? { ...request, status: select.value } : request,
+    );
+    renderTrainingRequests();
+  } catch (error) {
+    select.value = previousStatus;
+    setError(trainingErrorState, error.message || "Статусът не беше запазен.");
+  } finally {
+    select.disabled = false;
   }
 };
 
@@ -145,16 +244,35 @@ searchInput?.addEventListener("input", (event) => {
 statusFilterButtons.forEach((button) => {
   button.addEventListener("click", () => {
     selectedStatus = button.dataset.adminStatusFilter || "all";
-    statusFilterButtons.forEach((filterButton) => filterButton.classList.toggle("is-active", filterButton === button));
+    statusFilterButtons.forEach((item) => item.classList.toggle("is-active", item === button));
     renderOrders();
   });
 });
 
+trainingSearchInput?.addEventListener("input", (event) => {
+  trainingSearchTerm = event.target.value.trim().toLowerCase();
+  renderTrainingRequests();
+});
+
+trainingStatusButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    selectedTrainingStatus = button.dataset.trainingRequestStatusFilter || "all";
+    trainingStatusButtons.forEach((item) => item.classList.toggle("is-active", item === button));
+    renderTrainingRequests();
+  });
+});
+
+trainingTableBody?.addEventListener("change", (event) => {
+  const select = event.target.closest("[data-training-request-status]");
+  if (select) updateTrainingRequestStatus(select);
+});
+
 refreshButton?.addEventListener("click", loadOrders);
+trainingRefreshButton?.addEventListener("click", loadTrainingRequests);
 
 logoutButton?.addEventListener("click", async () => {
   await fetch("/api/admin/logout", { method: "POST" });
   window.location.replace("/admin/login");
 });
 
-loadOrders();
+Promise.all([loadOrders(), loadTrainingRequests()]);

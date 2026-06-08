@@ -3,33 +3,11 @@ const nav = document.querySelector("[data-nav]");
 const navToggle = document.querySelector("[data-nav-toggle]");
 const form = document.querySelector("[data-form]");
 const formStatus = document.querySelector("[data-form-status]");
-const requestTypeInput = document.querySelector("[data-request-type]");
-const selectedProgramInput = document.querySelector("[data-selected-program]");
 const navLinks = [...document.querySelectorAll(".site-nav a")];
 const faqSearch = document.querySelector("[data-faq-search]");
 
 document.body.dataset.theme = "dark";
 localStorage.removeItem("becomeProTheme");
-
-const programNames = {
-  "technical-pack": "Технически пакет",
-  "strength-level-1": "Силова програма — Ниво 1",
-  "strength-level-2": "Силова програма — Ниво 2",
-  "strength-level-3": "Силова програма — Ниво 3",
-  "summer-program": "Лятна програма",
-  "matchday-pack": "Мачов пакет",
-};
-
-const params = new URLSearchParams(window.location.search);
-const requestTypeParam = params.get("type");
-const requestType = requestTypeParam === "program" || requestTypeParam === "training" ? requestTypeParam : "";
-const selectedProgram = params.get("program") || "";
-
-if (requestTypeInput && requestType) requestTypeInput.value = requestType;
-if (selectedProgramInput && selectedProgram) selectedProgramInput.value = programNames[selectedProgram] || selectedProgram;
-
-const initialRequestTypeValue = requestTypeInput?.value || "training";
-const initialSelectedProgramValue = selectedProgramInput?.value || "";
 
 const closeNav = () => {
   nav?.classList.remove("is-open");
@@ -130,66 +108,51 @@ faqSearch?.addEventListener("input", () => {
   });
 });
 
-const getSupabaseClient = () => {
-  const config = window.BECOME_PRO_SUPABASE;
-  if (!config?.url || !config?.anonKey || !window.supabase) return null;
-  return window.supabase.createClient(config.url, config.anonKey);
-};
-
 form?.addEventListener("submit", async (event) => {
   event.preventDefault();
+  const submitButton = form.querySelector('button[type="submit"]');
+  const originalButtonText = submitButton?.textContent || "Запази място";
+
   if (formStatus) formStatus.textContent = "Изпращаме заявката...";
+  if (submitButton) {
+    submitButton.disabled = true;
+    submitButton.textContent = "Изпращане...";
+  }
 
   const formData = new FormData(form);
-  const basePayload = {
-    request_type: formData.get("request_type") || "training",
-    selected_program: formData.get("selected_program") || null,
-    who: formData.get("who"),
-    name: formData.get("name"),
-    phone: formData.get("phone"),
-    page_url: window.location.href,
-    user_agent: navigator.userAgent,
-  };
   const payload = {
-    ...basePayload,
-    email: formData.get("email") || null,
-    player_name: formData.get("player_name") || null,
-    player_age: formData.get("player_age") || null,
-    city: formData.get("city") || null,
-    position: formData.get("position") || null,
-    goal: formData.get("goal") || null,
-    preferred_time: formData.get("preferred_time") || null,
+    applicantType: formData.get("applicant_type"),
+    name: formData.get("name"),
+    city: formData.get("city"),
+    phone: formData.get("phone"),
   };
 
   try {
-    const client = getSupabaseClient();
+    const response = await fetch("/api/training-requests", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data = await response.json();
 
-    if (!client) throw new Error("Supabase is not configured yet.");
-
-    const { error } = await client.from("training_requests").insert(payload);
-    if (error) {
-      const canRetryWithBasePayload =
-        error.message?.includes("schema cache") || error.message?.includes("column");
-
-      if (!canRetryWithBasePayload) throw error;
-
-      const retry = await client.from("training_requests").insert(basePayload);
-      if (retry.error) throw retry.error;
-    }
+    if (!response.ok) throw new Error(data.error || "Заявката не беше изпратена.");
 
     if (formStatus) {
       formStatus.textContent =
-        "Заявката е изпратена. Ще се свържем с вас, за да уточним следващата стъпка.";
+        "Благодаря ви! Отговорите са изпратени успешно. Ще се свържем с вас възможно най-скоро.";
     }
 
     form.reset();
-    if (requestTypeInput) requestTypeInput.value = initialRequestTypeValue;
-    if (selectedProgramInput) selectedProgramInput.value = initialSelectedProgramValue;
   } catch (error) {
     console.error(error);
     if (formStatus) {
       formStatus.textContent =
         "Заявката не се изпрати. Моля, пробвай отново или ни пиши директно на имейл.";
+    }
+  } finally {
+    if (submitButton) {
+      submitButton.disabled = false;
+      submitButton.textContent = originalButtonText;
     }
   }
 });
