@@ -2,6 +2,7 @@ const {
   getCookie,
   readJsonBody,
   sendJson,
+  hasSupabaseAdmin,
   supabaseRequest,
   verifyAdminToken,
 } = require("../_shared");
@@ -10,10 +11,14 @@ const REQUEST_STATUSES = new Set(["new", "contacted", "booked", "declined"]);
 
 module.exports = async (req, res) => {
   try {
-    const session = verifyAdminToken(getCookie(req, "bp_admin_session"));
+    const session = verifyAdminToken(getCookie(req, "bp_admin"));
     if (!session) return sendJson(res, 401, { error: "Unauthorized." });
 
     if (req.method === "GET") {
+      if (!hasSupabaseAdmin()) {
+        return sendJson(res, 200, { requests: [], source: "supabase-not-configured" });
+      }
+
       const requests = await supabaseRequest(
         "training_requests?select=id,created_at,applicant_type,name,city,phone,status&order=created_at.desc",
       );
@@ -21,6 +26,10 @@ module.exports = async (req, res) => {
     }
 
     if (req.method === "PATCH") {
+      if (!hasSupabaseAdmin()) {
+        return sendJson(res, 503, { error: "Supabase is not configured." });
+      }
+
       const body = await readJsonBody(req);
       const id = String(body.id || "").trim();
       const status = String(body.status || "").trim();
