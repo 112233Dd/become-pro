@@ -3443,42 +3443,6 @@ blockquote:hover {
   object-position: center center;
 }
 
-.brand-face-thumbs {
-  position: absolute;
-  left: clamp(14px, 2vw, 22px);
-  right: clamp(14px, 2vw, 22px);
-  bottom: clamp(14px, 2vw, 22px);
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.brand-face-thumbs span {
-  display: block;
-  height: clamp(82px, 8vw, 108px);
-  overflow: hidden;
-  border: 1px solid rgba(245, 196, 0, 0.32);
-  border-radius: 10px;
-  background: rgba(3, 3, 3, 0.72);
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.34);
-}
-
-.brand-face-thumbs img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  opacity: 0.92;
-}
-
-.brand-face-thumbs span:first-child img {
-  object-position: center 42%;
-}
-
-.brand-face-thumbs span:last-child img {
-  object-position: center 54%;
-}
-
 .brand-face-copy {
   display: grid;
   align-content: end;
@@ -5684,18 +5648,6 @@ textarea:focus {
     height: 420px;
   }
 
-  .brand-face-thumbs {
-    left: 12px;
-    right: 12px;
-    bottom: 12px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .brand-face-thumbs span {
-    height: 86px;
-    border-radius: 8px;
-  }
-
   .brand-face-copy,
   .real-products-card {
     padding: 20px;
@@ -5908,14 +5860,6 @@ textarea:focus {
   .brand-face-image.main {
     min-height: 0;
     height: 380px;
-  }
-
-  .brand-face-thumbs {
-    gap: 8px;
-  }
-
-  .brand-face-thumbs span {
-    height: 74px;
   }
 
   .product-showcase-grid {
