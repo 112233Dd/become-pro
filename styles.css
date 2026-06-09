@@ -3420,7 +3420,8 @@ blockquote:hover {
   height: 100%;
 }
 
-.brand-face-image img {
+.brand-face-image img,
+.brand-face-image video {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -3428,12 +3429,17 @@ blockquote:hover {
   filter: saturate(0.98) contrast(1.05);
 }
 
+.brand-face-image video {
+  display: block;
+}
+
 .brand-face-image.main {
   min-height: 0;
   height: 100%;
 }
 
-.brand-face-image.main img {
+.brand-face-image.main img,
+.brand-face-image.main video {
   object-position: center center;
 }
 
