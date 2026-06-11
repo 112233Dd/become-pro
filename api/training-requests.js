@@ -3,6 +3,8 @@ const { readJsonBody, sendEmail, sendJson, supabaseRequest } = require("./_share
 const APPLICANT_TYPES = new Set(["Моето дете", "Себе си"]);
 
 const cleanText = (value, maxLength) => String(value || "").trim().slice(0, maxLength);
+const isLegacyTrainingSchemaError = (error) =>
+  /PGRST204|applicant_type|training_requests_status/i.test(String(error?.message || error || ""));
 
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
@@ -24,20 +26,38 @@ module.exports = async (req, res) => {
     if (city.length < 2) return sendJson(res, 400, { error: "Моля, въведи град." });
     if (phone.length < 6) return sendJson(res, 400, { error: "Моля, въведи валиден телефон." });
 
-    const rows = await supabaseRequest("training_requests", {
-      method: "POST",
-      headers: { Prefer: "return=representation" },
-      body: JSON.stringify([
-        {
-          applicant_type: applicantType,
-          who: applicantType,
-          name,
-          city,
-          phone,
-          status: "new",
-        },
-      ]),
-    });
+    let rows;
+    try {
+      rows = await supabaseRequest("training_requests", {
+        method: "POST",
+        headers: { Prefer: "return=representation" },
+        body: JSON.stringify([
+          {
+            applicant_type: applicantType,
+            who: applicantType,
+            name,
+            city,
+            phone,
+            status: "new",
+          },
+        ]),
+      });
+    } catch (schemaError) {
+      if (!isLegacyTrainingSchemaError(schemaError)) throw schemaError;
+      rows = await supabaseRequest("training_requests", {
+        method: "POST",
+        headers: { Prefer: "return=representation" },
+        body: JSON.stringify([
+          {
+            request_type: "training",
+            who: applicantType,
+            name,
+            city,
+            phone,
+          },
+        ]),
+      });
+    }
 
     try {
       await sendEmail({

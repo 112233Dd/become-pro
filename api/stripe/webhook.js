@@ -112,13 +112,17 @@ module.exports = async (req, res) => {
       if (!programs.length) return sendJson(res, 200, { received: true });
 
       if (hasSupabaseAdmin()) {
-        await upsertOrders({
-          programs,
-          customer,
-          status: "paid",
-          sessionId: session.id,
-          paymentIntentId: session.payment_intent || null,
-        });
+        try {
+          await upsertOrders({
+            programs,
+            customer,
+            status: "paid",
+            sessionId: session.id,
+            paymentIntentId: session.payment_intent || null,
+          });
+        } catch (persistenceError) {
+          console.error("Paid order persistence failed:", persistenceError);
+        }
       }
 
       try {

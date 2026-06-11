@@ -36,13 +36,17 @@ module.exports = async (req, res) => {
     });
 
     if (hasSupabaseAdmin()) {
-      await upsertOrders({
-        programs,
-        customer,
-        status: "pending",
-        sessionId: session.id,
-        paymentIntentId: session.payment_intent || null,
-      });
+      try {
+        await upsertOrders({
+          programs,
+          customer,
+          status: "pending",
+          sessionId: session.id,
+          paymentIntentId: session.payment_intent || null,
+        });
+      } catch (persistenceError) {
+        console.error("Pending order persistence failed:", persistenceError);
+      }
     }
 
     return sendJson(res, 200, { url: session.url, sessionId: session.id });

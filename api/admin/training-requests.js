@@ -8,6 +8,13 @@ const {
 } = require("../_shared");
 
 const REQUEST_STATUSES = new Set(["new", "contacted", "booked", "declined"]);
+const isLegacyTrainingSchemaError = (error) =>
+  /PGRST204|applicant_type|training_requests_status/i.test(String(error?.message || error || ""));
+const normalizeRequest = (request) => ({
+  ...request,
+  applicant_type: request.applicant_type || request.who || "",
+  status: request.status || "new",
+});
 
 module.exports = async (req, res) => {
   try {
@@ -19,10 +26,20 @@ module.exports = async (req, res) => {
         return sendJson(res, 200, { requests: [], source: "supabase-not-configured" });
       }
 
-      const requests = await supabaseRequest(
-        "training_requests?select=id,created_at,applicant_type,name,city,phone,status&order=created_at.desc",
-      );
-      return sendJson(res, 200, { requests: Array.isArray(requests) ? requests : [] });
+      let requests;
+      try {
+        requests = await supabaseRequest(
+          "training_requests?select=id,created_at,applicant_type,who,name,city,phone,status&order=created_at.desc",
+        );
+      } catch (schemaError) {
+        if (!isLegacyTrainingSchemaError(schemaError)) throw schemaError;
+        requests = await supabaseRequest(
+          "training_requests?select=id,created_at,who,name,city,phone&order=created_at.desc",
+        );
+      }
+      return sendJson(res, 200, {
+        requests: Array.isArray(requests) ? requests.map(normalizeRequest) : [],
+      });
     }
 
     if (req.method === "PATCH") {
