@@ -14,8 +14,14 @@ module.exports = async (req, res) => {
       return sendJson(res, 200, { orders, source: "stripe" });
     }
 
-    const orders = await supabaseRequest("orders?select=*&order=created_at.desc");
-    return sendJson(res, 200, { orders, source: "supabase" });
+    try {
+      const orders = await supabaseRequest("orders?select=*&order=created_at.desc");
+      return sendJson(res, 200, { orders, source: "supabase" });
+    } catch (supabaseError) {
+      console.error("Supabase orders unavailable:", supabaseError);
+      const orders = await listStripeOrders();
+      return sendJson(res, 200, { orders, source: "stripe-fallback" });
+    }
   } catch (error) {
     return sendJson(res, 500, { error: error.message || "Orders could not be loaded." });
   }

@@ -55,6 +55,15 @@ test("paid-order persistence failure does not block fulfillment email", () => {
   assert.match(completedBlock, /await sendFulfillmentEmails/);
 });
 
+test("admin orders fall back to Stripe when the Supabase table is unavailable", () => {
+  const endpoint = read("api/admin/orders.js");
+
+  assert.match(endpoint, /try\s*{\s*const orders = await supabaseRequest/);
+  assert.match(endpoint, /catch\s*\(supabaseError\)/);
+  assert.match(endpoint, /console\.error\(\s*"Supabase orders unavailable:"/);
+  assert.match(endpoint, /source:\s*"stripe-fallback"/);
+});
+
 test("contact form is only for individual training requests", () => {
   const html = read("contact.html");
   const form = html.match(/<form\b[\s\S]*?<\/form>/i)?.[0] || "";
