@@ -96,6 +96,40 @@ const ensureFulfillmentPayload = async ({ programs, session }) => {
   return true;
 };
 
+const markDeliveryFailed = async ({ programs, customer, session, reason, error }) => {
+  await logAdminEvent({
+    event: "fulfillment_delivery_failed",
+    message: `Paid checkout session requires manual delivery: ${reason}.`,
+    stripeSessionId: session.id,
+    metadata: {
+      reason,
+      error: error?.message || String(error || ""),
+      programs: programs.map((program) => ({ id: program.id, name: program.name })),
+      customerEmail: customer.customerEmail,
+    },
+  });
+
+  if (!hasSupabaseAdmin()) return;
+
+  try {
+    await upsertOrders({
+      programs,
+      customer,
+      status: "delivery_failed",
+      sessionId: session.id,
+      paymentIntentId: session.payment_intent || null,
+    });
+  } catch (deliveryStatusError) {
+    console.error("Delivery-failed order persistence failed:", deliveryStatusError);
+    await logAdminEvent({
+      event: "delivery_failed_persistence_failed",
+      message: "Could not save delivery_failed status for a paid checkout session.",
+      stripeSessionId: session.id,
+      metadata: { error: deliveryStatusError.message, reason },
+    });
+  }
+};
+
 const sendFulfillmentEmails = async ({ programs, customer, session }) => {
   await sendEmail({
     to: customer.customerEmail,
@@ -182,6 +216,13 @@ module.exports = async (req, res) => {
           });
         } catch (persistenceError) {
           console.error("Paid order persistence failed:", persistenceError);
+          await markDeliveryFailed({
+            programs,
+            customer,
+            session,
+            reason: "paid_order_save_failed",
+            error: persistenceError,
+          });
         }
       }
 
@@ -189,6 +230,13 @@ module.exports = async (req, res) => {
         await sendFulfillmentEmails({ programs, customer, session });
       } catch (emailError) {
         console.error("Fulfillment email failed", emailError);
+        await markDeliveryFailed({
+          programs,
+          customer,
+          session,
+          reason: "email_delivery_failed",
+          error: emailError,
+        });
       }
     }
 

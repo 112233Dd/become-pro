@@ -99,6 +99,8 @@ test("checkout endpoint accepts cart items and creates a Stripe Checkout Session
   const shared = read("api/_shared.js");
 
   assert.match(endpoint, /Array\.isArray\(body\.items\)/);
+  assert.match(endpoint, /isCheckoutEnabled/);
+  assert.match(endpoint, /Плащанията са временно спрени/);
   assert.match(endpoint, /createStripeCheckoutSession/);
   assert.match(endpoint, /status:\s*"pending"/);
   assert.match(endpoint, /url:\s*session\.url/);
@@ -112,6 +114,15 @@ test("checkout endpoint accepts cart items and creates a Stripe Checkout Session
   assert.match(shared, /Stripe-Version/);
 });
 
+test("checkout is disabled by default until payment configuration is verified", () => {
+  const endpoint = read("api/create-checkout-session.js");
+  const shared = read("api/_shared.js");
+
+  assert.match(shared, /const isCheckoutEnabled = \(\) => process\.env\.CHECKOUT_ENABLED === "true"/);
+  assert.match(endpoint, /return sendJson\(res,\s*503/);
+  assert.match(endpoint, /isCheckoutEnabled\(\)/);
+});
+
 test("webhook is the only place that fulfills successful payments", () => {
   const webhook = read("api/stripe/webhook.js");
   const successPage = read("checkout/success/index.html");
@@ -122,8 +133,24 @@ test("webhook is the only place that fulfills successful payments", () => {
   assert.match(webhook, /upsertOrders/);
   assert.match(webhook, /sendFulfillmentEmails/);
   assert.match(webhook, /ensureFulfillmentPayload/);
+  assert.match(webhook, /markDeliveryFailed/);
+  assert.match(webhook, /delivery_failed/);
   assert.match(webhook, /formatViberBonusForEmail/);
   assert.doesNotMatch(successPage, /upsertOrders|sendFulfillmentEmails|programLink/i);
+});
+
+test("paid orders fall back to delivery_failed when save or email delivery fails", () => {
+  const shared = read("api/_shared.js");
+  const webhook = read("api/stripe/webhook.js");
+  const schema = read("supabase/schema.sql");
+  const adminHtml = read("admin-orders.html");
+
+  assert.match(shared, /"delivery_failed"/);
+  assert.match(webhook, /reason:\s*"paid_order_save_failed"/);
+  assert.match(webhook, /reason:\s*"email_delivery_failed"/);
+  assert.match(webhook, /fulfillment_delivery_failed/);
+  assert.match(schema, /delivery_failed/);
+  assert.match(adminHtml, /data-admin-status-filter="delivery_failed"/);
 });
 
 test("Stripe checkout and webhook preserve program identity for fulfillment", () => {

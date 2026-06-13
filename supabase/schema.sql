@@ -73,7 +73,7 @@ create table if not exists public.orders (
   program_name text not null,
   program_price numeric(10, 2) not null,
   program_link text not null,
-  payment_status text not null default 'pending' check (payment_status in ('pending', 'paid', 'failed', 'expired')),
+  payment_status text not null default 'pending' check (payment_status in ('pending', 'paid', 'failed', 'expired', 'delivery_failed')),
   payment_provider text not null default 'stripe',
   stripe_checkout_session_id text,
   stripe_payment_intent_id text,
@@ -106,7 +106,7 @@ alter table public.orders
 
 alter table public.orders
   add constraint orders_payment_status_check
-  check (payment_status in ('pending', 'paid', 'failed', 'expired'));
+  check (payment_status in ('pending', 'paid', 'failed', 'expired', 'delivery_failed'));
 
 create unique index if not exists orders_stripe_session_program_idx
   on public.orders (stripe_checkout_session_id, program_id);

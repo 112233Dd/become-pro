@@ -402,8 +402,8 @@ const startStripeCheckout = async (programIds, trigger) => {
     const data = await response.json();
     if (!response.ok || !data.url) throw new Error(data.error || "Не успяхме да стартираме плащането.");
     window.location.href = data.url;
-  } catch {
-    showShopToast("Възникна проблем при стартиране на плащането. Моля, опитайте отново.");
+  } catch (error) {
+    showShopToast(error.message || "Възникна проблем при стартиране на плащането. Моля, опитайте отново.");
     if (button) {
       button.textContent = button.dataset.originalText || originalText || "Купи сега";
       button.removeAttribute("aria-busy");

@@ -36,7 +36,16 @@ test("cart exposes quantity, remove, total, and Stripe checkout controls", () =>
   assert.match(shop, /\/api\/create-checkout-session/);
 });
 
-test("checkout remains available when pending-order persistence fails", () => {
+test("checkout can be disabled while payment configuration is under review", () => {
+  const endpoint = read("api/create-checkout-session.js");
+  const shared = read("api/_shared.js");
+
+  assert.match(shared, /isCheckoutEnabled/);
+  assert.match(endpoint, /isCheckoutEnabled/);
+  assert.match(endpoint, /return sendJson\(res,\s*503/);
+});
+
+test("checkout still tolerates pending-order persistence failures when enabled", () => {
   const endpoint = read("api/create-checkout-session.js");
 
   assert.match(endpoint, /try\s*{\s*await upsertOrders\(/);
@@ -52,6 +61,7 @@ test("paid-order persistence failure does not block fulfillment email", () => {
 
   assert.match(completedBlock, /catch\s*\(persistenceError\)/);
   assert.match(completedBlock, /console\.error\(\s*"Paid order persistence failed:"/);
+  assert.match(completedBlock, /markDeliveryFailed/);
   assert.match(completedBlock, /await sendFulfillmentEmails/);
 });
 

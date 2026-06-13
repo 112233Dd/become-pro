@@ -11,7 +11,7 @@ const PROGRAM_LINKS = {
   "matchday-pack": "https://drive.google.com/file/d/16x5DuIX8f7p7UyZNQ972EKU1YSEGLBQX/view?usp=sharing",
 };
 const VIBER_GROUP_LINK = process.env.VIBER_GROUP_LINK || "";
-const ORDER_STATUSES = new Set(["pending", "paid", "failed", "expired"]);
+const ORDER_STATUSES = new Set(["pending", "paid", "failed", "expired", "delivery_failed"]);
 const STRIPE_API_VERSION = "2026-02-25.clover";
 
 const productCatalog = {
@@ -257,6 +257,7 @@ const supabaseRequest = async (path, options = {}) => {
 };
 
 const hasSupabaseAdmin = () => Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
+const isCheckoutEnabled = () => process.env.CHECKOUT_ENABLED === "true";
 
 const orderRowsFromPrograms = ({ programs, customer, status, sessionId, paymentIntentId }) =>
   programs.map((program) => ({
@@ -538,6 +539,7 @@ module.exports = {
   getOrigin,
   getProgramsByIds,
   hasSupabaseAdmin,
+  isCheckoutEnabled,
   listCheckoutSessionLineItems,
   listStripeOrders,
   logAdminEvent,

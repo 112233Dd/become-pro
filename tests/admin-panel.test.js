@@ -119,6 +119,7 @@ test("admin orders dashboard exposes search, filters, refresh, and empty state",
   assert.match(ordersHtml, /data-admin-status-filter\s*=\s*["']all["']/);
   assert.match(ordersHtml, /data-admin-status-filter\s*=\s*["']paid["']/);
   assert.match(ordersHtml, /data-admin-status-filter\s*=\s*["']pending["']/);
+  assert.match(ordersHtml, /data-admin-status-filter\s*=\s*["']delivery_failed["']/);
   assert.match(ordersHtml, /data-admin-status-filter\s*=\s*["']failed["']/);
   assert.match(ordersHtml, /data-admin-status-filter\s*=\s*["']expired["']/);
   assert.match(ordersHtml, /Stripe Session ID/);
@@ -143,6 +144,7 @@ test("order status model includes expired instead of cancelled for new records",
   const schema = read("supabase/schema.sql");
 
   assert.match(sharedApi, /"expired"/);
+  assert.match(sharedApi, /"delivery_failed"/);
   assert.doesNotMatch(sharedApi, /ORDER_STATUSES\s*=\s*new Set\(\[[^\]]*"cancelled"/);
   assert.match(sharedApi, /session\.status === "expired"\s*\?\s*"expired"/);
   assert.match(webhookApi, /status:\s*"expired"/);

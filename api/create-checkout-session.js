@@ -3,6 +3,7 @@ const {
   getOrigin,
   getProgramsByIds,
   hasSupabaseAdmin,
+  isCheckoutEnabled,
   readJsonBody,
   sendJson,
   upsertOrders,
@@ -12,6 +13,12 @@ module.exports = async (req, res) => {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     return sendJson(res, 405, { error: "Method not allowed." });
+  }
+
+  if (!isCheckoutEnabled()) {
+    return sendJson(res, 503, {
+      error: "Плащанията са временно спрени, докато проверяваме Stripe настройките.",
+    });
   }
 
   try {
