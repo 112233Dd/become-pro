@@ -14,6 +14,11 @@ const trainingStatusButtons = [...document.querySelectorAll("[data-training-requ
 const trainingRefreshButton = document.querySelector("[data-training-request-refresh]");
 const trainingEmptyState = document.querySelector("[data-training-request-empty]");
 const trainingErrorState = document.querySelector("[data-training-request-error]");
+const logTableBody = document.querySelector("[data-admin-log-table]");
+const logCountNode = document.querySelector("[data-admin-log-count]");
+const logRefreshButton = document.querySelector("[data-admin-log-refresh]");
+const logEmptyState = document.querySelector("[data-admin-log-empty]");
+const logErrorState = document.querySelector("[data-admin-log-error]");
 
 let orders = [];
 let selectedStatus = "all";
@@ -21,6 +26,7 @@ let searchTerm = "";
 let trainingRequests = [];
 let selectedTrainingStatus = "all";
 let trainingSearchTerm = "";
+let adminLogs = [];
 
 const trainingStatusLabels = {
   new: "Нова",
@@ -159,6 +165,26 @@ const renderTrainingRequests = () => {
     .join("");
 };
 
+const renderAdminLogs = () => {
+  if (!logTableBody) return;
+  if (logCountNode) logCountNode.textContent = `${adminLogs.length} logs`;
+  if (logEmptyState) logEmptyState.hidden = adminLogs.length > 0;
+
+  logTableBody.innerHTML = adminLogs
+    .map(
+      (log) => `
+        <tr class="log-level-${escapeHtml(log.level || "error")}">
+          <td>${escapeHtml(formatDate(log.created_at))}</td>
+          <td><mark class="order-status status-${escapeHtml(log.level || "error")}">${escapeHtml(log.level || "error")}</mark></td>
+          <td>${escapeHtml(log.event || "-")}</td>
+          <td>${escapeHtml(log.message || "-")}</td>
+          <td><code>${escapeHtml(log.stripe_checkout_session_id || "-")}</code></td>
+        </tr>
+      `,
+    )
+    .join("");
+};
+
 const setLoading = (button, isLoading, idleText, loadingText) => {
   if (!button) return;
   button.disabled = isLoading;
@@ -206,6 +232,25 @@ const loadTrainingRequests = async () => {
     setError(trainingErrorState, error.message || "Възникна проблем при зареждане на заявките.");
   } finally {
     setLoading(trainingRefreshButton, false, "Обнови заявките", "Зареждане...");
+  }
+};
+
+const loadAdminLogs = async () => {
+  setLoading(logRefreshButton, true, "Refresh logs", "Loading...");
+  setError(logErrorState);
+  try {
+    const response = await fetch("/api/admin/logs");
+    const data = await response.json();
+    if (handleUnauthorized(response)) return;
+    if (!response.ok) throw new Error(data.error || "Admin logs could not be loaded.");
+    adminLogs = Array.isArray(data.logs) ? data.logs : [];
+    renderAdminLogs();
+  } catch (error) {
+    adminLogs = [];
+    renderAdminLogs();
+    setError(logErrorState, error.message || "Admin logs could not be loaded.");
+  } finally {
+    setLoading(logRefreshButton, false, "Refresh logs", "Loading...");
   }
 };
 
@@ -269,10 +314,11 @@ trainingTableBody?.addEventListener("change", (event) => {
 
 refreshButton?.addEventListener("click", loadOrders);
 trainingRefreshButton?.addEventListener("click", loadTrainingRequests);
+logRefreshButton?.addEventListener("click", loadAdminLogs);
 
 logoutButton?.addEventListener("click", async () => {
   await fetch("/api/admin/logout", { method: "POST" });
   window.location.replace("/admin/login");
 });
 
-Promise.all([loadOrders(), loadTrainingRequests()]);
+Promise.all([loadOrders(), loadTrainingRequests(), loadAdminLogs()]);

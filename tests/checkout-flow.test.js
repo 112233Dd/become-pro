@@ -121,8 +121,44 @@ test("webhook is the only place that fulfills successful payments", () => {
   assert.match(webhook, /status:\s*"paid"/);
   assert.match(webhook, /upsertOrders/);
   assert.match(webhook, /sendFulfillmentEmails/);
-  assert.doesNotMatch(webhook, /VIBER_GROUP_LINK|formatViberBlock/);
+  assert.match(webhook, /ensureFulfillmentPayload/);
+  assert.match(webhook, /formatViberBonusForEmail/);
   assert.doesNotMatch(successPage, /upsertOrders|sendFulfillmentEmails|programLink/i);
+});
+
+test("Stripe checkout and webhook preserve program identity for fulfillment", () => {
+  const shared = read("api/_shared.js");
+  const webhook = read("api/stripe/webhook.js");
+
+  assert.match(shared, /body\.append\(`metadata\[\$\{key\}\]`/);
+  assert.match(shared, /body\.append\(`payment_intent_data\[metadata\]\[\$\{key\}\]`/);
+  assert.match(shared, /product_data\]\[metadata\]\[programId\]/);
+  assert.match(shared, /listCheckoutSessionLineItems/);
+  assert.match(shared, /getProgramsFromCheckoutLineItems/);
+  assert.match(webhook, /programsFromSession/);
+  assert.match(webhook, /listCheckoutSessionLineItems/);
+  assert.match(webhook, /getProgramsFromCheckoutLineItems/);
+});
+
+test("fulfillment email requires Google Drive links and logs missing access data", () => {
+  const shared = read("api/_shared.js");
+  const webhook = read("api/stripe/webhook.js");
+  const schema = read("supabase/schema.sql");
+  const adminLogsEndpoint = read("api/admin/logs.js");
+  const adminHtml = read("admin-orders.html");
+  const adminScript = read("admin-orders.js");
+
+  assert.match(shared, /validateProgramAccessLinks/);
+  assert.match(shared, /drive\.google\.com/);
+  assert.match(shared, /logAdminEvent/);
+  assert.match(webhook, /fulfillment_access_link_missing/);
+  assert.match(webhook, /Fulfillment email was not sent/);
+  assert.match(webhook, /formatProgramsForEmail\(programs\)\}\$\{formatViberBonusForEmail\(\)\}/);
+  assert.match(webhook, /become\.pro2024@gmail\.com/);
+  assert.match(schema, /create table if not exists public\.admin_logs/);
+  assert.match(adminLogsEndpoint, /admin_logs\?select=/);
+  assert.match(adminHtml, /data-admin-logs/);
+  assert.match(adminScript, /\/api\/admin\/logs/);
 });
 
 test("program catalog uses the real access link for each program", () => {

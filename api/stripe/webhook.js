@@ -1,10 +1,15 @@
 const {
   getProgramsByIds,
+  getProgramsFromCheckoutLineItems,
   hasSupabaseAdmin,
+  listCheckoutSessionLineItems,
+  logAdminEvent,
   readRawBody,
   sendEmail,
   sendJson,
   upsertOrders,
+  validateProgramAccessLinks,
+  VIBER_GROUP_LINK,
   verifyStripeSignature,
 } = require("../_shared");
 
@@ -35,8 +40,61 @@ const programsFromMetadata = (metadata = {}) => {
   return ids.length ? getProgramsByIds(ids) : [];
 };
 
+const programsFromSession = async (session = {}) => {
+  const metadataPrograms = programsFromMetadata(session.metadata || {});
+  if (metadataPrograms.length) return metadataPrograms;
+
+  try {
+    return getProgramsFromCheckoutLineItems(await listCheckoutSessionLineItems(session.id));
+  } catch (error) {
+    await logAdminEvent({
+      event: "stripe_program_lookup_failed",
+      message: "Could not resolve purchased program from Stripe Checkout line items.",
+      stripeSessionId: session.id,
+      metadata: { error: error.message },
+    });
+    return [];
+  }
+};
+
 const formatProgramsForEmail = (programs) =>
   programs.map((program) => `${program.name}\n${program.programLink}`).join("\n\n");
+
+const formatViberBonusForEmail = () =>
+  VIBER_GROUP_LINK
+    ? `\n\nР‘РѕРЅСѓСЃ Viber РіСЂСѓРїР°:\n${VIBER_GROUP_LINK}`
+    : "\n\nР‘РѕРЅСѓСЃ Viber РіСЂСѓРїР°:\nРђРєРѕ РїСЂРѕРіСЂР°РјР°С‚Р° РІРєР»СЋС‡РІР° Viber Р±РѕРЅСѓСЃ, С‰Рµ РїРѕР»СѓС‡РёС€ РґРѕСЃС‚СЉРї Рё РґРѕ РіСЂСѓРїР°С‚Р°.";
+
+const ensureFulfillmentPayload = async ({ programs, session }) => {
+  if (!programs.length) {
+    await logAdminEvent({
+      event: "stripe_program_missing",
+      message: "Checkout session has no recognizable purchased program. Fulfillment email was not sent.",
+      stripeSessionId: session.id,
+      metadata: { metadata: session.metadata || {} },
+    });
+    return false;
+  }
+
+  const validPrograms = validateProgramAccessLinks(programs);
+  if (validPrograms.length !== programs.length) {
+    await logAdminEvent({
+      event: "fulfillment_access_link_missing",
+      message: "Purchased program is missing a valid Google Drive access link. Fulfillment email was not sent.",
+      stripeSessionId: session.id,
+      metadata: {
+        programs: programs.map((program) => ({
+          id: program.id,
+          name: program.name,
+          programLink: program.programLink || "",
+        })),
+      },
+    });
+    return false;
+  }
+
+  return true;
+};
 
 const sendFulfillmentEmails = async ({ programs, customer, session }) => {
   await sendEmail({
@@ -52,9 +110,10 @@ const sendFulfillmentEmails = async ({ programs, customer, session }) => {
 ${programs.map((program) => program.name).join(", ")}
 
 Можеш да достъпиш програмата от този линк:
-${formatProgramsForEmail(programs)}
+${formatProgramsForEmail(programs)}${formatViberBonusForEmail()}
 
 Ако имаш въпроси или проблем с достъпа, свържи се с нас.
+Contact: become.pro2024@gmail.com
 
 Поздрави,
 Become Pro`,
@@ -88,7 +147,7 @@ Stripe Session ID:
 ${session.id}
 
 Изпратен линк:
-${formatProgramsForEmail(programs)}`,
+${formatProgramsForEmail(programs)}${formatViberBonusForEmail()}`,
   });
 };
 
@@ -105,11 +164,12 @@ module.exports = async (req, res) => {
 
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
-      const metadata = session.metadata || {};
-      const programs = programsFromMetadata(metadata);
+      const programs = await programsFromSession(session);
       const customer = customerFromSession(session);
 
-      if (!programs.length) return sendJson(res, 200, { received: true });
+      if (!(await ensureFulfillmentPayload({ programs, session }))) {
+        return sendJson(res, 200, { received: true });
+      }
 
       if (hasSupabaseAdmin()) {
         try {

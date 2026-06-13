@@ -118,3 +118,28 @@ create index if not exists orders_payment_status_idx
   on public.orders (payment_status);
 
 alter table public.orders enable row level security;
+
+create table if not exists public.admin_logs (
+  id uuid primary key default gen_random_uuid(),
+  level text not null default 'error' check (level in ('debug', 'info', 'warn', 'error')),
+  event text not null,
+  message text not null,
+  stripe_checkout_session_id text,
+  metadata jsonb not null default '{}'::jsonb,
+  created_at timestamptz not null default now()
+);
+
+alter table public.admin_logs add column if not exists level text default 'error';
+alter table public.admin_logs add column if not exists event text;
+alter table public.admin_logs add column if not exists message text;
+alter table public.admin_logs add column if not exists stripe_checkout_session_id text;
+alter table public.admin_logs add column if not exists metadata jsonb default '{}'::jsonb;
+alter table public.admin_logs add column if not exists created_at timestamptz default now();
+
+alter table public.admin_logs enable row level security;
+
+create index if not exists admin_logs_created_at_idx
+  on public.admin_logs (created_at desc);
+
+create index if not exists admin_logs_event_idx
+  on public.admin_logs (event);

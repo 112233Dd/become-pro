@@ -10,6 +10,7 @@ const PROGRAM_LINKS = {
   "summer-program": "https://drive.google.com/file/d/10PK5AIcqO8xb1Xx4gzKWxIUG_pS96HO_/view?usp=sharing",
   "matchday-pack": "https://drive.google.com/file/d/16x5DuIX8f7p7UyZNQ972EKU1YSEGLBQX/view?usp=sharing",
 };
+const VIBER_GROUP_LINK = process.env.VIBER_GROUP_LINK || "";
 const ORDER_STATUSES = new Set(["pending", "paid", "failed", "expired"]);
 const STRIPE_API_VERSION = "2026-02-25.clover";
 
@@ -119,6 +120,11 @@ const getProgramsByIds = (ids) => {
   return programs;
 };
 
+const getProgramsByNames = (names) => {
+  const normalizedNames = new Set(names.map((name) => String(name || "").trim()).filter(Boolean));
+  return Object.values(productCatalog).filter((program) => normalizedNames.has(program.name));
+};
+
 const createStripeCheckoutSession = async ({ programs, customer, origin }) => {
   const metadata = {
     programId: programs.map((program) => program.id).join(","),
@@ -152,6 +158,8 @@ const createStripeCheckoutSession = async ({ programs, customer, origin }) => {
     body.append(`line_items[${index}][price_data][product_data][name]`, program.name);
     body.append(`line_items[${index}][price_data][product_data][description]`, program.description);
     body.append(`line_items[${index}][price_data][product_data][images][]`, `${origin}${program.image}`);
+    body.append(`line_items[${index}][price_data][product_data][metadata][programId]`, program.id);
+    body.append(`line_items[${index}][price_data][product_data][metadata][programName]`, program.name);
   });
 
   const response = await fetch("https://api.stripe.com/v1/checkout/sessions", {
@@ -167,6 +175,62 @@ const createStripeCheckoutSession = async ({ programs, customer, origin }) => {
   const payload = await response.json();
   if (!response.ok) throw new Error(payload.error?.message || "Stripe Checkout session failed.");
   return payload;
+};
+
+const listCheckoutSessionLineItems = async (sessionId) => {
+  if (!sessionId) return [];
+  const payload = await stripeRequest(
+    `checkout/sessions/${encodeURIComponent(sessionId)}/line_items?limit=100&expand[]=data.price.product`,
+  );
+  return payload.data || [];
+};
+
+const getProgramsFromCheckoutLineItems = (lineItems = []) => {
+  const ids = lineItems
+    .map((item) => item?.price?.product?.metadata?.programId)
+    .filter(Boolean);
+
+  if (ids.length) return getProgramsByIds(ids);
+
+  const names = lineItems.map((item) => item?.price?.product?.name || item?.description).filter(Boolean);
+  const programs = getProgramsByNames(names);
+  return programs.length === names.length ? programs : [];
+};
+
+const validateProgramAccessLinks = (programs = []) =>
+  programs.filter((program) => {
+    try {
+      const url = new URL(program.programLink || "");
+      return url.hostname.includes("drive.google.com");
+    } catch {
+      return false;
+    }
+  });
+
+const logAdminEvent = async ({ level = "error", event, message, stripeSessionId = null, metadata = {} }) => {
+  const payload = {
+    level,
+    event,
+    message,
+    stripe_checkout_session_id: stripeSessionId,
+    metadata,
+  };
+
+  console[level === "error" ? "error" : "log"](`[admin-log:${event}] ${message}`, payload);
+
+  if (!hasSupabaseAdmin()) return { skipped: true };
+
+  try {
+    await supabaseRequest("admin_logs", {
+      method: "POST",
+      headers: { Prefer: "return=minimal" },
+      body: JSON.stringify([payload]),
+    });
+    return { ok: true };
+  } catch (error) {
+    console.error("Admin log persistence failed:", error);
+    return { skipped: true, error: error.message };
+  }
 };
 
 const supabaseRequest = async (path, options = {}) => {
@@ -467,12 +531,16 @@ module.exports = {
   productCatalog,
   PROGRAM_LINK,
   PROGRAM_LINKS,
+  VIBER_GROUP_LINK,
   STRIPE_API_VERSION,
   createStripeCheckoutSession,
+  getProgramsFromCheckoutLineItems,
   getOrigin,
   getProgramsByIds,
   hasSupabaseAdmin,
+  listCheckoutSessionLineItems,
   listStripeOrders,
+  logAdminEvent,
   readJsonBody,
   readRawBody,
   sendEmail,
@@ -480,6 +548,7 @@ module.exports = {
   signAdminToken,
   supabaseRequest,
   upsertOrders,
+  validateProgramAccessLinks,
   verifyAdminToken,
   verifyStripeSignature,
   getCookie,

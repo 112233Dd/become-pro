@@ -131,6 +131,39 @@
           </table>
         </div>
       </section>
+
+      <section class="admin-orders admin-logs" data-admin-logs>
+        <div class="admin-section-heading">
+          <div>
+            <p class="eyebrow">System</p>
+            <h2>Fulfillment logs</h2>
+          </div>
+          <div class="admin-toolbar">
+            <strong data-admin-log-count>0 logs</strong>
+            <button class="btn btn-secondary admin-refresh" type="button" data-admin-log-refresh>
+              Refresh logs
+            </button>
+          </div>
+        </div>
+
+        <p class="admin-state admin-empty" data-admin-log-empty hidden>No fulfillment issues logged.</p>
+        <p class="admin-state admin-error" data-admin-log-error hidden></p>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table admin-log-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Level</th>
+                <th>Event</th>
+                <th>Message</th>
+                <th>Stripe Session ID</th>
+              </tr>
+            </thead>
+            <tbody data-admin-log-table></tbody>
+          </table>
+        </div>
+      </section>
     </section>
   </main>
 
