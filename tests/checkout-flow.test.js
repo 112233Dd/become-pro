@@ -183,18 +183,18 @@ test("success and cancel pages exist for Stripe redirects", () => {
   assert.match(cancelPage, /programs\.html#programs/);
 });
 
-test("all programs use the temporary live EUR 0.50 price in storefront and Stripe", () => {
+test("all programs use the temporary live EUR 0.10 price in storefront and Stripe", () => {
   const shop = read("shop.js");
   const shared = read("api/_shared.js");
 
-  assert.equal((shop.match(/price:\s*"€0\.50"/g) || []).length, 6);
-  assert.equal((shared.match(/price:\s*0\.5,/g) || []).length, 6);
-  assert.equal((shared.match(/priceCents:\s*50,/g) || []).length, 6);
+  assert.equal((shop.match(/price:\s*"€0\.10"/g) || []).length, 6);
+  assert.equal((shared.match(/price:\s*0\.1,/g) || []).length, 6);
+  assert.equal((shared.match(/priceCents:\s*10,/g) || []).length, 6);
   assert.doesNotMatch(shop, /€49\.99/);
   assert.doesNotMatch(shared, /priceCents:\s*4999/);
 });
 
-test("all six storefront programs render the visible EUR 0.50 price", () => {
+test("all six storefront programs render the visible EUR 0.10 price", () => {
   const shop = read("shop.js");
   const cardRenderer = extractNamedDeclaration(shop, "renderProgramCard");
 
@@ -211,7 +211,7 @@ test("storefront renders all six shop programs through the shared card renderer"
   const storefrontRenderer = extractNamedDeclaration(shop, "renderProgramStorefront");
 
   assert.equal((catalog.match(/\bid\s*:/g) || []).length, 6, "shopPrograms must contain six programs");
-  assert.equal((catalog.match(/price\s*:\s*["']€0\.50["']/g) || []).length, 6, "Every program must cost €0.50");
+  assert.equal((catalog.match(/price\s*:\s*["']€0\.10["']/g) || []).length, 6, "Every program must cost €0.10");
   assert.match(storefrontRenderer, /\bshopPrograms\b/, "Storefront must use shopPrograms");
   assert.match(storefrontRenderer, /\.map\s*\(/, "Storefront must iterate over all programs");
   assert.match(storefrontRenderer, /\brenderProgramCard\s*\(/, "Storefront must use the shared card renderer");
