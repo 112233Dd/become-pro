@@ -5,7 +5,7 @@ const shopPrograms = [
   {
     id: "summer-program",
     title: "Лятна програма",
-    price: "€0.10",
+    price: "€0.50",
     image: "assets/program-cover-summer.png",
     badge: "🥇 Най-добрият избор за лятото",
     badgeVariant: "featured",
@@ -65,7 +65,7 @@ const shopPrograms = [
   {
     id: "technical-pack",
     title: "Технически пакет",
-    price: "€0.10",
+    price: "€0.50",
     image: "assets/program-cover-technical-pack.png",
     description:
       "Пълна техническа система за футболисти, които искат по-добър контрол, по-уверени действия с топката и повече качество в игра.",
@@ -119,7 +119,7 @@ const shopPrograms = [
   {
     id: "strength-level-1",
     title: "Силова програма — Ниво 1",
-    price: "€0.10",
+    price: "€0.50",
     image: "assets/program-cover-strength-level-1.jfif",
     description:
       "Начална силова програма за футболисти, които искат да изградят стабилна основа, правилна техника и по-добър контрол на тялото.",
@@ -161,7 +161,7 @@ const shopPrograms = [
   {
     id: "strength-level-2",
     title: "Силова програма — Ниво 2",
-    price: "€0.10",
+    price: "€0.50",
     image: "assets/program-cover-strength-level-2.jfif",
     description:
       "Следващо ниво за футболисти, които вече имат основа и искат повече сила, експлозивност и устойчивост.",
@@ -203,7 +203,7 @@ const shopPrograms = [
   {
     id: "strength-level-3",
     title: "Силова програма — Ниво 3",
-    price: "€0.10",
+    price: "€0.50",
     image: "assets/program-cover-strength-level-3.jfif",
     description:
       "Напреднала програма за футболисти, които искат по-висока физическа готовност, повече мощност и по-добро представяне на терена.",
@@ -245,7 +245,7 @@ const shopPrograms = [
   {
     id: "matchday-pack",
     title: "Мачов пакет",
-    price: "€0.10",
+    price: "€0.50",
     image: "assets/program-cover-matchday.png",
     description:
       "Пакет за играчи, които искат да се подготвят по-добре преди мач и да изградят по-добра рутина около представянето си.",
