@@ -336,7 +336,7 @@ test("programs page contains no static program card articles", () => {
   assert.doesNotMatch(storefront, STATIC_PROGRAM_CARD, "Programs page still contains static program cards");
 });
 
-test("training CTA opens the survey and Results is publicly named Players", () => {
+test("training campaign page opens the short form and Results is publicly named Players", () => {
   const training = read("training.html");
   const players = read("players.html");
   const publicPages = [
@@ -359,7 +359,9 @@ test("training CTA opens the survey and Results is publicly named Players", () =
     "programs/matchday-pack/index.html",
   ].map(read);
 
-  assert.match(training, /href="contact\.html">Попълни анкетата<\/a>/);
+  assert.match(training, /class="training-landing"/);
+  assert.match(training, /id="training-form"/);
+  assert.match(training, /data-training-landing-form/);
   assert.match(players, /<title>Играчи \| Become Pro<\/title>/);
   publicPages.forEach((page) => assert.doesNotMatch(page, />Резултати<\/a>/));
 });

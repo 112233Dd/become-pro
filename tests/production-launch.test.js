@@ -57,7 +57,6 @@ test("every public page uses the shared footer", () => {
     "contact.html",
     "faq.html",
     "players.html",
-    "training.html",
     "privacy-policy.html",
     "terms.html",
     "cookie-policy.html",
