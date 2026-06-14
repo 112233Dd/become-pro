@@ -38,6 +38,10 @@ test("individual training campaign route and page exist", () => {
   assert.equal(rewrites.get("/training/parents"), "/individual-training.html");
   assert.equal(rewrites.get("/training/players"), "/individual-training.html");
   assert.ok(fs.existsSync(path.join(root, "individual-training.html")));
+  assert.ok(fs.existsSync(path.join(root, "training", "index.html")));
+  ["plovdiv", "sofia", "stara-zagora", "parents", "players"].forEach((variant) => {
+    assert.ok(fs.existsSync(path.join(root, "training", variant, "index.html")));
+  });
 });
 
 test("landing page contains the approved conversion structure", () => {
