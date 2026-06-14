@@ -237,6 +237,7 @@ test("protected admin analytics API supports filters and funnel summaries", () =
 
   assert.match(endpoint, /verifyAdminToken/);
   assert.match(endpoint, /landing_analytics_events/);
+  assert.match(endpoint, /landing_page_url/);
   assert.match(endpoint, /page_variant/);
   assert.match(endpoint, /utm_source/);
   assert.match(endpoint, /utm_medium/);
@@ -247,6 +248,7 @@ test("protected admin analytics API supports filters and funnel summaries", () =
   assert.match(endpoint, /formStarts/);
   assert.match(endpoint, /formSubmissions/);
   assert.match(endpoint, /conversionRate/);
+  assert.match(endpoint, /byLandingPage/);
   assert.match(endpoint, /byVariant/);
   assert.match(endpoint, /byCampaign/);
 });
@@ -255,14 +257,20 @@ test("admin panel shows lead attribution and landing analytics", () => {
   const html = read("admin-orders.html");
   const script = read("admin-orders.js");
 
-  assert.match(html, /Landing Page Analytics/);
+  assert.match(html, /<h2>Analytics<\/h2>/);
   assert.match(html, /data-landing-analytics-filters/);
   assert.match(html, /data-landing-analytics-summary/);
+  assert.match(html, /name="landing_page_url"/);
+  assert.match(html, /name="page_variant"/);
+  assert.match(html, /Funnel heatmap/);
+  assert.match(html, /data-landing-funnel-table/);
   assert.match(html, /data-landing-variant-table/);
   assert.match(html, /data-landing-campaign-table/);
   assert.match(html, /Landing page/);
   assert.match(html, /Кампания/);
   assert.match(script, /\/api\/admin\/landing-analytics/);
+  assert.match(script, /landingFunnelTable/);
+  assert.match(script, /byLandingPage/);
   assert.match(script, /page_variant/);
   assert.match(script, /utm_campaign/);
   assert.match(script, /conversionRate/);

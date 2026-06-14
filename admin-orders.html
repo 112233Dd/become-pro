@@ -172,8 +172,8 @@
       <section class="admin-orders admin-landing-analytics" data-landing-analytics>
         <div class="admin-section-heading">
           <div>
-            <p class="eyebrow">Campaign funnel</p>
-            <h2>Landing Page Analytics</h2>
+            <p class="eyebrow">Analytics</p>
+            <h2>Analytics</h2>
           </div>
           <div class="admin-toolbar">
             <strong data-landing-analytics-status>Последни 30 дни</strong>
@@ -186,7 +186,8 @@
         <form class="admin-analytics-filters" data-landing-analytics-filters>
           <label>От дата<input type="date" name="start" data-analytics-start /></label>
           <label>До дата<input type="date" name="end" data-analytics-end /></label>
-          <label>Landing page<input type="text" name="page_variant" placeholder="general" /></label>
+          <label>Landing page<input type="text" name="landing_page_url" placeholder="/training/plovdiv" /></label>
+          <label>Variant<input type="text" name="page_variant" placeholder="plovdiv" /></label>
           <label>UTM source<input type="text" name="utm_source" placeholder="instagram" /></label>
           <label>UTM medium<input type="text" name="utm_medium" placeholder="paid_social" /></label>
           <label>UTM campaign<input type="text" name="utm_campaign" placeholder="campaign_name" /></label>
@@ -200,6 +201,15 @@
         <div class="admin-analytics-summary" data-landing-analytics-summary></div>
 
         <div class="admin-analytics-tables">
+          <section>
+            <h3>Funnel heatmap по landing page</h3>
+            <div class="admin-table-wrap">
+              <table class="admin-table admin-analytics-table admin-funnel-table">
+                <thead><tr><th>Landing page</th><th>Page Views</th><th>CTA Clicks</th><th>Form Starts</th><th>Form Submits</th><th>Conversion</th></tr></thead>
+                <tbody data-landing-funnel-table></tbody>
+              </table>
+            </div>
+          </section>
           <section>
             <h3>Performance по landing page вариант</h3>
             <div class="admin-table-wrap">

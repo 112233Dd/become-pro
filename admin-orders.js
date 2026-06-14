@@ -30,6 +30,7 @@ const landingAnalyticsRefresh = document.querySelector("[data-landing-analytics-
 const landingAnalyticsReset = document.querySelector("[data-landing-analytics-reset]");
 const landingAnalyticsError = document.querySelector("[data-landing-analytics-error]");
 const landingAnalyticsSummary = document.querySelector("[data-landing-analytics-summary]");
+const landingFunnelTable = document.querySelector("[data-landing-funnel-table]");
 const landingVariantTable = document.querySelector("[data-landing-variant-table]");
 const landingCampaignTable = document.querySelector("[data-landing-campaign-table]");
 
@@ -217,8 +218,24 @@ const analyticsRows = (rows = []) =>
     )
     .join("");
 
+const analyticsFunnelRows = (rows = []) =>
+  rows
+    .map(
+      (row) => `
+        <tr>
+          <td><strong>${escapeHtml(row.name || "-")}</strong></td>
+          <td>${escapeHtml(row.pageViews ?? 0)}</td>
+          <td>${escapeHtml(row.ctaClicks ?? 0)}</td>
+          <td>${escapeHtml(row.formStarts ?? 0)}</td>
+          <td>${escapeHtml(row.formSubmissions ?? 0)}</td>
+          <td>${escapeHtml(`${Number(row.conversionRate || 0).toFixed(2)}%`)}</td>
+        </tr>
+      `,
+    )
+    .join("");
+
 const renderLandingAnalytics = () => {
-  if (!landingAnalyticsSummary || !landingVariantTable || !landingCampaignTable) return;
+  if (!landingAnalyticsSummary || !landingFunnelTable || !landingVariantTable || !landingCampaignTable) return;
   const summary = landingAnalytics?.summary || {};
   landingAnalyticsSummary.innerHTML = [
     ["Общо посещения", summary.pageViews || 0],
@@ -230,6 +247,7 @@ const renderLandingAnalytics = () => {
   ]
     .map(([label, value]) => analyticsMetricCard(label, value))
     .join("");
+  landingFunnelTable.innerHTML = analyticsFunnelRows(landingAnalytics?.byLandingPage);
   landingVariantTable.innerHTML = analyticsRows(landingAnalytics?.byVariant);
   landingCampaignTable.innerHTML = analyticsRows(landingAnalytics?.byCampaign);
 };

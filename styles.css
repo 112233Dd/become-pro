@@ -2232,6 +2232,23 @@ blockquote:hover {
   min-width: 820px;
 }
 
+.admin-funnel-table {
+  min-width: 760px;
+}
+
+.admin-funnel-table th:not(:first-child),
+.admin-funnel-table td:not(:first-child) {
+  text-align: center;
+}
+
+.admin-funnel-table td:nth-child(2),
+.admin-funnel-table td:nth-child(3),
+.admin-funnel-table td:nth-child(4),
+.admin-funnel-table td:nth-child(5) {
+  color: var(--lime);
+  font-weight: 900;
+}
+
 .admin-section-heading {
   display: flex;
   gap: 20px;

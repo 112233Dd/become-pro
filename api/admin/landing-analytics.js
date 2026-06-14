@@ -78,20 +78,22 @@ module.exports = async (req, res) => {
     }
 
     const filters = {
+      landing_page_url: cleanFilter(req.query?.landing_page_url, 500),
       page_variant: cleanFilter(req.query?.page_variant),
       utm_source: cleanFilter(req.query?.utm_source),
       utm_medium: cleanFilter(req.query?.utm_medium),
       utm_campaign: cleanFilter(req.query?.utm_campaign),
     };
     const query = new URLSearchParams({
-      select: "session_id,event_name,page_variant,utm_source,utm_medium,utm_campaign,event_time",
+      select: "session_id,event_name,landing_page_url,page_variant,utm_source,utm_medium,utm_campaign,event_time",
       event_time: `gte.${start.toISOString()}`,
       order: "event_time.desc",
       limit: "10000",
     });
     query.append("event_time", `lte.${end.toISOString()}`);
     Object.entries(filters).forEach(([key, value]) => {
-      if (value) query.append(key, `eq.${value}`);
+      if (!value) return;
+      query.append(key, key === "landing_page_url" ? `ilike.*${value}*` : `eq.${value}`);
     });
 
     const events = (await supabaseRequest(`landing_analytics_events?${query.toString()}`)) || [];
@@ -100,9 +102,11 @@ module.exports = async (req, res) => {
     return sendJson(res, 200, {
       range: { start: start.toISOString(), end: end.toISOString() },
       summary: buildStats(events),
+      byLandingPage: groupEvents(events, "landing_page_url", "Landing page"),
       byVariant: groupEvents(events, "page_variant", "general"),
       byCampaign: groupEvents(events, "utm_campaign", "Без кампания"),
       filters: {
+        landingPages: distinct("landing_page_url"),
         pageVariants: distinct("page_variant"),
         utmSources: distinct("utm_source"),
         utmMediums: distinct("utm_medium"),
