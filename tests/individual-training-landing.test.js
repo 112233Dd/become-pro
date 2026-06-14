@@ -31,6 +31,12 @@ test("individual training campaign route and page exist", () => {
   const rewrites = new Map(JSON.parse(read("vercel.json")).rewrites.map((item) => [item.source, item.destination]));
 
   assert.equal(rewrites.get("/individual-training"), "/individual-training.html");
+  assert.equal(rewrites.get("/training"), "/individual-training.html");
+  assert.equal(rewrites.get("/training/plovdiv"), "/individual-training.html");
+  assert.equal(rewrites.get("/training/sofia"), "/individual-training.html");
+  assert.equal(rewrites.get("/training/stara-zagora"), "/individual-training.html");
+  assert.equal(rewrites.get("/training/parents"), "/individual-training.html");
+  assert.equal(rewrites.get("/training/players"), "/individual-training.html");
   assert.ok(fs.existsSync(path.join(root, "individual-training.html")));
 });
 
@@ -115,6 +121,9 @@ test("landing tracker emits only approved anonymous funnel events", () => {
   assert.match(script, /\/api\/training-requests/);
   assert.match(script, /landingPageUrl/);
   assert.match(script, /pageVariant/);
+  assert.match(script, /VARIANT_BY_PATH/);
+  assert.match(script, /\/training\/plovdiv/);
+  assert.match(script, /CITY_BY_VARIANT/);
   assert.match(script, /deviceType/);
   assert.match(script, /browser/);
   assert.doesNotMatch(script, /analyticsPayload\s*=\s*\{[\s\S]{0,900}\b(name|phone|email)\s*:/);

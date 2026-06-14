@@ -48,6 +48,30 @@
       "destination": "/individual-training.html"
     },
     {
+      "source": "/training",
+      "destination": "/individual-training.html"
+    },
+    {
+      "source": "/training/plovdiv",
+      "destination": "/individual-training.html"
+    },
+    {
+      "source": "/training/sofia",
+      "destination": "/individual-training.html"
+    },
+    {
+      "source": "/training/stara-zagora",
+      "destination": "/individual-training.html"
+    },
+    {
+      "source": "/training/parents",
+      "destination": "/individual-training.html"
+    },
+    {
+      "source": "/training/players",
+      "destination": "/individual-training.html"
+    },
+    {
       "source": "/checkout/success",
       "destination": "/checkout/success/index.html"
     },

@@ -10,9 +10,25 @@
     "form_submit_error",
   ]);
   const CAMPAIGN_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"];
+  const VARIANT_BY_PATH = new Map([
+    ["/training", "general"],
+    ["/individual-training", "general"],
+    ["/training/plovdiv", "plovdiv"],
+    ["/training/sofia", "sofia"],
+    ["/training/stara-zagora", "stara-zagora"],
+    ["/training/parents", "parents"],
+    ["/training/players", "players"],
+  ]);
+  const CITY_BY_VARIANT = new Map([
+    ["plovdiv", "Пловдив"],
+    ["sofia", "София"],
+    ["stara-zagora", "Стара Загора"],
+  ]);
   const params = new URLSearchParams(window.location.search);
   const campaign = Object.fromEntries(CAMPAIGN_KEYS.map((key) => [key, (params.get(key) || "").slice(0, 160)]));
-  const pageVariant = document.body.dataset.pageVariant || "general";
+  const normalizedPath = window.location.pathname.replace(/\/$/, "") || "/training";
+  const pageVariant = VARIANT_BY_PATH.get(normalizedPath) || document.body.dataset.pageVariant || "general";
+  document.body.dataset.pageVariant = pageVariant;
   const landingPageUrl = `${window.location.origin}${window.location.pathname}${window.location.search}`;
   const referrer = document.referrer.slice(0, 500);
   const deviceType = window.matchMedia("(max-width: 720px)").matches ? "mobile" : "desktop";
@@ -76,6 +92,11 @@
 
   const form = document.querySelector("[data-training-landing-form]");
   const formStatus = document.querySelector("[data-landing-form-status]");
+  const cityInput = form?.querySelector('[name="city"]');
+  const suggestedCity = CITY_BY_VARIANT.get(pageVariant);
+  if (cityInput && suggestedCity && !cityInput.value) {
+    cityInput.value = suggestedCity;
+  }
   const markFormStart = () => track("form_start", true);
   ["focusin", "input", "change"].forEach((eventName) => form?.addEventListener(eventName, markFormStart));
 
