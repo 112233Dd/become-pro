@@ -19,6 +19,11 @@ const logCountNode = document.querySelector("[data-admin-log-count]");
 const logRefreshButton = document.querySelector("[data-admin-log-refresh]");
 const logEmptyState = document.querySelector("[data-admin-log-empty]");
 const logErrorState = document.querySelector("[data-admin-log-error]");
+const stripeDiagnosticsStatus = document.querySelector("[data-stripe-diagnostics-status]");
+const stripeDiagnosticsRefreshButton = document.querySelector("[data-stripe-diagnostics-refresh]");
+const stripeDiagnosticsError = document.querySelector("[data-stripe-diagnostics-error]");
+const stripeDiagnosticsSummary = document.querySelector("[data-stripe-diagnostics-summary]");
+const stripeDiagnosticsSessions = document.querySelector("[data-stripe-diagnostics-sessions]");
 
 let orders = [];
 let selectedStatus = "all";
@@ -27,6 +32,7 @@ let trainingRequests = [];
 let selectedTrainingStatus = "all";
 let trainingSearchTerm = "";
 let adminLogs = [];
+let stripeDiagnostics = null;
 
 const trainingStatusLabels = {
   new: "Нова",
@@ -69,6 +75,11 @@ const formatDate = (value) => {
 
 const formatPrice = (value) =>
   new Intl.NumberFormat("bg-BG", { style: "currency", currency: "EUR" }).format(Number(value || 0));
+
+const formatMinorAmount = (amount, currency = "eur") =>
+  new Intl.NumberFormat("bg-BG", { style: "currency", currency: String(currency || "eur").toUpperCase() }).format(
+    Number(amount || 0) / 100,
+  );
 
 const setError = (node, message = "") => {
   if (!node) return;
@@ -185,6 +196,61 @@ const renderAdminLogs = () => {
     .join("");
 };
 
+const renderStripeDiagnostics = () => {
+  if (!stripeDiagnosticsSummary || !stripeDiagnosticsSessions) return;
+
+  if (!stripeDiagnostics) {
+    stripeDiagnosticsSummary.innerHTML = "";
+    stripeDiagnosticsSessions.innerHTML = "";
+    if (stripeDiagnosticsStatus) stripeDiagnosticsStatus.textContent = "Not loaded";
+    return;
+  }
+
+  const account = stripeDiagnostics.account || {};
+  const environment = stripeDiagnostics.environment || {};
+  const checkoutLabel = stripeDiagnostics.checkoutEnabled ? "ENABLED" : "DISABLED";
+  if (stripeDiagnosticsStatus) stripeDiagnosticsStatus.textContent = `Checkout ${checkoutLabel}`;
+
+  const items = [
+    ["Stripe account", account.id || "-"],
+    ["Secret key mode", environment.stripeSecretKeyMode || "-"],
+    ["Checkout", checkoutLabel],
+    ["Webhook secret", environment.hasStripeWebhookSecret ? "configured" : "missing"],
+    ["Publishable key", environment.hasPublishableKey ? "configured" : "missing"],
+    ["Business name", account.businessName || "-"],
+    ["Country", account.country || "-"],
+    ["Default currency", account.defaultCurrency || "-"],
+    ["Charges enabled", account.chargesEnabled ? "yes" : "no"],
+    ["Payouts enabled", account.payoutsEnabled ? "yes" : "no"],
+  ];
+
+  stripeDiagnosticsSummary.innerHTML = items
+    .map(
+      ([label, value]) => `
+        <article class="admin-diagnostic-card">
+          <span>${escapeHtml(label)}</span>
+          <strong>${escapeHtml(value)}</strong>
+        </article>
+      `,
+    )
+    .join("");
+
+  stripeDiagnosticsSessions.innerHTML = (stripeDiagnostics.recentSessions || [])
+    .map(
+      (session) => `
+        <tr>
+          <td>${escapeHtml(formatDate(session.createdAt))}</td>
+          <td><code>${escapeHtml(session.id || "-")}</code></td>
+          <td>${escapeHtml(session.paymentStatus || session.status || "-")}</td>
+          <td>${escapeHtml(formatMinorAmount(session.amountTotal, session.currency))}</td>
+          <td>${escapeHtml(session.customerEmail || "-")}</td>
+          <td>${escapeHtml(session.programName || session.programId || "-")}</td>
+        </tr>
+      `,
+    )
+    .join("");
+};
+
 const setLoading = (button, isLoading, idleText, loadingText) => {
   if (!button) return;
   button.disabled = isLoading;
@@ -254,6 +320,25 @@ const loadAdminLogs = async () => {
   }
 };
 
+const loadStripeDiagnostics = async () => {
+  setLoading(stripeDiagnosticsRefreshButton, true, "Refresh Stripe status", "Loading...");
+  setError(stripeDiagnosticsError);
+  try {
+    const response = await fetch("/api/admin/stripe-diagnostics");
+    const data = await response.json();
+    if (handleUnauthorized(response)) return;
+    if (!response.ok) throw new Error(data.error || "Stripe diagnostics could not be loaded.");
+    stripeDiagnostics = data;
+    renderStripeDiagnostics();
+  } catch (error) {
+    stripeDiagnostics = null;
+    renderStripeDiagnostics();
+    setError(stripeDiagnosticsError, error.message || "Stripe diagnostics could not be loaded.");
+  } finally {
+    setLoading(stripeDiagnosticsRefreshButton, false, "Refresh Stripe status", "Loading...");
+  }
+};
+
 const updateTrainingRequestStatus = async (select) => {
   const id = select.dataset.requestId;
   const previousStatus = trainingRequests.find((request) => request.id === id)?.status || "new";
@@ -315,10 +400,11 @@ trainingTableBody?.addEventListener("change", (event) => {
 refreshButton?.addEventListener("click", loadOrders);
 trainingRefreshButton?.addEventListener("click", loadTrainingRequests);
 logRefreshButton?.addEventListener("click", loadAdminLogs);
+stripeDiagnosticsRefreshButton?.addEventListener("click", loadStripeDiagnostics);
 
 logoutButton?.addEventListener("click", async () => {
   await fetch("/api/admin/logout", { method: "POST" });
   window.location.replace("/admin/login");
 });
 
-Promise.all([loadOrders(), loadTrainingRequests(), loadAdminLogs()]);
+Promise.all([loadStripeDiagnostics(), loadOrders(), loadTrainingRequests(), loadAdminLogs()]);

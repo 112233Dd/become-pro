@@ -9,7 +9,6 @@ const {
   sendJson,
   upsertOrders,
   validateProgramAccessLinks,
-  VIBER_GROUP_LINK,
   verifyStripeSignature,
 } = require("../_shared");
 
@@ -60,10 +59,97 @@ const programsFromSession = async (session = {}) => {
 const formatProgramsForEmail = (programs) =>
   programs.map((program) => `${program.name}\n${program.programLink}`).join("\n\n");
 
-const formatViberBonusForEmail = () =>
-  VIBER_GROUP_LINK
-    ? `\n\nР‘РѕРЅСѓСЃ Viber РіСЂСѓРїР°:\n${VIBER_GROUP_LINK}`
-    : "\n\nР‘РѕРЅСѓСЃ Viber РіСЂСѓРїР°:\nРђРєРѕ РїСЂРѕРіСЂР°РјР°С‚Р° РІРєР»СЋС‡РІР° Viber Р±РѕРЅСѓСЃ, С‰Рµ РїРѕР»СѓС‡РёС€ РґРѕСЃС‚СЉРї Рё РґРѕ РіСЂСѓРїР°С‚Р°.";
+const escapeHtml = (value) =>
+  String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+const getCustomerGreeting = (customerName) => {
+  const name = String(customerName || "").trim();
+  return name && name !== "Become Pro клиент" ? `Здравей, ${name},` : "Здравей,";
+};
+
+const buildCustomerEmailText = ({ programs, customer }) => `${getCustomerGreeting(customer.customerName)}
+
+Благодарим ти, че избра Become Pro.
+
+Покупката ти е успешна.
+
+Закупена програма:
+${programs.map((program) => program.name).join(", ")}
+
+Отвори програмата от съответния линк:
+${formatProgramsForEmail(programs)}
+
+Ако имаш въпроси или проблем с достъпа, пиши ни на become.pro2024@gmail.com.
+
+Поздрави,
+Become Pro`;
+
+const buildCustomerEmailHtml = ({ programs, customer }) => {
+  const programBlocks = programs
+    .map(
+      (program) => `
+        <tr>
+          <td style="padding:0 0 18px;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border:1px solid #e6dfcf;border-radius:14px;background:#fffdf8;">
+              <tr>
+                <td style="padding:22px;">
+                  <p style="margin:0 0 14px;color:#17150f;font-size:18px;font-weight:800;">${escapeHtml(program.name)}</p>
+                  <table role="presentation" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td style="border-radius:9px;background:#f5c400;">
+                        <a href="${escapeHtml(program.programLink)}" style="display:inline-block;padding:13px 22px;color:#11100c;font-size:15px;font-weight:800;text-decoration:none;" target="_blank">Отвори програмата</a>
+                      </td>
+                    </tr>
+                  </table>
+                  <p style="margin:16px 0 6px;color:#6d675c;font-size:12px;line-height:1.55;">Ако бутонът не работи, отвори директния линк:</p>
+                  <p style="margin:0;font-size:12px;line-height:1.55;word-break:break-all;">
+                    <a href="${escapeHtml(program.programLink)}" style="color:#8b6800;">${escapeHtml(program.programLink)}</a>
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>`,
+    )
+    .join("");
+
+  return `<!doctype html>
+<html lang="bg">
+  <body style="margin:0;padding:0;background:#070706;font-family:Arial,Helvetica,sans-serif;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#070706;">
+      <tr>
+        <td align="center" style="padding:34px 14px;">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:620px;">
+            <tr>
+              <td align="center" style="padding:0 0 20px;">
+                <img src="https://become-pro-ivory.vercel.app/assets/becomepro-logo.png" width="78" height="78" alt="Become Pro" style="display:block;width:78px;height:78px;object-fit:contain;" />
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:34px;border:1px solid #302b1d;border-radius:20px;background:#11110f;">
+                <p style="margin:0 0 10px;color:#f5c400;font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;">Become Pro</p>
+                <h1 style="margin:0 0 22px;color:#ffffff;font-size:28px;line-height:1.2;">Достъп до твоята Become Pro програма</h1>
+                <p style="margin:0 0 12px;color:#f4f0e6;font-size:16px;line-height:1.65;">${escapeHtml(getCustomerGreeting(customer.customerName))}</p>
+                <p style="margin:0 0 26px;color:#c9c3b5;font-size:15px;line-height:1.65;">Плащането е успешно. По-долу е достъпът до закупената програма.</p>
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                  ${programBlocks}
+                </table>
+                <p style="margin:8px 0 0;color:#c9c3b5;font-size:14px;line-height:1.65;">При проблем с достъпа пиши на <a href="mailto:become.pro2024@gmail.com" style="color:#f5c400;">become.pro2024@gmail.com</a>.</p>
+                <p style="margin:26px 0 0;color:#ffffff;font-size:14px;line-height:1.6;">Поздрави,<br /><strong>Become Pro</strong></p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
+};
 
 const ensureFulfillmentPayload = async ({ programs, session }) => {
   if (!programs.length) {
@@ -134,23 +220,8 @@ const sendFulfillmentEmails = async ({ programs, customer, session }) => {
   await sendEmail({
     to: customer.customerEmail,
     subject: "Достъп до твоята Become Pro програма",
-    text: `Здравей, ${customer.customerName},
-
-Благодарим ти, че избра Become Pro.
-
-Покупката ти е успешна.
-
-Закупена програма:
-${programs.map((program) => program.name).join(", ")}
-
-Можеш да достъпиш програмата от този линк:
-${formatProgramsForEmail(programs)}${formatViberBonusForEmail()}
-
-Ако имаш въпроси или проблем с достъпа, свържи се с нас.
-Contact: become.pro2024@gmail.com
-
-Поздрави,
-Become Pro`,
+    text: buildCustomerEmailText({ programs, customer }),
+    html: buildCustomerEmailHtml({ programs, customer }),
   });
 
   await sendEmail({
@@ -181,7 +252,7 @@ Stripe Session ID:
 ${session.id}
 
 Изпратен линк:
-${formatProgramsForEmail(programs)}${formatViberBonusForEmail()}`,
+${formatProgramsForEmail(programs)}`,
   });
 };
 

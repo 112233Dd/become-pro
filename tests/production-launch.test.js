@@ -26,6 +26,95 @@ test("all product pages mount the shared detail content and required scripts", (
   });
 });
 
+test("homepage hero shows the four approved launch statistics", () => {
+  const html = read("index.html");
+
+  assert.match(html, /<strong>50\+<\/strong><span>футболисти<\/span>/);
+  assert.match(html, /<strong>100\+<\/strong><span>проведени тренировки<\/span>/);
+  assert.match(html, /<strong>4\+<\/strong><span>футболни програми<\/span>/);
+  assert.match(html, /<strong>10[–-]24<\/strong><span>години подходяща възраст<\/span>/);
+});
+
+test("program storefront and product details include purchase trust", () => {
+  const programs = read("programs.html");
+  const shop = read("shop.js");
+
+  assert.match(programs, /data-program-storefront[\s\S]*data-purchase-trust/);
+  assert.match(shop, /Сигурно плащане чрез Stripe/);
+  assert.match(shop, /Моментален достъп след успешна покупка/);
+  assert.match(shop, /Получаваш програмата директно на имейл/);
+  assert.match(shop, /Поддръжка при проблем с достъпа/);
+  assert.match(shop, /renderPurchaseTrust/);
+});
+
+test("every public page uses the shared footer", () => {
+  const pages = [
+    "index.html",
+    "programs.html",
+    "cart.html",
+    "checkout.html",
+    "coach.html",
+    "contact.html",
+    "faq.html",
+    "players.html",
+    "training.html",
+    "privacy-policy.html",
+    "terms.html",
+    "cookie-policy.html",
+    "refund-policy.html",
+    ...productPages.map(([folder]) => `programs/${folder}/index.html`),
+  ];
+
+  pages.forEach((page) => {
+    const html = read(page);
+    assert.equal((html.match(/data-site-footer/g) || []).length, 1, `${page} needs one footer mount`);
+    assert.match(html, /script\.js/);
+  });
+
+  const script = read("script.js");
+  assert.match(script, /https:\/\/www\.instagram\.com\//);
+  assert.match(script, /https:\/\/www\.tiktok\.com\//);
+  assert.match(script, /mailto:become\.pro2024@gmail\.com/);
+  assert.match(script, /tel:\+359897575257/);
+  assert.match(script, /\/privacy-policy/);
+  assert.match(script, /\/terms/);
+  assert.match(script, /\/cookie-policy/);
+  assert.match(script, /\/refund-policy/);
+});
+
+test("legal pages and clean routes expose the required policies", () => {
+  const legalPages = new Map([
+    ["privacy-policy.html", "Политика за поверителност"],
+    ["terms.html", "Общи условия"],
+    ["cookie-policy.html", "Политика за бисквитки"],
+    ["refund-policy.html", "Политика за възстановяване на суми"],
+  ]);
+
+  legalPages.forEach((heading, page) => {
+    const html = read(page);
+    assert.match(html, new RegExp(`<h1>${heading}</h1>`));
+    assert.match(html, /Последна актуализация: 14 юни 2026 г\./);
+    assert.match(html, /become\.pro2024@gmail\.com/);
+    assert.match(html, /data-header/);
+    assert.match(html, /data-site-footer/);
+  });
+
+  const config = JSON.parse(read("vercel.json"));
+  const rewrites = new Map(config.rewrites.map(({ source, destination }) => [source, destination]));
+
+  assert.equal(rewrites.get("/privacy-policy"), "/privacy-policy.html");
+  assert.equal(rewrites.get("/terms"), "/terms.html");
+  assert.equal(rewrites.get("/cookie-policy"), "/cookie-policy.html");
+  assert.equal(rewrites.get("/refund-policy"), "/refund-policy.html");
+});
+
+test("mobile layout keeps stats compact and stacks footer and trust content", () => {
+  const styles = read("styles.css");
+
+  assert.match(styles, /@media \(max-width: 1060px\)[\s\S]*?\.hero-stats,[\s\S]*?\.purchase-trust[\s\S]*?grid-template-columns: repeat\(2,/);
+  assert.match(styles, /@media \(max-width: 620px\)[\s\S]*?\.footer-main,[\s\S]*?\.purchase-trust[\s\S]*?grid-template-columns: 1fr/);
+});
+
 test("cart exposes quantity, remove, total, and Stripe checkout controls", () => {
   const shop = read("shop.js");
 

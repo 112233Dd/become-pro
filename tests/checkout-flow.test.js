@@ -135,7 +135,6 @@ test("webhook is the only place that fulfills successful payments", () => {
   assert.match(webhook, /ensureFulfillmentPayload/);
   assert.match(webhook, /markDeliveryFailed/);
   assert.match(webhook, /delivery_failed/);
-  assert.match(webhook, /formatViberBonusForEmail/);
   assert.doesNotMatch(successPage, /upsertOrders|sendFulfillmentEmails|programLink/i);
 });
 
@@ -180,12 +179,53 @@ test("fulfillment email requires Google Drive links and logs missing access data
   assert.match(shared, /logAdminEvent/);
   assert.match(webhook, /fulfillment_access_link_missing/);
   assert.match(webhook, /Fulfillment email was not sent/);
-  assert.match(webhook, /formatProgramsForEmail\(programs\)\}\$\{formatViberBonusForEmail\(\)\}/);
+  assert.match(webhook, /formatProgramsForEmail\(programs\)/);
   assert.match(webhook, /become\.pro2024@gmail\.com/);
   assert.match(schema, /create table if not exists public\.admin_logs/);
   assert.match(adminLogsEndpoint, /admin_logs\?select=/);
   assert.match(adminHtml, /data-admin-logs/);
   assert.match(adminScript, /\/api\/admin\/logs/);
+});
+
+test("fulfillment email contains no separate Viber section", () => {
+  const webhook = read("api/stripe/webhook.js");
+
+  assert.doesNotMatch(webhook, /formatViberBonusForEmail|VIBER_GROUP_LINK/);
+  assert.doesNotMatch(webhook, /Viber група|Viber бонус/);
+});
+
+test("fulfillment email includes professional HTML and plain-text access", () => {
+  const webhook = read("api/stripe/webhook.js");
+
+  assert.match(webhook, /Достъп до твоята Become Pro програма/);
+  assert.match(webhook, /Отвори програмата/);
+  assert.match(webhook, /become\.pro2024@gmail\.com/);
+  assert.match(webhook, /escapeHtml/);
+  assert.match(webhook, /https:\/\/become-pro-ivory\.vercel\.app\//);
+  assert.match(webhook, /html:/);
+  assert.match(webhook, /program\.name/);
+  assert.match(webhook, /program\.programLink/);
+});
+
+test("SMTP email sends multipart UTF-8 base64 and Resend receives HTML", () => {
+  const shared = read("api/_shared.js");
+
+  assert.match(shared, /sendEmail = async \(\{ to, subject, text, html \}\)/);
+  assert.match(shared, /multipart\/alternative/);
+  assert.match(shared, /Content-Type: text\/plain; charset=UTF-8/);
+  assert.match(shared, /Content-Type: text\/html; charset=UTF-8/);
+  assert.match(shared, /Content-Transfer-Encoding: base64/);
+  assert.match(shared, /encodeBodyBase64\(text\)/);
+  assert.match(shared, /encodeBodyBase64\(html\)/);
+  assert.match(shared, /JSON\.stringify\(\{ from, to, subject, text, html \}\)/);
+  assert.doesNotMatch(shared, /Content-Transfer-Encoding: 8bit/);
+});
+
+test("email sources contain no mojibake fragments", () => {
+  const shared = read("api/_shared.js");
+  const webhook = read("api/stripe/webhook.js");
+
+  assert.doesNotMatch(`${shared}\n${webhook}`, /Р‘Р|Р”Р|РџР|РЎР|вЂ|в‚/);
 });
 
 test("program catalog uses the real access link for each program", () => {

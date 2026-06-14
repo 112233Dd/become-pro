@@ -126,6 +126,26 @@ test("admin orders dashboard exposes search, filters, refresh, and empty state",
   assert.match(ordersHtml, /Program Link/);
 });
 
+test("admin dashboard exposes Stripe diagnostics without leaking secret keys", () => {
+  const ordersHtml = read("admin-orders.html");
+  const ordersScript = read("admin-orders.js");
+  const diagnosticsApi = read("api/admin/stripe-diagnostics.js");
+  const sharedApi = read("api/_shared.js");
+
+  assert.match(ordersHtml, /data-stripe-diagnostics/);
+  assert.match(ordersHtml, /data-stripe-diagnostics-summary/);
+  assert.match(ordersHtml, /data-stripe-diagnostics-sessions/);
+  assert.match(ordersScript, /\/api\/admin\/stripe-diagnostics/);
+  assert.match(ordersScript, /Stripe account/);
+  assert.match(ordersScript, /Secret key mode/);
+  assert.match(ordersScript, /Webhook secret/);
+  assert.match(diagnosticsApi, /verifyAdminToken/);
+  assert.match(sharedApi, /getStripeDiagnostics/);
+  assert.match(sharedApi, /checkout\/sessions\?limit=10/);
+  assert.doesNotMatch(sharedApi, /secretKey:\s*process\.env\.STRIPE_SECRET_KEY/);
+  assert.doesNotMatch(diagnosticsApi, /STRIPE_SECRET_KEY.*sendJson/);
+});
+
 test("admin orders client filters by status and search term", () => {
   const ordersScript = read("admin-orders.js");
 

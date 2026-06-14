@@ -10,7 +10,6 @@ const PROGRAM_LINKS = {
   "summer-program": "https://drive.google.com/file/d/10PK5AIcqO8xb1Xx4gzKWxIUG_pS96HO_/view?usp=sharing",
   "matchday-pack": "https://drive.google.com/file/d/16x5DuIX8f7p7UyZNQ972EKU1YSEGLBQX/view?usp=sharing",
 };
-const VIBER_GROUP_LINK = process.env.VIBER_GROUP_LINK || "";
 const ORDER_STATUSES = new Set(["pending", "paid", "failed", "expired", "delivery_failed"]);
 const STRIPE_API_VERSION = "2026-02-25.clover";
 
@@ -350,6 +349,49 @@ const listStripeOrders = async () => {
   });
 };
 
+const getStripeDiagnostics = async () => {
+  const [account, sessions] = await Promise.all([
+    stripeRequest("account"),
+    stripeRequest("checkout/sessions?limit=10"),
+  ]);
+
+  return {
+    checkoutEnabled: isCheckoutEnabled(),
+    environment: {
+      stripeSecretKeyMode: String(process.env.STRIPE_SECRET_KEY || "").startsWith("sk_live_")
+        ? "live"
+        : String(process.env.STRIPE_SECRET_KEY || "").startsWith("sk_test_")
+          ? "test"
+          : "unknown",
+      hasStripeWebhookSecret: Boolean(process.env.STRIPE_WEBHOOK_SECRET),
+      hasPublishableKey: Boolean(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || process.env.STRIPE_PUBLISHABLE_KEY),
+      siteUrl: getOrigin({ headers: { host: process.env.VERCEL_PROJECT_PRODUCTION_URL || "" } }),
+    },
+    account: {
+      id: account.id,
+      country: account.country,
+      defaultCurrency: account.default_currency,
+      chargesEnabled: account.charges_enabled,
+      payoutsEnabled: account.payouts_enabled,
+      detailsSubmitted: account.details_submitted,
+      businessName: account.business_profile?.name || account.settings?.dashboard?.display_name || "",
+    },
+    recentSessions: (sessions.data || []).map((session) => ({
+      id: session.id,
+      mode: session.mode,
+      status: session.status,
+      paymentStatus: session.payment_status,
+      amountTotal: session.amount_total,
+      currency: session.currency,
+      customerEmail: session.customer_details?.email || session.customer_email || session.metadata?.customerEmail || "",
+      programId: session.metadata?.programId || "",
+      programName: session.metadata?.programName || "",
+      paymentIntentId: session.payment_intent || "",
+      createdAt: session.created ? new Date(session.created * 1000).toISOString() : "",
+    })),
+  };
+};
+
 const encodeHeader = (value) => `=?UTF-8?B?${Buffer.from(String(value), "utf8").toString("base64")}?=`;
 
 const sanitizeAddress = (value) => String(value || "").replace(/[\r\n]+/g, " ").trim();
@@ -361,7 +403,34 @@ const dotStuff = (value) =>
     .map((line) => (line.startsWith(".") ? `.${line}` : line))
     .join("\r\n");
 
-const sendSmtpEmail = async ({ to, subject, text }) => {
+const encodeBodyBase64 = (value) =>
+  Buffer.from(String(value || "").replace(/\r?\n/g, "\r\n"), "utf8")
+    .toString("base64")
+    .replace(/.{1,76}/g, "$&\r\n")
+    .trimEnd();
+
+const escapeEmailHtml = (value) =>
+  String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+const buildMultipartBody = ({ text, html, boundary }) =>
+  [
+    `--${boundary}`,
+    "Content-Type: text/plain; charset=UTF-8",
+    "Content-Transfer-Encoding: base64",
+    "",
+    encodeBodyBase64(text),
+    `--${boundary}`,
+    "Content-Type: text/html; charset=UTF-8",
+    "Content-Transfer-Encoding: base64",
+    "",
+    encodeBodyBase64(html),
+    `--${boundary}--`,
+  ].join("\r\n");
+
+const sendSmtpEmail = async ({ to, subject, text, html }) => {
   const host = process.env.SMTP_HOST || "smtp.gmail.com";
   const port = Number(process.env.SMTP_PORT || 465);
   const user = process.env.SMTP_USER || process.env.GMAIL_USER;
@@ -373,16 +442,17 @@ const sendSmtpEmail = async ({ to, subject, text }) => {
   const fromAddress = sanitizeAddress(from);
   const toAddress = sanitizeAddress(to);
   const envelopeFrom = fromAddress.match(/<([^>]+)>/)?.[1] || fromAddress;
+  const boundary = `become-pro-${crypto.randomBytes(18).toString("hex")}`;
+  const htmlBody = html || `<pre>${escapeEmailHtml(text)}</pre>`;
   const message = [
     `From: ${fromAddress}`,
     `To: ${toAddress}`,
     `Subject: ${encodeHeader(subject)}`,
     "MIME-Version: 1.0",
-    "Content-Type: text/plain; charset=UTF-8",
-    "Content-Transfer-Encoding: 8bit",
+    `Content-Type: multipart/alternative; boundary="${boundary}"`,
     `Date: ${new Date().toUTCString()}`,
     "",
-    dotStuff(text),
+    buildMultipartBody({ text, html: htmlBody, boundary }),
   ].join("\r\n");
 
   return new Promise((resolve, reject) => {
@@ -452,7 +522,7 @@ const sendSmtpEmail = async ({ to, subject, text }) => {
   });
 };
 
-const sendResendEmail = async ({ to, subject, text }) => {
+const sendResendEmail = async ({ to, subject, text, html }) => {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.EMAIL_FROM;
   if (!apiKey || !from || !to) return { skipped: true };
@@ -463,16 +533,16 @@ const sendResendEmail = async ({ to, subject, text }) => {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ from, to, subject, text }),
+    body: JSON.stringify({ from, to, subject, text, html }),
   });
 
   if (!response.ok) throw new Error(`Email send failed: ${await response.text()}`);
   return response.json();
 };
 
-const sendEmail = async ({ to, subject, text }) => {
-  if (process.env.RESEND_API_KEY) return sendResendEmail({ to, subject, text });
-  return sendSmtpEmail({ to, subject, text });
+const sendEmail = async ({ to, subject, text, html }) => {
+  if (process.env.RESEND_API_KEY) return sendResendEmail({ to, subject, text, html });
+  return sendSmtpEmail({ to, subject, text, html });
 };
 
 const verifyStripeSignature = (rawBody, signatureHeader) => {
@@ -532,7 +602,6 @@ module.exports = {
   productCatalog,
   PROGRAM_LINK,
   PROGRAM_LINKS,
-  VIBER_GROUP_LINK,
   STRIPE_API_VERSION,
   createStripeCheckoutSession,
   getProgramsFromCheckoutLineItems,
@@ -542,6 +611,7 @@ module.exports = {
   isCheckoutEnabled,
   listCheckoutSessionLineItems,
   listStripeOrders,
+  getStripeDiagnostics,
   logAdminEvent,
   readJsonBody,
   readRawBody,

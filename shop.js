@@ -528,6 +528,33 @@ const renderProgramCard = (program, compact = false) => `
   </article>
 `;
 
+const purchaseTrustItems = [
+  ["secure", "Сигурно плащане чрез Stripe"],
+  ["instant", "Моментален достъп след успешна покупка"],
+  ["email", "Получаваш програмата директно на имейл"],
+  ["support", "Поддръжка при проблем с достъпа"],
+];
+
+const renderPurchaseTrustMarkup = () => `
+  <section class="purchase-trust" aria-label="Сигурност и достъп">
+    ${purchaseTrustItems
+      .map(
+        ([icon, text]) => `
+          <div class="purchase-trust-item">
+            <span class="purchase-trust-icon purchase-trust-icon-${icon}" aria-hidden="true"></span>
+            <span>${text}</span>
+          </div>`,
+      )
+      .join("")}
+  </section>
+`;
+
+const renderPurchaseTrust = () => {
+  document.querySelectorAll("[data-purchase-trust]").forEach((root) => {
+    root.innerHTML = renderPurchaseTrustMarkup();
+  });
+};
+
 const renderProgramStorefront = () => {
   const root = document.querySelector("[data-program-storefront]");
   if (!root) return;
@@ -655,6 +682,8 @@ const renderProductDetail = () => {
         ${processSteps.map((step, index) => `<article><span>${String(index + 1).padStart(2, "0")}</span><p>${step}</p></article>`).join("")}
       </div>
     </section>
+
+    ${renderPurchaseTrustMarkup()}
 
     <section class="product-testimonials section-dark reveal">
       <div class="section-heading center">
@@ -861,6 +890,7 @@ document.addEventListener("click", (event) => {
 });
 
 renderProgramStorefront();
+renderPurchaseTrust();
 renderProductDetail();
 renderCartPage();
 renderCheckoutPage();

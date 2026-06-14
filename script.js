@@ -5,6 +5,50 @@ const form = document.querySelector("[data-form]");
 const formStatus = document.querySelector("[data-form-status]");
 const navLinks = [...document.querySelectorAll(".site-nav a")];
 const faqSearch = document.querySelector("[data-faq-search]");
+const siteFooter = document.querySelector("[data-site-footer]");
+
+const renderSiteFooter = () => {
+  if (!siteFooter) return;
+
+  siteFooter.innerHTML = `
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a class="footer-logo" href="/" aria-label="Become Pro начало">
+          <img src="/assets/becomepro-logo.png" alt="" />
+          <span>BECOME <strong>PRO</strong></span>
+        </a>
+        <p>Футболни програми и индивидуални тренировки за целенасочено развитие.</p>
+      </div>
+      <nav class="footer-column" aria-label="Бързи връзки">
+        <h2>Навигация</h2>
+        <a href="/programs">Програми</a>
+        <a href="/training">Индивидуални тренировки</a>
+        <a href="/players">Играчи</a>
+        <a href="/faq">FAQ</a>
+        <a href="/contact">Контакти</a>
+      </nav>
+      <div class="footer-column">
+        <h2>Свържи се с нас</h2>
+        <a href="https://www.instagram.com/yordan.zhelew1/" target="_blank" rel="noreferrer">Instagram</a>
+        <a href="https://www.tiktok.com/@yordan.zhelew1?lang=en" target="_blank" rel="noreferrer">TikTok</a>
+        <a href="mailto:become.pro2024@gmail.com">become.pro2024@gmail.com</a>
+        <a href="tel:+359897575257">+359 897 575 257</a>
+      </div>
+      <nav class="footer-column" aria-label="Правна информация">
+        <h2>Правна информация</h2>
+        <a href="/privacy-policy">Политика за поверителност</a>
+        <a href="/terms">Общи условия</a>
+        <a href="/cookie-policy">Политика за бисквитки</a>
+        <a href="/refund-policy">Възстановяване на суми</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>© ${new Date().getFullYear()} Become Pro. Всички права запазени.</p>
+    </div>
+  `;
+};
+
+renderSiteFooter();
 
 document.body.dataset.theme = "dark";
 localStorage.removeItem("becomeProTheme");

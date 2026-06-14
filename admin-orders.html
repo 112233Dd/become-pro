@@ -27,6 +27,40 @@
         <p>Поръчки от онлайн програмите и заявки за индивидуални тренировки.</p>
       </div>
 
+      <section class="admin-orders admin-stripe-diagnostics" data-stripe-diagnostics>
+        <div class="admin-section-heading">
+          <div>
+            <p class="eyebrow">Stripe</p>
+            <h2>Payment diagnostics</h2>
+          </div>
+          <div class="admin-toolbar">
+            <strong data-stripe-diagnostics-status>Not loaded</strong>
+            <button class="btn btn-secondary admin-refresh" type="button" data-stripe-diagnostics-refresh>
+              Refresh Stripe status
+            </button>
+          </div>
+        </div>
+
+        <p class="admin-state admin-error" data-stripe-diagnostics-error hidden></p>
+        <div class="admin-diagnostics-grid" data-stripe-diagnostics-summary></div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table admin-stripe-session-table">
+            <thead>
+              <tr>
+                <th>Created</th>
+                <th>Session</th>
+                <th>Payment</th>
+                <th>Amount</th>
+                <th>Email</th>
+                <th>Program</th>
+              </tr>
+            </thead>
+            <tbody data-stripe-diagnostics-sessions></tbody>
+          </table>
+        </div>
+      </section>
+
       <section class="admin-orders" data-admin-orders>
         <div class="admin-section-heading">
           <div>
