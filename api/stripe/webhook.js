@@ -62,8 +62,8 @@ const formatProgramsForEmail = (programs) =>
 
 const formatViberBonusForEmail = () =>
   VIBER_GROUP_LINK
-    ? `\n\nР‘РѕРЅСѓСЃ Viber РіСЂСѓРїР°:\n${VIBER_GROUP_LINK}`
-    : "\n\nР‘РѕРЅСѓСЃ Viber РіСЂСѓРїР°:\nРђРєРѕ РїСЂРѕРіСЂР°РјР°С‚Р° РІРєР»СЋС‡РІР° Viber Р±РѕРЅСѓСЃ, С‰Рµ РїРѕР»СѓС‡РёС€ РґРѕСЃС‚СЉРї Рё РґРѕ РіСЂСѓРїР°С‚Р°.";
+    ? `\n\nБонус: Viber група\n${VIBER_GROUP_LINK}`
+    : "\n\nБонус: Viber група\nАко програмата включва Viber бонус, ще получиш достъп и до групата.";
 
 const ensureFulfillmentPayload = async ({ programs, session }) => {
   if (!programs.length) {
