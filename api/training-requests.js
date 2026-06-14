@@ -4,7 +4,9 @@ const APPLICANT_TYPES = new Set(["Моето дете", "Себе си"]);
 
 const cleanText = (value, maxLength) => String(value || "").trim().slice(0, maxLength);
 const isLegacyTrainingSchemaError = (error) =>
-  /PGRST204|applicant_type|training_requests_status/i.test(String(error?.message || error || ""));
+  /PGRST204|applicant_type|training_requests_status|landing_page_url|page_variant|utm_/i.test(
+    String(error?.message || error || ""),
+  );
 
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
@@ -18,6 +20,19 @@ module.exports = async (req, res) => {
     const name = cleanText(body.name, 120);
     const city = cleanText(body.city, 120);
     const phone = cleanText(body.phone, 40);
+    const attribution = body.attribution || {};
+    const attributionRow = {
+      landing_page_url: cleanText(attribution.landingPageUrl, 500) || null,
+      page_variant: cleanText(attribution.pageVariant, 160) || null,
+      utm_source: cleanText(attribution.utm_source, 160) || null,
+      utm_medium: cleanText(attribution.utm_medium, 160) || null,
+      utm_campaign: cleanText(attribution.utm_campaign, 160) || null,
+      utm_content: cleanText(attribution.utm_content, 160) || null,
+      utm_term: cleanText(attribution.utm_term, 160) || null,
+      referrer: cleanText(attribution.referrer, 500) || null,
+      device_type: cleanText(attribution.deviceType, 40) || null,
+      browser: cleanText(attribution.browser, 300) || null,
+    };
 
     if (!APPLICANT_TYPES.has(applicantType)) {
       return sendJson(res, 400, { error: "Моля, избери кого искаш да запишеш." });
@@ -39,6 +54,7 @@ module.exports = async (req, res) => {
             city,
             phone,
             status: "new",
+            ...attributionRow,
           },
         ]),
       });
@@ -70,6 +86,8 @@ module.exports = async (req, res) => {
           `Име: ${name}`,
           `Град: ${city}`,
           `Телефон: ${phone}`,
+          `Landing page: ${attributionRow.page_variant || "-"}`,
+          `Кампания: ${attributionRow.utm_campaign || "-"}`,
           "",
           "Заявката е записана в админ панела.",
         ].join("\n"),

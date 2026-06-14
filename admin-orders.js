@@ -24,6 +24,14 @@ const stripeDiagnosticsRefreshButton = document.querySelector("[data-stripe-diag
 const stripeDiagnosticsError = document.querySelector("[data-stripe-diagnostics-error]");
 const stripeDiagnosticsSummary = document.querySelector("[data-stripe-diagnostics-summary]");
 const stripeDiagnosticsSessions = document.querySelector("[data-stripe-diagnostics-sessions]");
+const landingAnalyticsFilters = document.querySelector("[data-landing-analytics-filters]");
+const landingAnalyticsStatus = document.querySelector("[data-landing-analytics-status]");
+const landingAnalyticsRefresh = document.querySelector("[data-landing-analytics-refresh]");
+const landingAnalyticsReset = document.querySelector("[data-landing-analytics-reset]");
+const landingAnalyticsError = document.querySelector("[data-landing-analytics-error]");
+const landingAnalyticsSummary = document.querySelector("[data-landing-analytics-summary]");
+const landingVariantTable = document.querySelector("[data-landing-variant-table]");
+const landingCampaignTable = document.querySelector("[data-landing-campaign-table]");
 
 let orders = [];
 let selectedStatus = "all";
@@ -33,6 +41,7 @@ let selectedTrainingStatus = "all";
 let trainingSearchTerm = "";
 let adminLogs = [];
 let stripeDiagnostics = null;
+let landingAnalytics = null;
 
 const trainingStatusLabels = {
   new: "Нова",
@@ -161,6 +170,14 @@ const renderTrainingRequests = () => {
           <td>${escapeHtml(request.city || "-")}</td>
           <td><a href="tel:${escapeHtml(request.phone || "")}">${escapeHtml(request.phone || "-")}</a></td>
           <td>
+            <strong>${escapeHtml(request.page_variant || "-")}</strong>
+            ${request.landing_page_url ? `<span>${escapeHtml(request.landing_page_url)}</span>` : ""}
+          </td>
+          <td>
+            <strong>${escapeHtml(request.utm_campaign || "-")}</strong>
+            ${request.utm_source || request.utm_medium ? `<span>${escapeHtml([request.utm_source, request.utm_medium].filter(Boolean).join(" / "))}</span>` : ""}
+          </td>
+          <td>
             <select
               class="training-request-status status-${escapeHtml(status)}"
               data-training-request-status
@@ -174,6 +191,47 @@ const renderTrainingRequests = () => {
       `;
     })
     .join("");
+};
+
+const analyticsMetricCard = (label, value) => `
+  <article class="admin-diagnostic-card">
+    <span>${escapeHtml(label)}</span>
+    <strong>${escapeHtml(value)}</strong>
+  </article>
+`;
+
+const analyticsRows = (rows = []) =>
+  rows
+    .map(
+      (row) => `
+        <tr>
+          <td><strong>${escapeHtml(row.name || "-")}</strong></td>
+          <td>${escapeHtml(row.pageViews ?? 0)}</td>
+          <td>${escapeHtml(row.uniqueSessions ?? 0)}</td>
+          <td>${escapeHtml(row.ctaClicks ?? 0)}</td>
+          <td>${escapeHtml(row.formStarts ?? 0)}</td>
+          <td>${escapeHtml(row.formSubmissions ?? 0)}</td>
+          <td>${escapeHtml(`${Number(row.conversionRate || 0).toFixed(2)}%`)}</td>
+        </tr>
+      `,
+    )
+    .join("");
+
+const renderLandingAnalytics = () => {
+  if (!landingAnalyticsSummary || !landingVariantTable || !landingCampaignTable) return;
+  const summary = landingAnalytics?.summary || {};
+  landingAnalyticsSummary.innerHTML = [
+    ["Общо посещения", summary.pageViews || 0],
+    ["Уникални сесии", summary.uniqueSessions || 0],
+    ["CTA кликове", summary.ctaClicks || 0],
+    ["Започнати форми", summary.formStarts || 0],
+    ["Изпратени форми", summary.formSubmissions || 0],
+    ["Conversion rate", `${Number(summary.conversionRate || 0).toFixed(2)}%`],
+  ]
+    .map(([label, value]) => analyticsMetricCard(label, value))
+    .join("");
+  landingVariantTable.innerHTML = analyticsRows(landingAnalytics?.byVariant);
+  landingCampaignTable.innerHTML = analyticsRows(landingAnalytics?.byCampaign);
 };
 
 const renderAdminLogs = () => {
@@ -339,6 +397,37 @@ const loadStripeDiagnostics = async () => {
   }
 };
 
+const loadLandingAnalytics = async () => {
+  setLoading(landingAnalyticsRefresh, true, "Обнови статистиката", "Зареждане...");
+  setError(landingAnalyticsError);
+  try {
+    const params = new URLSearchParams();
+    if (landingAnalyticsFilters) {
+      new FormData(landingAnalyticsFilters).forEach((value, key) => {
+        const cleanValue = String(value || "").trim();
+        if (cleanValue) params.set(key, cleanValue);
+      });
+    }
+    const response = await fetch(`/api/admin/landing-analytics${params.size ? `?${params}` : ""}`);
+    const data = await response.json();
+    if (handleUnauthorized(response)) return;
+    if (!response.ok) throw new Error(data.error || "Landing analytics could not be loaded.");
+    landingAnalytics = data;
+    renderLandingAnalytics();
+    if (landingAnalyticsStatus) {
+      const start = formatDate(data.range?.start);
+      const end = formatDate(data.range?.end);
+      landingAnalyticsStatus.textContent = `${start} – ${end}`;
+    }
+  } catch (error) {
+    landingAnalytics = null;
+    renderLandingAnalytics();
+    setError(landingAnalyticsError, error.message || "Landing analytics could not be loaded.");
+  } finally {
+    setLoading(landingAnalyticsRefresh, false, "Обнови статистиката", "Зареждане...");
+  }
+};
+
 const updateTrainingRequestStatus = async (select) => {
   const id = select.dataset.requestId;
   const previousStatus = trainingRequests.find((request) => request.id === id)?.status || "new";
@@ -401,10 +490,19 @@ refreshButton?.addEventListener("click", loadOrders);
 trainingRefreshButton?.addEventListener("click", loadTrainingRequests);
 logRefreshButton?.addEventListener("click", loadAdminLogs);
 stripeDiagnosticsRefreshButton?.addEventListener("click", loadStripeDiagnostics);
+landingAnalyticsRefresh?.addEventListener("click", loadLandingAnalytics);
+landingAnalyticsFilters?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  loadLandingAnalytics();
+});
+landingAnalyticsReset?.addEventListener("click", () => {
+  landingAnalyticsFilters?.reset();
+  loadLandingAnalytics();
+});
 
 logoutButton?.addEventListener("click", async () => {
   await fetch("/api/admin/logout", { method: "POST" });
   window.location.replace("/admin/login");
 });
 
-Promise.all([loadStripeDiagnostics(), loadOrders(), loadTrainingRequests(), loadAdminLogs()]);
+Promise.all([loadStripeDiagnostics(), loadOrders(), loadTrainingRequests(), loadLandingAnalytics(), loadAdminLogs()]);

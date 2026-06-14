@@ -29,6 +29,16 @@ alter table public.training_requests add column if not exists goal text;
 alter table public.training_requests add column if not exists preferred_time text;
 alter table public.training_requests add column if not exists applicant_type text;
 alter table public.training_requests add column if not exists status text not null default 'new';
+alter table public.training_requests add column if not exists landing_page_url text;
+alter table public.training_requests add column if not exists page_variant text;
+alter table public.training_requests add column if not exists utm_source text;
+alter table public.training_requests add column if not exists utm_medium text;
+alter table public.training_requests add column if not exists utm_campaign text;
+alter table public.training_requests add column if not exists utm_content text;
+alter table public.training_requests add column if not exists utm_term text;
+alter table public.training_requests add column if not exists referrer text;
+alter table public.training_requests add column if not exists device_type text;
+alter table public.training_requests add column if not exists browser text;
 
 update public.training_requests
 set applicant_type = who
@@ -61,6 +71,89 @@ create index if not exists training_requests_created_at_idx
 
 create index if not exists training_requests_status_idx
   on public.training_requests (status);
+
+create index if not exists training_requests_page_variant_idx
+  on public.training_requests (page_variant);
+
+create index if not exists training_requests_utm_campaign_idx
+  on public.training_requests (utm_campaign);
+
+create table if not exists public.landing_analytics_events (
+  id uuid primary key default gen_random_uuid(),
+  session_id text not null check (char_length(session_id) between 12 and 100),
+  landing_page_url text not null,
+  page_variant text not null default 'general',
+  event_name text not null check (
+    event_name in (
+      'page_view',
+      'scroll_50',
+      'scroll_90',
+      'click_primary_cta',
+      'click_secondary_cta',
+      'form_start',
+      'form_submit_success',
+      'form_submit_error'
+    )
+  ),
+  utm_source text,
+  utm_medium text,
+  utm_campaign text,
+  utm_content text,
+  utm_term text,
+  referrer text,
+  device_type text,
+  event_time timestamptz not null default now()
+);
+
+alter table public.landing_analytics_events enable row level security;
+
+create index if not exists landing_analytics_event_time_idx
+  on public.landing_analytics_events (event_time desc);
+
+create index if not exists landing_analytics_variant_time_idx
+  on public.landing_analytics_events (page_variant, event_time desc);
+
+create index if not exists landing_analytics_campaign_time_idx
+  on public.landing_analytics_events (utm_campaign, event_time desc);
+
+create index if not exists landing_analytics_session_time_idx
+  on public.landing_analytics_events (session_id, event_time desc);
+
+create index if not exists landing_analytics_event_name_time_idx
+  on public.landing_analytics_events (event_name, event_time desc);
+
+create or replace function public.delete_expired_landing_analytics()
+returns integer
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  deleted_count integer;
+begin
+  delete from public.landing_analytics_events
+  where event_time < now() - interval '12 months';
+  get diagnostics deleted_count = row_count;
+  return deleted_count;
+end;
+$$;
+
+do $$
+begin
+  if exists (select 1 from pg_extension where extname = 'pg_cron') then
+    if not exists (select 1 from cron.job where jobname = 'delete-expired-landing-analytics') then
+      perform cron.schedule(
+        'delete-expired-landing-analytics',
+        '17 3 * * *',
+        'select public.delete_expired_landing_analytics();'
+      );
+    end if;
+  end if;
+exception
+  when undefined_table or insufficient_privilege then
+    raise notice 'pg_cron is unavailable; run select public.delete_expired_landing_analytics() manually.';
+end;
+$$;
 
 create table if not exists public.orders (
   id uuid primary key default gen_random_uuid(),

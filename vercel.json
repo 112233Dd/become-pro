@@ -44,6 +44,10 @@
       "destination": "/refund-policy.html"
     },
     {
+      "source": "/individual-training",
+      "destination": "/individual-training.html"
+    },
+    {
       "source": "/checkout/success",
       "destination": "/checkout/success/index.html"
     },
