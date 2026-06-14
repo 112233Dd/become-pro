@@ -2182,6 +2182,8 @@ blockquote:hover {
   display: grid;
   grid-template-columns: repeat(3, minmax(150px, 1fr));
   gap: 12px;
+  width: 100%;
+  min-width: 0;
 }
 
 .admin-analytics-filters label {
@@ -2191,9 +2193,11 @@ blockquote:hover {
   font-size: 12px;
   font-weight: 900;
   text-transform: uppercase;
+  min-width: 0;
 }
 
 .admin-analytics-filters input {
+  min-width: 0;
   min-height: 46px;
   padding: 0 12px;
   border: 1px solid rgba(255, 255, 255, 0.14);
