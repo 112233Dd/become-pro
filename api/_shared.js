@@ -350,6 +350,49 @@ const listStripeOrders = async () => {
   });
 };
 
+const getStripeDiagnostics = async () => {
+  const [account, sessions] = await Promise.all([
+    stripeRequest("account"),
+    stripeRequest("checkout/sessions?limit=10"),
+  ]);
+
+  return {
+    checkoutEnabled: isCheckoutEnabled(),
+    environment: {
+      stripeSecretKeyMode: String(process.env.STRIPE_SECRET_KEY || "").startsWith("sk_live_")
+        ? "live"
+        : String(process.env.STRIPE_SECRET_KEY || "").startsWith("sk_test_")
+          ? "test"
+          : "unknown",
+      hasStripeWebhookSecret: Boolean(process.env.STRIPE_WEBHOOK_SECRET),
+      hasPublishableKey: Boolean(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || process.env.STRIPE_PUBLISHABLE_KEY),
+      siteUrl: getOrigin({ headers: { host: process.env.VERCEL_PROJECT_PRODUCTION_URL || "" } }),
+    },
+    account: {
+      id: account.id,
+      country: account.country,
+      defaultCurrency: account.default_currency,
+      chargesEnabled: account.charges_enabled,
+      payoutsEnabled: account.payouts_enabled,
+      detailsSubmitted: account.details_submitted,
+      businessName: account.business_profile?.name || account.settings?.dashboard?.display_name || "",
+    },
+    recentSessions: (sessions.data || []).map((session) => ({
+      id: session.id,
+      mode: session.mode,
+      status: session.status,
+      paymentStatus: session.payment_status,
+      amountTotal: session.amount_total,
+      currency: session.currency,
+      customerEmail: session.customer_details?.email || session.customer_email || session.metadata?.customerEmail || "",
+      programId: session.metadata?.programId || "",
+      programName: session.metadata?.programName || "",
+      paymentIntentId: session.payment_intent || "",
+      createdAt: session.created ? new Date(session.created * 1000).toISOString() : "",
+    })),
+  };
+};
+
 const encodeHeader = (value) => `=?UTF-8?B?${Buffer.from(String(value), "utf8").toString("base64")}?=`;
 
 const sanitizeAddress = (value) => String(value || "").replace(/[\r\n]+/g, " ").trim();
@@ -360,6 +403,12 @@ const dotStuff = (value) =>
     .split("\r\n")
     .map((line) => (line.startsWith(".") ? `.${line}` : line))
     .join("\r\n");
+
+const encodeBodyBase64 = (value) =>
+  Buffer.from(String(value || "").replace(/\r?\n/g, "\r\n"), "utf8")
+    .toString("base64")
+    .replace(/.{1,76}/g, "$&\r\n")
+    .trimEnd();
 
 const sendSmtpEmail = async ({ to, subject, text }) => {
   const host = process.env.SMTP_HOST || "smtp.gmail.com";
@@ -379,10 +428,10 @@ const sendSmtpEmail = async ({ to, subject, text }) => {
     `Subject: ${encodeHeader(subject)}`,
     "MIME-Version: 1.0",
     "Content-Type: text/plain; charset=UTF-8",
-    "Content-Transfer-Encoding: 8bit",
+    "Content-Transfer-Encoding: base64",
     `Date: ${new Date().toUTCString()}`,
     "",
-    dotStuff(text),
+    encodeBodyBase64(text),
   ].join("\r\n");
 
   return new Promise((resolve, reject) => {
@@ -542,6 +591,7 @@ module.exports = {
   isCheckoutEnabled,
   listCheckoutSessionLineItems,
   listStripeOrders,
+  getStripeDiagnostics,
   logAdminEvent,
   readJsonBody,
   readRawBody,
