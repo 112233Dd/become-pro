@@ -2129,6 +2129,11 @@ blockquote:hover {
   padding: clamp(22px, 4vw, 42px);
 }
 
+.admin-shell > *,
+.admin-orders {
+  min-width: 0;
+}
+
 .admin-login-card {
   display: grid;
   gap: 16px;
