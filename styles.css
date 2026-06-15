@@ -5091,17 +5091,24 @@ cite {
 .contact-form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-  padding: clamp(20px, 4vw, 34px);
+  gap: 12px;
+  padding: clamp(20px, 2.4vw, 28px);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: rgba(255, 255, 255, 0.06);
 }
 
 .contact-inquiry-form {
-  background: #f7f8fb;
-  border-color: rgba(255, 255, 255, 0.16);
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+  align-self: start;
+  border-color: rgba(245, 196, 0, 0.42);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(245, 196, 0, 0.09), transparent 34%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018)),
+    #0b0c0c;
+  box-shadow:
+    0 0 0 1px rgba(245, 196, 0, 0.07) inset,
+    0 20px 60px rgba(0, 0, 0, 0.42),
+    0 0 32px rgba(245, 196, 0, 0.08);
 }
 
 .contact-form-row {
@@ -5112,27 +5119,45 @@ cite {
 }
 
 .contact-inquiry-form label {
-  color: #1d2634;
+  color: #f5f5f0;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .contact-inquiry-form input,
 .contact-inquiry-form textarea {
-  background: #eef2f7;
-  border-color: #d8e0ea;
-  color: #101722;
+  background: #050606;
+  border-color: rgba(255, 255, 255, 0.13);
+  color: var(--white);
+  caret-color: var(--lime);
+}
+
+.contact-inquiry-form input:hover,
+.contact-inquiry-form textarea:hover {
+  border-color: rgba(245, 196, 0, 0.48);
+}
+
+.contact-inquiry-form input:focus,
+.contact-inquiry-form textarea:focus {
+  border-color: var(--lime);
+  box-shadow:
+    0 0 0 3px rgba(245, 196, 0, 0.12),
+    0 0 22px rgba(245, 196, 0, 0.08);
+}
+
+.contact-inquiry-form textarea {
+  min-height: 128px;
 }
 
 .contact-consent {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  padding: 14px;
-  border: 1px solid #d8e0ea;
+  padding: 12px 14px;
+  border: 1px solid rgba(245, 196, 0, 0.18);
   border-radius: var(--radius);
-  background: #eef2f7;
-  color: #415064;
+  background: rgba(255, 255, 255, 0.035);
+  color: #d7d8d2;
   font-size: 12px;
   font-weight: 700;
   line-height: 1.55;
@@ -5144,6 +5169,16 @@ cite {
   width: auto;
   min-height: auto;
   margin-top: 3px;
+  accent-color: var(--lime);
+}
+
+.contact-inquiry-form .btn-primary {
+  margin-top: 2px;
+  box-shadow: 0 12px 30px rgba(245, 196, 0, 0.14);
+}
+
+.contact-inquiry-form .btn-primary:hover {
+  box-shadow: 0 14px 38px rgba(245, 196, 0, 0.24);
 }
 
 label {
