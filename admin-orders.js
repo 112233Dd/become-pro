@@ -14,6 +14,13 @@ const trainingStatusButtons = [...document.querySelectorAll("[data-training-requ
 const trainingRefreshButton = document.querySelector("[data-training-request-refresh]");
 const trainingEmptyState = document.querySelector("[data-training-request-empty]");
 const trainingErrorState = document.querySelector("[data-training-request-error]");
+const contactInquiryTableBody = document.querySelector("[data-contact-inquiry-table]");
+const contactInquiryCountNode = document.querySelector("[data-contact-inquiry-count]");
+const contactInquirySearchInput = document.querySelector("[data-contact-inquiry-search]");
+const contactInquiryStatusButtons = [...document.querySelectorAll("[data-contact-inquiry-status-filter]")];
+const contactInquiryRefreshButton = document.querySelector("[data-contact-inquiry-refresh]");
+const contactInquiryEmptyState = document.querySelector("[data-contact-inquiry-empty]");
+const contactInquiryErrorState = document.querySelector("[data-contact-inquiry-error]");
 const logTableBody = document.querySelector("[data-admin-log-table]");
 const logCountNode = document.querySelector("[data-admin-log-count]");
 const logRefreshButton = document.querySelector("[data-admin-log-refresh]");
@@ -40,6 +47,15 @@ let searchTerm = "";
 let trainingRequests = [];
 let selectedTrainingStatus = "all";
 let trainingSearchTerm = "";
+let contactInquiries = [];
+let selectedContactInquiryStatus = "all";
+let contactInquirySearchTerm = "";
+
+const contactInquiryStatusLabels = {
+  new: "Ново",
+  answered: "Отговорено",
+  archived: "Архивирано",
+};
 let adminLogs = [];
 let stripeDiagnostics = null;
 let landingAnalytics = null;
@@ -184,6 +200,55 @@ const renderTrainingRequests = () => {
               data-training-request-status
               data-request-id="${escapeHtml(request.id)}"
               aria-label="Статус на заявката"
+            >
+              ${options}
+            </select>
+          </td>
+        </tr>
+      `;
+    })
+    .join("");
+};
+
+const getFilteredContactInquiries = () =>
+  contactInquiries.filter((inquiry) => {
+    const status = inquiry.status || "new";
+    const haystack = [inquiry.name, inquiry.phone, inquiry.email, inquiry.message].join(" ").toLowerCase();
+    return (
+      (selectedContactInquiryStatus === "all" || status === selectedContactInquiryStatus) &&
+      (!contactInquirySearchTerm || haystack.includes(contactInquirySearchTerm))
+    );
+  });
+
+const renderContactInquiries = () => {
+  if (!contactInquiryTableBody) return;
+  const filteredInquiries = getFilteredContactInquiries();
+  if (contactInquiryCountNode) contactInquiryCountNode.textContent = `${filteredInquiries.length} запитвания`;
+  if (contactInquiryEmptyState) contactInquiryEmptyState.hidden = filteredInquiries.length > 0;
+
+  contactInquiryTableBody.innerHTML = filteredInquiries
+    .map((inquiry) => {
+      const status = inquiry.status || "new";
+      const options = Object.entries(contactInquiryStatusLabels)
+        .map(
+          ([value, label]) =>
+            `<option value="${value}"${value === status ? " selected" : ""}>${escapeHtml(label)}</option>`,
+        )
+        .join("");
+
+      return `
+        <tr class="contact-status-${escapeHtml(status)}">
+          <td>${escapeHtml(formatDate(inquiry.created_at))}</td>
+          <td><strong>${escapeHtml(inquiry.name || "-")}</strong></td>
+          <td><a href="tel:${escapeHtml(inquiry.phone || "")}">${escapeHtml(inquiry.phone || "-")}</a></td>
+          <td><a href="mailto:${escapeHtml(inquiry.email || "")}">${escapeHtml(inquiry.email || "-")}</a></td>
+          <td class="admin-message-cell">${escapeHtml(inquiry.message || "-")}</td>
+          <td>
+            <select
+              class="contact-inquiry-status status-${escapeHtml(status)}"
+              data-contact-inquiry-status
+              data-inquiry-id="${escapeHtml(inquiry.id)}"
+              aria-label="Статус на контактното запитване"
             >
               ${options}
             </select>
@@ -377,6 +442,25 @@ const loadTrainingRequests = async () => {
   }
 };
 
+const loadContactInquiries = async () => {
+  setLoading(contactInquiryRefreshButton, true, "Обнови запитванията", "Зареждане...");
+  setError(contactInquiryErrorState);
+  try {
+    const response = await fetch("/api/admin/contact-inquiries");
+    const data = await response.json();
+    if (handleUnauthorized(response)) return;
+    if (!response.ok) throw new Error(data.error || "Не успяхме да заредим контактните запитвания.");
+    contactInquiries = Array.isArray(data.inquiries) ? data.inquiries : [];
+    renderContactInquiries();
+  } catch (error) {
+    contactInquiries = [];
+    renderContactInquiries();
+    setError(contactInquiryErrorState, error.message || "Възникна проблем при зареждане на контактните запитвания.");
+  } finally {
+    setLoading(contactInquiryRefreshButton, false, "Обнови запитванията", "Зареждане...");
+  }
+};
+
 const loadAdminLogs = async () => {
   setLoading(logRefreshButton, true, "Refresh logs", "Loading...");
   setError(logErrorState);
@@ -435,7 +519,7 @@ const loadLandingAnalytics = async () => {
     if (landingAnalyticsStatus) {
       const start = formatDate(data.range?.start);
       const end = formatDate(data.range?.end);
-      landingAnalyticsStatus.textContent = `${start} – ${end}`;
+      landingAnalyticsStatus.textContent = `${start} ? ${end}`;
     }
   } catch (error) {
     landingAnalytics = null;
@@ -473,6 +557,33 @@ const updateTrainingRequestStatus = async (select) => {
   }
 };
 
+const updateContactInquiryStatus = async (select) => {
+  const id = select.dataset.inquiryId;
+  const previousStatus = contactInquiries.find((inquiry) => inquiry.id === id)?.status || "new";
+  select.disabled = true;
+
+  try {
+    const response = await fetch("/api/admin/contact-inquiries", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, status: select.value }),
+    });
+    const data = await response.json();
+    if (handleUnauthorized(response)) return;
+    if (!response.ok) throw new Error(data.error || "Статусът не беше запазен.");
+
+    contactInquiries = contactInquiries.map((inquiry) =>
+      inquiry.id === id ? { ...inquiry, status: select.value } : inquiry,
+    );
+    renderContactInquiries();
+  } catch (error) {
+    select.value = previousStatus;
+    setError(contactInquiryErrorState, error.message || "Статусът не беше запазен.");
+  } finally {
+    select.disabled = false;
+  }
+};
+
 searchInput?.addEventListener("input", (event) => {
   searchTerm = event.target.value.trim().toLowerCase();
   renderOrders();
@@ -504,8 +615,27 @@ trainingTableBody?.addEventListener("change", (event) => {
   if (select) updateTrainingRequestStatus(select);
 });
 
+contactInquirySearchInput?.addEventListener("input", (event) => {
+  contactInquirySearchTerm = event.target.value.trim().toLowerCase();
+  renderContactInquiries();
+});
+
+contactInquiryStatusButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    selectedContactInquiryStatus = button.dataset.contactInquiryStatusFilter || "all";
+    contactInquiryStatusButtons.forEach((item) => item.classList.toggle("is-active", item === button));
+    renderContactInquiries();
+  });
+});
+
+contactInquiryTableBody?.addEventListener("change", (event) => {
+  const select = event.target.closest("[data-contact-inquiry-status]");
+  if (select) updateContactInquiryStatus(select);
+});
+
 refreshButton?.addEventListener("click", loadOrders);
 trainingRefreshButton?.addEventListener("click", loadTrainingRequests);
+contactInquiryRefreshButton?.addEventListener("click", loadContactInquiries);
 logRefreshButton?.addEventListener("click", loadAdminLogs);
 stripeDiagnosticsRefreshButton?.addEventListener("click", loadStripeDiagnostics);
 landingAnalyticsRefresh?.addEventListener("click", loadLandingAnalytics);
@@ -523,4 +653,11 @@ logoutButton?.addEventListener("click", async () => {
   window.location.replace("/admin/login");
 });
 
-Promise.all([loadStripeDiagnostics(), loadOrders(), loadTrainingRequests(), loadLandingAnalytics(), loadAdminLogs()]);
+Promise.all([
+  loadStripeDiagnostics(),
+  loadOrders(),
+  loadTrainingRequests(),
+  loadContactInquiries(),
+  loadLandingAnalytics(),
+  loadAdminLogs(),
+]);

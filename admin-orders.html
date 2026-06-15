@@ -169,6 +169,59 @@
         </div>
       </section>
 
+      <section class="admin-orders admin-contact-inquiries" data-contact-inquiries>
+        <div class="admin-section-heading">
+          <div>
+            <p class="eyebrow">Контакт</p>
+            <h2>Контактни запитвания</h2>
+          </div>
+          <div class="admin-toolbar">
+            <strong data-contact-inquiry-count>0 запитвания</strong>
+            <button class="btn btn-secondary admin-refresh" type="button" data-contact-inquiry-refresh>
+              Обнови запитванията
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-controls">
+          <label class="admin-search">
+            <span>Търсене</span>
+            <input
+              type="search"
+              placeholder="Име, телефон, имейл или съобщение"
+              data-contact-inquiry-search
+            />
+          </label>
+          <div class="admin-filter" aria-label="Филтър на контактните запитвания">
+            <button class="is-active" type="button" data-contact-inquiry-status-filter="all">Всички</button>
+            <button type="button" data-contact-inquiry-status-filter="new">Нови</button>
+            <button type="button" data-contact-inquiry-status-filter="answered">Отговорени</button>
+            <button type="button" data-contact-inquiry-status-filter="archived">Архивирани</button>
+          </div>
+        </div>
+
+        <p class="admin-state admin-empty" data-contact-inquiry-empty hidden>
+          Все още няма контактни запитвания.
+        </p>
+        <p class="admin-state admin-error" data-contact-inquiry-error hidden></p>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table admin-contact-table">
+            <thead>
+              <tr>
+                <th>Дата и час</th>
+                <th>Име</th>
+                <th>Телефон</th>
+                <th>Имейл</th>
+                <th>Съобщение</th>
+                <th>Статус</th>
+              </tr>
+            </thead>
+            <tbody data-contact-inquiry-table></tbody>
+          </table>
+        </div>
+      </section>
+
       <section class="admin-orders admin-landing-analytics" data-landing-analytics>
         <div class="admin-section-heading">
           <div>

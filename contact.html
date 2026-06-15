@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Индивидуални тренировки | Become Pro</title>
+    <title>Контакти | Become Pro</title>
     <meta
       name="description"
-      content="Запиши футболист за индивидуална тренировка с Become Pro."
+      content="Свържи се с Become Pro за въпрос, футболна програма или индивидуална тренировка."
     />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -15,18 +15,15 @@
     <meta name="theme-color" content="#050505" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Become Pro" />
-    <meta property="og:title" content="Индивидуални тренировки | Become Pro" />
+    <meta property="og:title" content="Контакти | Become Pro" />
     <meta
       property="og:description"
-      content="Запиши футболист за индивидуална тренировка с Become Pro."
+      content="Пиши ни за въпрос, програма или индивидуална тренировка."
     />
     <meta property="og:image" content="https://become-pro-ivory.vercel.app/assets/og-image.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Индивидуални тренировки | Become Pro" />
-    <meta
-      name="twitter:description"
-      content="Запиши футболист за индивидуална тренировка с Become Pro."
-    />
+    <meta name="twitter:title" content="Контакти | Become Pro" />
+    <meta name="twitter:description" content="Пиши ни за въпрос, програма или индивидуална тренировка." />
     <meta name="twitter:image" content="https://become-pro-ivory.vercel.app/assets/og-image.png" />
     <link rel="stylesheet" href="styles.css" />
   </head>
@@ -42,51 +39,64 @@
       </button>
       <nav class="site-nav" data-nav>
         <a href="programs.html">Програми</a>
-        <a href="training.html">Индивидуални тренировки</a>
+        <a href="/training">Индивидуални тренировки</a>
         <a href="coach.html">За треньора</a>
         <a href="players.html">Играчи</a>
         <a href="faq.html">Често задавани въпроси</a>
         <a href="contact.html">Контакти</a>
       </nav>
       <div class="header-actions">
-        <a class="header-cta" href="contact.html">Запази тренировка</a>
+        <a class="header-cta" href="/training">Запази тренировка</a>
       </div>
     </header>
 
     <main id="top">
-      <section class="contact section-dark reveal" id="contact">
+      <section class="contact contact-page section-dark reveal" id="contact">
         <div class="contact-copy">
-          <p class="eyebrow">Индивидуални тренировки</p>
-          <h1>Запиши се за индивидуални тренировки</h1>
-          <p>Попълни кратката форма и ще се свържем с теб до 24 часа, за да уточним удобен ден, час и локация.</p>
+          <p class="eyebrow">Контакт</p>
+          <h1>Пиши ни за въпрос, програма или индивидуална тренировка</h1>
+          <p>
+            Използвай тази страница, ако имаш въпрос, нужда от насока или искаш да разбереш кой вариант е най-подходящ за теб.
+          </p>
+          <div class="contact-reasons" aria-label="Причини да ни пишеш">
+            <span>Ясна насока</span>
+            <span>Помощ с избора</span>
+            <span>Бърз отговор</span>
+          </div>
+          <div class="contact-info-card">
+            <p>Директен контакт</p>
+            <a href="mailto:become.pro2024@gmail.com">become.pro2024@gmail.com</a>
+            <a href="tel:+359897575257">+359 897 575 257</a>
+          </div>
         </div>
 
-        <form class="contact-form training-survey training-request-form" data-form>
+        <form class="contact-form contact-inquiry-form" data-contact-form>
+          <div class="contact-form-row">
+            <label>
+              Име
+              <input type="text" name="name" autocomplete="name" required />
+            </label>
+            <label>
+              Телефонен номер
+              <input type="tel" name="phone" autocomplete="tel" required />
+            </label>
+          </div>
           <label class="full">
-            Кого искате да запишете?
-            <select name="applicant_type" required>
-              <option value="">Избери отговор</option>
-              <option value="Моето дете">Моето дете</option>
-              <option value="Себе си">Себе си</option>
-            </select>
+            Имейл адрес
+            <input type="email" name="email" autocomplete="email" required />
           </label>
           <label class="full">
-            Име
-            <input type="text" name="name" autocomplete="name" required />
+            Съобщение
+            <textarea name="message" rows="7" required></textarea>
           </label>
-          <label class="full">
-            Град
-            <input type="text" name="city" autocomplete="address-level2" required />
+          <label class="contact-consent full">
+            <input type="checkbox" name="consent" required />
+            <span>
+              С изпращането на формата се съгласявам данните ми да бъдат използвани единствено за връзка по моето запитване.
+            </span>
           </label>
-          <label class="full">
-            Телефонен номер
-            <input type="tel" name="phone" autocomplete="tel" required />
-          </label>
-          <button class="btn btn-primary full" type="submit">Запази място</button>
-          <p class="form-privacy full">
-            Данните се използват единствено за връзка относно индивидуалните тренировки.
-          </p>
-          <p class="form-status" data-form-status aria-live="polite"></p>
+          <button class="btn btn-primary full" type="submit">Изпрати съобщението</button>
+          <p class="form-status" data-contact-form-status aria-live="polite"></p>
         </form>
       </section>
     </main>

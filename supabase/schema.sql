@@ -78,6 +78,40 @@ create index if not exists training_requests_page_variant_idx
 create index if not exists training_requests_utm_campaign_idx
   on public.training_requests (utm_campaign);
 
+create table if not exists public.contact_inquiries (
+  id uuid primary key default gen_random_uuid(),
+  name text not null check (char_length(name) between 2 and 120),
+  phone text not null check (char_length(phone) between 6 and 40),
+  email text not null check (char_length(email) between 5 and 160),
+  message text not null check (char_length(message) between 5 and 2000),
+  status text not null default 'new' check (status in ('new', 'answered', 'archived')),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.contact_inquiries add column if not exists name text;
+alter table public.contact_inquiries add column if not exists phone text;
+alter table public.contact_inquiries add column if not exists email text;
+alter table public.contact_inquiries add column if not exists message text;
+alter table public.contact_inquiries add column if not exists status text default 'new';
+alter table public.contact_inquiries add column if not exists created_at timestamptz default now();
+alter table public.contact_inquiries add column if not exists updated_at timestamptz default now();
+
+alter table public.contact_inquiries
+  drop constraint if exists contact_inquiries_status_check;
+
+alter table public.contact_inquiries
+  add constraint contact_inquiries_status_check
+  check (status in ('new', 'answered', 'archived'));
+
+alter table public.contact_inquiries enable row level security;
+
+create index if not exists contact_inquiries_created_at_idx
+  on public.contact_inquiries (created_at desc);
+
+create index if not exists contact_inquiries_status_idx
+  on public.contact_inquiries (status);
+
 create table if not exists public.landing_analytics_events (
   id uuid primary key default gen_random_uuid(),
   session_id text not null check (char_length(session_id) between 12 and 100),

@@ -3,6 +3,8 @@ const nav = document.querySelector("[data-nav]");
 const navToggle = document.querySelector("[data-nav-toggle]");
 const form = document.querySelector("[data-form]");
 const formStatus = document.querySelector("[data-form-status]");
+const contactForm = document.querySelector("[data-contact-form]");
+const contactFormStatus = document.querySelector("[data-contact-form-status]");
 const navLinks = [...document.querySelectorAll(".site-nav a")];
 const faqSearch = document.querySelector("[data-faq-search]");
 const siteFooter = document.querySelector("[data-site-footer]");
@@ -192,6 +194,56 @@ form?.addEventListener("submit", async (event) => {
     if (formStatus) {
       formStatus.textContent =
         "Заявката не се изпрати. Моля, пробвай отново или ни пиши директно на имейл.";
+    }
+  } finally {
+    if (submitButton) {
+      submitButton.disabled = false;
+      submitButton.textContent = originalButtonText;
+    }
+  }
+});
+
+contactForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const submitButton = contactForm.querySelector('button[type="submit"]');
+  const originalButtonText = submitButton?.textContent || "Изпрати съобщението";
+
+  if (contactFormStatus) contactFormStatus.textContent = "Изпращаме съобщението...";
+  if (submitButton) {
+    submitButton.disabled = true;
+    submitButton.textContent = "Изпращане...";
+  }
+
+  const formData = new FormData(contactForm);
+  const payload = {
+    name: formData.get("name"),
+    phone: formData.get("phone"),
+    email: formData.get("email"),
+    message: formData.get("message"),
+    consent: Boolean(formData.get("consent")),
+  };
+
+  try {
+    const response = await fetch("/api/contact-inquiries", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data = await response.json();
+
+    if (!response.ok) throw new Error(data.error || "Съобщението не беше изпратено.");
+
+    if (contactFormStatus) {
+      contactFormStatus.textContent =
+        "Благодарим ти! Съобщението е изпратено успешно. Ще се свържем с теб възможно най-скоро.";
+    }
+
+    contactForm.reset();
+  } catch (error) {
+    console.error(error);
+    if (contactFormStatus) {
+      contactFormStatus.textContent =
+        "Съобщението не се изпрати. Моля, пробвай отново или ни пиши директно на имейл.";
     }
   } finally {
     if (submitButton) {

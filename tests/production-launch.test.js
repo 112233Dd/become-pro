@@ -1,4 +1,4 @@
-const test = require("node:test");
+﻿const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
@@ -162,16 +162,16 @@ test("admin orders fall back to Stripe when the Supabase table is unavailable", 
   assert.match(endpoint, /source:\s*"stripe-fallback"/);
 });
 
-test("contact form is only for individual training requests", () => {
+test("contact form is a general inquiry form and does not create training requests", () => {
   const html = read("contact.html");
   const form = html.match(/<form\b[\s\S]*?<\/form>/i)?.[0] || "";
 
-  assert.match(html, /Запиши се за индивидуални тренировки/);
-  assert.match(form, /name="applicant_type"/);
+  assert.match(html, /Пиши ни за въпрос, програма или индивидуална тренировка/);
   assert.match(form, /name="name"/);
-  assert.match(form, /name="city"/);
   assert.match(form, /name="phone"/);
-  assert.doesNotMatch(form, /selected_program|request_type|name="email"|онлайн програма/i);
+  assert.match(form, /name="email"/);
+  assert.match(form, /name="message"/);
+  assert.doesNotMatch(form, /name="applicant_type"|name="city"|Моето дете|Себе си/i);
 });
 
 test("training requests support the legacy production schema until migration", () => {

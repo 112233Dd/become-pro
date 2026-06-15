@@ -7,52 +7,63 @@ const root = path.resolve(__dirname, "..");
 
 const read = (relativePath) => fs.readFileSync(path.join(root, relativePath), "utf8");
 
-test("training request page contains only the compact individual-training fields", () => {
+test("contact page is a general contact form, not a training request form", () => {
   const html = read("contact.html");
   const form = html.match(/<form\b[\s\S]*?<\/form>/i)?.[0] || "";
 
-  assert.match(html, /Запиши се за индивидуални тренировки/);
+  assert.match(html, /Пиши ни за въпрос, програма или индивидуална тренировка/);
   assert.match(
     html,
-    /Попълни кратката форма и ще се свържем с теб до 24 часа, за да уточним удобен ден, час и локация\./,
+    /Използвай тази страница, ако имаш въпрос, нужда от насока или искаш да разбереш кой вариант е най-подходящ за теб\./,
   );
-  assert.match(form, /name="applicant_type"/);
   assert.match(form, /name="name"/);
-  assert.match(form, /name="city"/);
   assert.match(form, /name="phone"/);
-  assert.match(form, />Моето дете</);
-  assert.match(form, />Себе си</);
-  assert.match(form, />Запази място</);
+  assert.match(form, /name="email"/);
+  assert.match(form, /name="message"/);
+  assert.match(form, />Изпрати съобщението</);
   assert.match(
     form,
-    /Данните се използват единствено за връзка относно индивидуалните тренировки\./,
+    /С изпращането на формата се съгласявам данните ми да бъдат използвани единствено за връзка по моето запитване\./,
   );
-
-  [
-    "request_type",
-    "selected_program",
-    'name="email"',
-    "player_name",
-    "player_age",
-    "position",
-    "goal",
-    "preferred_time",
-  ].forEach((removedField) => assert.doesNotMatch(form, new RegExp(removedField)));
+  assert.doesNotMatch(form, /name="applicant_type"/);
+  assert.doesNotMatch(form, /name="city"/);
+  assert.doesNotMatch(form, /Моето дете|Себе си|Запази място|Запази тренировка/);
 });
 
-test("training request frontend submits to the protected server workflow", () => {
+test("general contact frontend submits to contact inquiries endpoint", () => {
   const script = read("script.js");
 
-  assert.match(script, /fetch\(\s*["']\/api\/training-requests["']/);
-  assert.match(script, /applicantType:\s*formData\.get\(["']applicant_type["']\)/);
+  assert.match(script, /\/api\/contact-inquiries/);
+  assert.match(script, /name:\s*formData\.get\(["']name["']\)/);
+  assert.match(script, /email:\s*formData\.get\(["']email["']\)/);
+  assert.match(script, /message:\s*formData\.get\(["']message["']\)/);
   assert.match(
     script,
-    /Благодаря ви! Отговорите са изпратени успешно\. Ще се свържем с вас възможно най-скоро\./,
+    /Благодарим ти! Съобщението е изпратено успешно\. Ще се свържем с теб възможно най-скоро\./,
   );
-  assert.doesNotMatch(script, /\.from\(["']training_requests["']\)\.insert/);
 });
 
-test("public training request API validates, stores, and emails the request", () => {
+test("training signup CTAs point to the dedicated training landing page", () => {
+  ["index.html", "coach.html", "players.html", "programs.html", "faq.html", "contact.html"].forEach((page) => {
+    const html = read(page);
+    assert.doesNotMatch(html, /href="contact\.html">(?:Запази|Запиши|Започни)/);
+  });
+});
+
+test("public contact inquiry API validates, stores, and emails the inquiry", () => {
+  const endpoint = read("api/contact-inquiries.js");
+
+  assert.match(endpoint, /contact_inquiries/);
+  assert.match(endpoint, /name/);
+  assert.match(endpoint, /phone/);
+  assert.match(endpoint, /email/);
+  assert.match(endpoint, /message/);
+  assert.match(endpoint, /status:\s*"new"/);
+  assert.match(endpoint, /sendEmail/);
+  assert.doesNotMatch(endpoint, /training_requests/);
+});
+
+test("training request API remains dedicated to individual training signups", () => {
   const endpoint = read("api/training-requests.js");
 
   assert.match(endpoint, /applicantType/);
@@ -61,48 +72,47 @@ test("public training request API validates, stores, and emails the request", ()
   assert.match(endpoint, /training_requests/);
   assert.match(endpoint, /status:\s*"new"/);
   assert.match(endpoint, /sendEmail/);
-  assert.match(endpoint, /ADMIN_EMAIL/);
 });
 
-test("admin training request API is protected and supports status updates", () => {
-  const endpoint = read("api/admin/training-requests.js");
+test("admin contact inquiry API is protected and supports status updates", () => {
+  const endpoint = read("api/admin/contact-inquiries.js");
 
   assert.match(endpoint, /verifyAdminToken/);
   assert.match(endpoint, /req\.method === "GET"/);
   assert.match(endpoint, /req\.method === "PATCH"/);
-  assert.match(endpoint, /training_requests/);
-  assert.match(endpoint, /contacted/);
-  assert.match(endpoint, /booked/);
-  assert.match(endpoint, /declined/);
+  assert.match(endpoint, /contact_inquiries/);
+  assert.match(endpoint, /answered/);
+  assert.match(endpoint, /archived/);
 });
 
-test("admin panel includes a separate training requests dashboard", () => {
+test("admin panel includes a separate contact inquiries dashboard", () => {
   const html = read("admin-orders.html");
   const script = read("admin-orders.js");
 
-  assert.match(html, /Заявки за индивидуални тренировки/);
-  assert.match(html, /data-training-requests/);
-  assert.match(html, /data-training-request-table/);
-  assert.match(html, /data-training-request-search/);
-  assert.match(html, /data-training-request-status-filter/);
-  assert.match(script, /\/api\/admin\/training-requests/);
-  assert.match(script, /data-training-request-status/);
+  assert.match(html, /Контактни запитвания/);
+  assert.match(html, /data-contact-inquiries/);
+  assert.match(html, /data-contact-inquiry-table/);
+  assert.match(html, /data-contact-inquiry-search/);
+  assert.match(html, /data-contact-inquiry-status-filter/);
+  assert.match(script, /\/api\/admin\/contact-inquiries/);
+  assert.match(script, /data-contact-inquiry-status/);
   assert.match(script, /method:\s*"PATCH"/);
-  assert.match(script, /Нова/);
-  assert.match(script, /Свързан/);
-  assert.match(script, /Записан/);
-  assert.match(script, /Отказан/);
+  assert.match(script, /Ново/);
+  assert.match(script, /Отговорено/);
+  assert.match(script, /Архивирано/);
 });
 
-test("Supabase schema defines the compact request model and allowed statuses", () => {
+test("Supabase schema defines contact inquiries and allowed statuses", () => {
   const schema = read("supabase/schema.sql");
 
-  assert.match(schema, /applicant_type text/);
-  assert.match(schema, /status text/);
+  assert.match(schema, /create table if not exists public\.contact_inquiries/);
+  assert.match(schema, /name text not null/);
+  assert.match(schema, /phone text not null/);
+  assert.match(schema, /email text not null/);
+  assert.match(schema, /message text not null/);
   assert.match(schema, /'new'/);
-  assert.match(schema, /'contacted'/);
-  assert.match(schema, /'booked'/);
-  assert.match(schema, /'declined'/);
+  assert.match(schema, /'answered'/);
+  assert.match(schema, /'archived'/);
 });
 
 test("online program purchase controls do not use the training form", () => {
