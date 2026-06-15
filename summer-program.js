@@ -2,7 +2,8 @@
   const EVENT_NAMES = new Set([
     "page_view", "scroll_25", "scroll_50", "scroll_75", "scroll_90",
     "view_problem", "view_solution", "view_program_contents", "view_product_preview",
-    "view_coach", "view_testimonials", "view_price",
+    "view_coach", "view_testimonials", "view_explainer_video", "view_training_videos",
+    "play_explainer_video", "view_price",
     "click_primary_cta", "checkout_started", "checkout_created", "checkout_error",
   ]);
   const CAMPAIGN_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"];
@@ -46,6 +47,9 @@
     }
   }), { threshold: 0.45 });
   document.querySelectorAll("[data-track-view]").forEach((section) => observer.observe(section));
+  document.querySelector("[data-explainer-video]")?.addEventListener("play", () => {
+    track("play_explainer_video", true);
+  });
 
   window.summerProgramAnalytics = { sessionId, landingPageUrl, pageVariant, campaign, referrer, deviceType, track };
 

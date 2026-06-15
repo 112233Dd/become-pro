@@ -97,6 +97,33 @@ test("summer program landing adds real product, player, coach, and testimonial p
   assert.ok((html.match(/Промо цена 0,50 €/g) || []).length >= 3);
 });
 
+test("summer program landing places the explainer and training videos in the approved order", () => {
+  const html = read("summer-program.html");
+  const heroIndex = html.indexOf('id="summer-hero"');
+  const explainerIndex = html.indexOf('id="summer-explainer"');
+  const proofIndex = html.indexOf('id="summer-proof"');
+  const trainingVideosIndex = html.indexOf('id="summer-training-videos"');
+  const playerHeadingIndex = html.indexOf("ИГРАЧИ, КОИТО ТРЕНИРАТ ОНЛАЙН");
+
+  assert.ok(
+    heroIndex >= 0 &&
+      explainerIndex > heroIndex &&
+      proofIndex > explainerIndex &&
+      trainingVideosIndex > proofIndex &&
+      playerHeadingIndex > trainingVideosIndex
+  );
+  assert.match(html, /Какво точно получаваш в Лятната програма\?/);
+  assert.match(html, /summer-program-explainer\.mp4/);
+  assert.match(html, /controls\s+playsinline\s+preload="metadata"/);
+
+  [
+    "field-drill-side-forward-back.mp4",
+    "overlap-passing-cones.mp4",
+    "change-direction-back.mp4",
+  ].forEach((video) => assert.match(html, new RegExp(video)));
+  assert.ok((html.match(/autoplay muted loop playsinline/g) || []).length >= 3);
+});
+
 test("summer program landing has isolated premium responsive styling", () => {
   const html = read("summer-program.html");
   const css = read("summer-program.css");
@@ -127,6 +154,9 @@ test("summer program tracker emits the approved anonymous commerce funnel", () =
     "view_product_preview",
     "view_coach",
     "view_testimonials",
+    "view_explainer_video",
+    "view_training_videos",
+    "play_explainer_video",
     "click_primary_cta",
     "checkout_started",
     "checkout_created",
@@ -191,6 +221,9 @@ test("analytics API accepts summer funnel events but reserves purchases for the 
     "view_product_preview",
     "view_coach",
     "view_testimonials",
+    "view_explainer_video",
+    "view_training_videos",
+    "play_explainer_video",
     "checkout_started",
     "checkout_created",
     "checkout_error",
