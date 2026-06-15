@@ -124,6 +124,31 @@ test("summer program landing places the explainer and training videos in the app
   assert.ok((html.match(/autoplay muted loop playsinline/g) || []).length >= 3);
 });
 
+test("summer program fit section uses specific emotional cards and a direct checkout CTA", () => {
+  const html = read("summer-program.html");
+  const fitSection = html.match(/<section id="summer-fit"[\s\S]*?<\/section>/)?.[0] || "";
+
+  assert.match(fitSection, /Тази програма е за теб, ако искаш лятото да работи за развитието ти/);
+  assert.match(
+    fitSection,
+    /Не е нужно да тренираш хаотично\. Нужно е да знаеш какво да правиш, кога да го правиш и защо го правиш\./
+  );
+  [
+    "Играч, който иска структура",
+    "Родител, който търси ясен план",
+    "Футболист в клуб",
+    "Играч, който иска предимство",
+  ].forEach((copy) => assert.match(fitSection, new RegExp(copy)));
+
+  assert.match(fitSection, /Разпозна ли се\?/);
+  assert.match(fitSection, /Вземи програмата и започни с ясен план\./);
+  assert.equal((fitSection.match(/class="summer-fit-icon"/g) || []).length, 4);
+  assert.match(fitSection, /class="summer-fit-grid"/);
+  assert.match(fitSection, /class="summer-fit-cta"/);
+  assert.match(fitSection, /data-summer-checkout/);
+  assert.match(fitSection, /data-primary-cta/);
+});
+
 test("summer program landing has isolated premium responsive styling", () => {
   const html = read("summer-program.html");
   const css = read("summer-program.css");

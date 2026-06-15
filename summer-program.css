@@ -129,6 +129,39 @@ button, a { transition: 0.2s ease; }
 }
 .summer-preview-grid img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; display: block; background: #fff; }
 .summer-preview-grid figcaption { padding: 18px 20px; color: var(--summer-white); font-weight: 800; line-height: 1.45; }
+.summer-fit-lead { max-width: 800px; margin: -2px 0 34px; color: var(--summer-muted); font-size: clamp(17px,2vw,21px); line-height: 1.65; }
+.summer-fit-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
+.summer-fit-grid article {
+  position: relative; overflow: hidden; min-height: 260px; padding: 28px;
+  border: 1px solid var(--summer-line); border-radius: var(--summer-radius);
+  background: radial-gradient(circle at 100% 0,rgba(245,196,0,.12),transparent 34%), var(--summer-panel);
+  box-shadow: 0 22px 60px rgba(0,0,0,.3);
+  transition: transform .22s ease,border-color .22s ease,box-shadow .22s ease;
+}
+.summer-fit-grid article::after {
+  content: ""; position: absolute; inset: auto 0 0; height: 3px;
+  background: linear-gradient(90deg,var(--summer-gold),rgba(245,196,0,0));
+}
+.summer-fit-grid article:hover {
+  transform: translateY(-4px); border-color: rgba(245,196,0,.5);
+  box-shadow: 0 28px 70px rgba(0,0,0,.4),0 0 30px rgba(245,196,0,.07);
+}
+.summer-fit-icon {
+  width: 54px; height: 54px; display: grid; place-items: center; margin-bottom: 28px;
+  border: 1px solid rgba(245,196,0,.45); border-radius: 15px;
+  background: rgba(245,196,0,.08); color: var(--summer-gold);
+}
+.summer-fit-icon svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.summer-fit-grid h3 { margin: 0 0 12px; color: var(--summer-white); font-size: clamp(20px,2.2vw,25px); line-height: 1.15; }
+.summer-fit-grid p { margin: 0; color: var(--summer-muted); font-size: 16px; line-height: 1.65; }
+.summer-fit-cta {
+  display: flex; justify-content: space-between; align-items: center; gap: 24px;
+  margin-top: 22px; padding: 24px 26px; border: 1px solid rgba(245,196,0,.36);
+  border-radius: var(--summer-radius); background: linear-gradient(90deg,rgba(245,196,0,.1),rgba(245,196,0,.025));
+}
+.summer-fit-cta p { margin: 0; color: var(--summer-white); font-size: clamp(17px,2vw,21px); line-height: 1.45; }
+.summer-fit-cta strong { color: var(--summer-gold); }
+.summer-fit-cta .summer-primary-cta { flex: 0 0 auto; }
 .summer-coach {
   display: grid; grid-template-columns: minmax(280px,.72fr) minmax(0,1.28fr); gap: clamp(30px,6vw,76px); align-items: center;
 }
@@ -172,6 +205,7 @@ button, a { transition: 0.2s ease; }
   .summer-hero { grid-template-columns: 1fr; }
   .summer-card-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .summer-player-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .summer-fit-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .summer-training-video-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .summer-training-video-grid article:first-child { grid-column: 1 / -1; }
   .summer-player-grid article:last-child { grid-column: 1 / -1; max-width: calc(50% - 8px); justify-self: center; }
@@ -187,6 +221,10 @@ button, a { transition: 0.2s ease; }
   .summer-hero h1 { font-size: clamp(38px,10.8vw,46px); }
   .summer-hero-media img { max-height: 340px; }
   .summer-card-grid, .summer-included-list, .summer-proof, .summer-player-grid, .summer-preview-grid, .summer-coach { grid-template-columns: 1fr; }
+  .summer-fit-grid { grid-template-columns: 1fr; }
+  .summer-fit-grid article { min-height: auto; padding: 24px; }
+  .summer-fit-cta { align-items: stretch; flex-direction: column; }
+  .summer-fit-cta .summer-primary-cta { width: 100%; }
   .summer-training-video-grid { grid-template-columns: 1fr; }
   .summer-training-video-grid article:first-child { grid-column: auto; }
   .summer-training-video-grid article, .summer-training-video-grid video { min-height: 360px; }
