@@ -149,6 +149,30 @@ test("summer program fit section uses specific emotional cards and a direct chec
   assert.match(fitSection, /data-primary-cta/);
 });
 
+test("summer program problem section uses premium emotional cards and bridges into the solution", () => {
+  const html = read("summer-program.html");
+  const problemSection = html.match(/<section id="summer-problem"[\s\S]*?<\/section>/)?.[0] || "";
+
+  assert.match(problemSection, /Лятото без ясен план може да те върне една крачка назад/);
+  assert.match(
+    problemSection,
+    /Желанието да тренираш не е достатъчно, ако всяка тренировка е случайна, натоварването е непоследователно\s+и не знаеш какво качество развиваш\./
+  );
+  [
+    "Тренираш без посока",
+    "Губиш постоянство",
+    "Не знаеш дали напредваш",
+    "Връщаш се неподготвен",
+  ].forEach((copy) => assert.match(problemSection, new RegExp(copy)));
+
+  assert.equal((problemSection.match(/class="summer-problem-icon"/g) || []).length, 4);
+  assert.equal((problemSection.match(/class="summer-problem-number"/g) || []).length, 4);
+  assert.match(problemSection, /class="summer-problem-grid"/);
+  assert.match(problemSection, /class="summer-problem-bridge"/);
+  assert.match(problemSection, /Проблемът не е липсата на желание\./);
+  assert.match(problemSection, /Проблемът е липсата на система\./);
+});
+
 test("summer program landing has isolated premium responsive styling", () => {
   const html = read("summer-program.html");
   const css = read("summer-program.css");

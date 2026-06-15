@@ -75,6 +75,61 @@ button, a { transition: 0.2s ease; }
 .summer-card-grid article > span { color: var(--summer-gold); font-size: 12px; font-weight: 900; }
 .summer-card-grid h3 { margin: 36px 0 10px; color: var(--summer-white); font-size: 21px; }
 .summer-card-grid p { color: var(--summer-muted); line-height: 1.55; }
+.summer-problem-section { position: relative; }
+.summer-problem-section::before {
+  content: ""; position: absolute; z-index: -1; top: 12%; left: 50%; width: min(820px,80vw); height: 420px;
+  transform: translateX(-50%); border-radius: 50%; background: rgba(245,196,0,.055); filter: blur(100px);
+}
+.summer-problem-lead {
+  max-width: 830px; margin: -2px 0 36px; color: var(--summer-muted);
+  font-size: clamp(17px,2vw,21px); line-height: 1.65;
+}
+.summer-problem-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
+.summer-problem-grid article {
+  position: relative; overflow: hidden; min-height: 270px; padding: 30px;
+  border: 1px solid rgba(245,196,0,.22); border-radius: var(--summer-radius);
+  background:
+    radial-gradient(circle at 100% 0,rgba(245,196,0,.11),transparent 36%),
+    linear-gradient(145deg,rgba(255,255,255,.025),transparent 55%),
+    var(--summer-panel);
+  box-shadow: 0 24px 64px rgba(0,0,0,.34);
+  transition: transform .22s ease,border-color .22s ease,box-shadow .22s ease;
+}
+.summer-problem-grid article::after {
+  content: ""; position: absolute; inset: auto 0 0; height: 3px;
+  background: linear-gradient(90deg,var(--summer-gold),rgba(245,196,0,0));
+}
+.summer-problem-grid article:hover {
+  transform: translateY(-4px); border-color: rgba(245,196,0,.52);
+  box-shadow: 0 30px 76px rgba(0,0,0,.44),0 0 34px rgba(245,196,0,.07);
+}
+.summer-problem-number {
+  position: absolute; top: 18px; right: 24px; color: rgba(245,196,0,.13);
+  font-size: clamp(58px,7vw,82px); font-weight: 950; line-height: 1; letter-spacing: -.06em;
+}
+.summer-problem-icon {
+  position: relative; width: 56px; height: 56px; display: grid; place-items: center; margin-bottom: 30px;
+  border: 1px solid rgba(245,196,0,.48); border-radius: 16px;
+  background: linear-gradient(145deg,rgba(245,196,0,.14),rgba(245,196,0,.035)); color: var(--summer-gold);
+  box-shadow: inset 0 0 22px rgba(245,196,0,.04),0 10px 30px rgba(0,0,0,.25);
+}
+.summer-problem-icon svg {
+  width: 29px; height: 29px; fill: none; stroke: currentColor; stroke-width: 1.8;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.summer-problem-grid h3 {
+  position: relative; max-width: 78%; margin: 0 0 12px; color: var(--summer-white);
+  font-size: clamp(21px,2.4vw,27px); line-height: 1.12;
+}
+.summer-problem-grid p { position: relative; max-width: 560px; margin: 0; color: var(--summer-muted); font-size: 16px; line-height: 1.65; }
+.summer-problem-bridge {
+  display: flex; justify-content: space-between; align-items: center; gap: 24px;
+  margin-top: 20px; padding: 24px 28px; border: 1px solid rgba(245,196,0,.34);
+  border-radius: var(--summer-radius); background: linear-gradient(90deg,rgba(245,196,0,.11),rgba(245,196,0,.025));
+  box-shadow: 0 20px 55px rgba(0,0,0,.25);
+}
+.summer-problem-bridge span { color: var(--summer-muted); font-size: clamp(16px,2vw,20px); }
+.summer-problem-bridge strong { color: var(--summer-gold); font-size: clamp(18px,2.4vw,24px); text-align: right; }
 .summer-panel, .summer-price-section, .summer-final-cta { padding: clamp(28px,5vw,60px); }
 .summer-included-list { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; margin: 28px 0 0; padding: 0; list-style: none; }
 .summer-included-list li { position: relative; padding: 17px 18px 17px 46px; border: 1px solid var(--summer-line); border-radius: 14px; background: var(--summer-panel); font-weight: 800; }
@@ -204,6 +259,7 @@ button, a { transition: 0.2s ease; }
 @media (max-width: 900px) {
   .summer-hero { grid-template-columns: 1fr; }
   .summer-card-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .summer-problem-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .summer-player-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .summer-fit-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .summer-training-video-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
@@ -221,6 +277,12 @@ button, a { transition: 0.2s ease; }
   .summer-hero h1 { font-size: clamp(38px,10.8vw,46px); }
   .summer-hero-media img { max-height: 340px; }
   .summer-card-grid, .summer-included-list, .summer-proof, .summer-player-grid, .summer-preview-grid, .summer-coach { grid-template-columns: 1fr; }
+  .summer-problem-grid { grid-template-columns: 1fr; }
+  .summer-problem-grid article { min-height: auto; padding: 24px; }
+  .summer-problem-number { top: 16px; right: 20px; font-size: 64px; }
+  .summer-problem-icon { margin-bottom: 26px; }
+  .summer-problem-bridge { align-items: flex-start; flex-direction: column; padding: 22px 24px; }
+  .summer-problem-bridge strong { text-align: left; }
   .summer-fit-grid { grid-template-columns: 1fr; }
   .summer-fit-grid article { min-height: auto; padding: 24px; }
   .summer-fit-cta { align-items: stretch; flex-direction: column; }
