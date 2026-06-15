@@ -216,6 +216,7 @@ contactForm?.addEventListener("submit", async (event) => {
 
   const formData = new FormData(contactForm);
   const payload = {
+    requestType: "contact",
     name: formData.get("name"),
     phone: formData.get("phone"),
     email: formData.get("email"),
@@ -224,7 +225,7 @@ contactForm?.addEventListener("submit", async (event) => {
   };
 
   try {
-    const response = await fetch("/api/contact-inquiries", {
+    const response = await fetch("/api/training-requests", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),

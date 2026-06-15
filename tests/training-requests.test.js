@@ -30,10 +30,11 @@ test("contact page is a general contact form, not a training request form", () =
   assert.doesNotMatch(form, /Моето дете|Себе си|Запази място|Запази тренировка/);
 });
 
-test("general contact frontend submits to contact inquiries endpoint", () => {
+test("general contact frontend submits through the shared requests endpoint", () => {
   const script = read("script.js");
 
-  assert.match(script, /\/api\/contact-inquiries/);
+  assert.match(script, /\/api\/training-requests/);
+  assert.match(script, /requestType:\s*"contact"/);
   assert.match(script, /name:\s*formData\.get\(["']name["']\)/);
   assert.match(script, /email:\s*formData\.get\(["']email["']\)/);
   assert.match(script, /message:\s*formData\.get\(["']message["']\)/);
@@ -51,8 +52,9 @@ test("training signup CTAs point to the dedicated training landing page", () => 
 });
 
 test("public contact inquiry API validates, stores, and emails the inquiry", () => {
-  const endpoint = read("api/contact-inquiries.js");
+  const endpoint = read("api/training-requests.js");
 
+  assert.match(endpoint, /requestType === "contact"/);
   assert.match(endpoint, /contact_inquiries/);
   assert.match(endpoint, /name/);
   assert.match(endpoint, /phone/);
@@ -60,7 +62,6 @@ test("public contact inquiry API validates, stores, and emails the inquiry", () 
   assert.match(endpoint, /message/);
   assert.match(endpoint, /status:\s*"new"/);
   assert.match(endpoint, /sendEmail/);
-  assert.doesNotMatch(endpoint, /training_requests/);
 });
 
 test("training request API remains dedicated to individual training signups", () => {
@@ -75,9 +76,10 @@ test("training request API remains dedicated to individual training signups", ()
 });
 
 test("admin contact inquiry API is protected and supports status updates", () => {
-  const endpoint = read("api/admin/contact-inquiries.js");
+  const endpoint = read("api/admin/training-requests.js");
 
   assert.match(endpoint, /verifyAdminToken/);
+  assert.match(endpoint, /searchParams\.get\("type"\) === "contact"/);
   assert.match(endpoint, /req\.method === "GET"/);
   assert.match(endpoint, /req\.method === "PATCH"/);
   assert.match(endpoint, /contact_inquiries/);
@@ -94,12 +96,20 @@ test("admin panel includes a separate contact inquiries dashboard", () => {
   assert.match(html, /data-contact-inquiry-table/);
   assert.match(html, /data-contact-inquiry-search/);
   assert.match(html, /data-contact-inquiry-status-filter/);
-  assert.match(script, /\/api\/admin\/contact-inquiries/);
+  assert.match(script, /\/api\/admin\/training-requests\?type=contact/);
   assert.match(script, /data-contact-inquiry-status/);
   assert.match(script, /method:\s*"PATCH"/);
   assert.match(script, /Ново/);
   assert.match(script, /Отговорено/);
   assert.match(script, /Архивирано/);
+});
+
+test("Vercel Hobby deployment stays within the 12 function limit", () => {
+  const functionFiles = fs
+    .readdirSync(path.join(root, "api"), { recursive: true, withFileTypes: true })
+    .filter((entry) => entry.isFile() && entry.name.endsWith(".js") && entry.name !== "_shared.js");
+
+  assert.ok(functionFiles.length <= 12, `Expected at most 12 functions, found ${functionFiles.length}`);
 });
 
 test("Supabase schema defines contact inquiries and allowed statuses", () => {

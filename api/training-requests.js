@@ -3,10 +3,73 @@ const { readJsonBody, sendEmail, sendJson, supabaseRequest } = require("./_share
 const APPLICANT_TYPES = new Set(["Моето дете", "Себе си"]);
 
 const cleanText = (value, maxLength) => String(value || "").trim().slice(0, maxLength);
+const isEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || "").trim());
 const isLegacyTrainingSchemaError = (error) =>
   /PGRST204|applicant_type|training_requests_status|landing_page_url|page_variant|utm_/i.test(
     String(error?.message || error || ""),
   );
+const isContactSchemaError = (error) =>
+  /contact_inquiries|PGRST205|PGRST204|schema cache/i.test(String(error?.message || error || ""));
+
+const createContactInquiry = async (body) => {
+  const name = cleanText(body.name, 120);
+  const phone = cleanText(body.phone, 40);
+  const email = cleanText(body.email, 160).toLowerCase();
+  const message = cleanText(body.message, 2000);
+  const consent = Boolean(body.consent);
+
+  if (name.length < 2) return { error: "Моля, въведи име." };
+  if (phone.length < 6) return { error: "Моля, въведи валиден телефон." };
+  if (!isEmail(email)) return { error: "Моля, въведи валиден имейл адрес." };
+  if (message.length < 5) return { error: "Моля, въведи съобщение." };
+  if (!consent) return { error: "Моля, потвърди съгласието за връзка." };
+
+  let rows;
+  try {
+    rows = await supabaseRequest("contact_inquiries", {
+      method: "POST",
+      headers: { Prefer: "return=representation" },
+      body: JSON.stringify([{ name, phone, email, message, status: "new" }]),
+    });
+  } catch (schemaError) {
+    if (!isContactSchemaError(schemaError)) throw schemaError;
+    rows = await supabaseRequest("admin_logs", {
+      method: "POST",
+      headers: { Prefer: "return=representation" },
+      body: JSON.stringify([
+        {
+          level: "info",
+          event: "contact_inquiry",
+          message: `Контактно запитване от ${name}`,
+          metadata: { name, phone, email, message, status: "new" },
+        },
+      ]),
+    });
+  }
+
+  try {
+    await sendEmail({
+      to: process.env.ADMIN_EMAIL,
+      subject: "Ново контактно запитване",
+      text: [
+        "Получено е ново контактно запитване.",
+        "",
+        `Име: ${name}`,
+        `Телефон: ${phone}`,
+        `Имейл: ${email}`,
+        "",
+        "Съобщение:",
+        message,
+        "",
+        "Запитването е записано в админ панела.",
+      ].join("\n"),
+    });
+  } catch (emailError) {
+    console.error("Contact inquiry admin email failed:", emailError);
+  }
+
+  return { inquiry: rows?.[0] || null };
+};
 
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
@@ -16,6 +79,12 @@ module.exports = async (req, res) => {
 
   try {
     const body = await readJsonBody(req);
+    if (body.requestType === "contact") {
+      const result = await createContactInquiry(body);
+      if (result.error) return sendJson(res, 400, { error: result.error });
+      return sendJson(res, 201, { ok: true, inquiry: result.inquiry });
+    }
+
     const applicantType = cleanText(body.applicantType, 40);
     const name = cleanText(body.name, 120);
     const city = cleanText(body.city, 120);

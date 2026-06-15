@@ -446,7 +446,7 @@ const loadContactInquiries = async () => {
   setLoading(contactInquiryRefreshButton, true, "Обнови запитванията", "Зареждане...");
   setError(contactInquiryErrorState);
   try {
-    const response = await fetch("/api/admin/contact-inquiries");
+    const response = await fetch("/api/admin/training-requests?type=contact");
     const data = await response.json();
     if (handleUnauthorized(response)) return;
     if (!response.ok) throw new Error(data.error || "Не успяхме да заредим контактните запитвания.");
@@ -563,7 +563,7 @@ const updateContactInquiryStatus = async (select) => {
   select.disabled = true;
 
   try {
-    const response = await fetch("/api/admin/contact-inquiries", {
+    const response = await fetch("/api/admin/training-requests?type=contact", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, status: select.value }),
