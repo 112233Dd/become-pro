@@ -1,16 +1,47 @@
 const {
   getProgramsByIds,
   getProgramsFromCheckoutLineItems,
+  getOrigin,
   hasSupabaseAdmin,
   listCheckoutSessionLineItems,
   logAdminEvent,
   readRawBody,
   sendEmail,
   sendJson,
+  supabaseRequest,
   upsertOrders,
   validateProgramAccessLinks,
   verifyStripeSignature,
 } = require("../_shared");
+
+const trackCompletedPurchase = async ({ session, programs, origin }) => {
+  if (!hasSupabaseAdmin()) return;
+  const metadata = session.metadata || {};
+  const summerProgram = programs.find((program) => program.id === "summer-program");
+  if (!summerProgram || metadata.pageVariant !== "summer-program") return;
+
+  await supabaseRequest("landing_analytics_events?on_conflict=stripe_checkout_session_id,program_id,event_name", {
+    method: "POST",
+    headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
+    body: JSON.stringify([
+      {
+        session_id: metadata.landingSessionId || `stripe-${session.id}`,
+        landing_page_url: metadata.landingPageUrl || `${origin}/summer-program`,
+        page_variant: "summer-program",
+        event_name: "purchase_completed",
+        utm_source: metadata.utm_source || null,
+        utm_medium: metadata.utm_medium || null,
+        utm_campaign: metadata.utm_campaign || null,
+        utm_content: metadata.utm_content || null,
+        utm_term: metadata.utm_term || null,
+        referrer: metadata.referrer || null,
+        device_type: metadata.deviceType || "unknown",
+        stripe_checkout_session_id: session.id,
+        program_id: summerProgram.id,
+      },
+    ]),
+  });
+};
 
 const customerFromMetadata = (metadata = {}) => ({
   customerName: metadata.customerName || "Become Pro клиент",
@@ -295,6 +326,23 @@ module.exports = async (req, res) => {
             error: persistenceError,
           });
         }
+      }
+
+      try {
+        await trackCompletedPurchase({
+          session,
+          programs,
+          origin: getOrigin(req),
+        });
+      } catch (analyticsError) {
+        console.error("Purchase analytics failed:", analyticsError);
+        await logAdminEvent({
+          level: "error",
+          event: "purchase_analytics_failed",
+          message: "Paid Summer Program order could not be added to landing analytics.",
+          stripeSessionId: session.id,
+          metadata: { programIds: programs.map((program) => program.id), error: analyticsError.message },
+        });
       }
 
       try {

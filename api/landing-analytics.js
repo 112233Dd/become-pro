@@ -2,13 +2,22 @@ const { readJsonBody, sendJson, supabaseRequest } = require("./_shared");
 
 const EVENT_NAMES = new Set([
   "page_view",
+  "scroll_25",
   "scroll_50",
+  "scroll_75",
   "scroll_90",
+  "view_problem",
+  "view_solution",
+  "view_program_contents",
+  "view_price",
   "click_primary_cta",
   "click_secondary_cta",
   "form_start",
   "form_submit_success",
   "form_submit_error",
+  "checkout_started",
+  "checkout_created",
+  "checkout_error",
 ]);
 
 const cleanText = (value, maxLength) => String(value || "").trim().slice(0, maxLength);

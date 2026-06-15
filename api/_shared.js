@@ -124,7 +124,7 @@ const getProgramsByNames = (names) => {
   return Object.values(productCatalog).filter((program) => normalizedNames.has(program.name));
 };
 
-const createStripeCheckoutSession = async ({ programs, customer, origin }) => {
+const createStripeCheckoutSession = async ({ programs, customer, origin, attribution = {} }) => {
   const metadata = {
     programId: programs.map((program) => program.id).join(","),
     programName: programs.map((program) => program.name).join(", "),
@@ -133,6 +133,16 @@ const createStripeCheckoutSession = async ({ programs, customer, origin }) => {
     customerPhone: customer.customerPhone,
     playerName: customer.playerName || "",
     playerAge: customer.playerAge || "",
+    landingSessionId: attribution.landingSessionId || "",
+    landingPageUrl: attribution.landingPageUrl || "",
+    pageVariant: attribution.pageVariant || "",
+    utm_source: attribution.utm_source || "",
+    utm_medium: attribution.utm_medium || "",
+    utm_campaign: attribution.utm_campaign || "",
+    utm_content: attribution.utm_content || "",
+    utm_term: attribution.utm_term || "",
+    referrer: attribution.referrer || "",
+    deviceType: attribution.deviceType || "",
   };
 
   const body = new URLSearchParams();

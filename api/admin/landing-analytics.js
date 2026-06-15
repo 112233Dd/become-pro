@@ -11,11 +11,16 @@ const buildStats = (events) => {
   const pageViewSessions = new Set();
   const allSessions = new Set();
   const submitSessions = new Set();
+  const purchaseSessions = new Set();
   let pageViews = 0;
   let ctaClicks = 0;
   let formStarts = 0;
   let formSubmissions = 0;
   let formErrors = 0;
+  let checkoutStarts = 0;
+  let checkoutsCreated = 0;
+  let checkoutErrors = 0;
+  let purchases = 0;
 
   events.forEach((event) => {
     allSessions.add(event.session_id);
@@ -30,10 +35,20 @@ const buildStats = (events) => {
       submitSessions.add(event.session_id);
     }
     if (event.event_name === "form_submit_error") formErrors += 1;
+    if (event.event_name === "checkout_started") checkoutStarts += 1;
+    if (event.event_name === "checkout_created") checkoutsCreated += 1;
+    if (event.event_name === "checkout_error") checkoutErrors += 1;
+    if (event.event_name === "purchase_completed") {
+      purchases += 1;
+      purchaseSessions.add(event.session_id);
+    }
   });
 
   const conversionRate = pageViewSessions.size
     ? Number(((submitSessions.size / pageViewSessions.size) * 100).toFixed(2))
+    : 0;
+  const purchaseConversionRate = pageViewSessions.size
+    ? Number(((purchaseSessions.size / pageViewSessions.size) * 100).toFixed(2))
     : 0;
 
   return {
@@ -44,6 +59,11 @@ const buildStats = (events) => {
     formSubmissions,
     formErrors,
     conversionRate,
+    checkoutStarts,
+    checkoutsCreated,
+    checkoutErrors,
+    purchases,
+    purchaseConversionRate,
   };
 };
 
@@ -85,7 +105,7 @@ module.exports = async (req, res) => {
       utm_campaign: cleanFilter(req.query?.utm_campaign),
     };
     const query = new URLSearchParams({
-      select: "session_id,event_name,landing_page_url,page_variant,utm_source,utm_medium,utm_campaign,event_time",
+      select: "session_id,event_name,landing_page_url,page_variant,utm_source,utm_medium,utm_campaign,event_time,stripe_checkout_session_id,program_id",
       event_time: `gte.${start.toISOString()}`,
       order: "event_time.desc",
       limit: "10000",

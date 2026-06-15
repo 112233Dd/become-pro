@@ -1,0 +1,124 @@
+:root {
+  --summer-bg: #050505;
+  --summer-panel: #0d0e0d;
+  --summer-panel-soft: #14150f;
+  --summer-gold: #f5c400;
+  --summer-gold-soft: #fbe9a0;
+  --summer-white: #f7f7f2;
+  --summer-muted: #b9b9ae;
+  --summer-line: rgba(245, 196, 0, 0.24);
+  --summer-max: 1180px;
+  --summer-radius: 20px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; background: var(--summer-bg); }
+body.summer-sales-page {
+  margin: 0;
+  overflow-x: hidden;
+  background: radial-gradient(circle at 80% 10%, rgba(245, 196, 0, 0.08), transparent 28%), var(--summer-bg);
+  color: var(--summer-white);
+  font-family: Arial, Helvetica, sans-serif;
+}
+button, a { transition: 0.2s ease; }
+.summer-header {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; justify-content: space-between; align-items: center;
+  min-height: 72px; padding: 12px max(18px, calc((100vw - var(--summer-max)) / 2));
+  border-bottom: 1px solid rgba(255,255,255,.1);
+  background: rgba(5,5,5,.92); backdrop-filter: blur(16px);
+}
+.summer-brand { display: inline-flex; align-items: center; gap: 10px; color: var(--summer-white); font-weight: 900; text-decoration: none; }
+.summer-brand img { width: 38px; height: 38px; object-fit: contain; }
+.summer-header-cta, .summer-primary-cta, .summer-mobile-sticky button {
+  border: 1px solid var(--summer-gold); border-radius: 12px; background: var(--summer-gold);
+  color: #050505; font-weight: 900; cursor: pointer;
+}
+.summer-header-cta { min-height: 44px; padding: 10px 18px; }
+.summer-hero, .summer-section, .summer-proof, .summer-price-section, .summer-final-cta, .summer-footer {
+  width: min(calc(100% - 36px), var(--summer-max)); margin-inline: auto;
+}
+.summer-hero {
+  display: grid; grid-template-columns: minmax(0,1.05fr) minmax(320px,.75fr);
+  gap: clamp(28px,6vw,80px); align-items: center; min-height: calc(100vh - 72px);
+  padding: clamp(52px,8vw,104px) 0;
+}
+.summer-eyebrow { margin: 0 0 12px; color: var(--summer-gold); font-size: 12px; font-weight: 900; letter-spacing: .08em; }
+.summer-hero h1, .summer-section h2, .summer-price-section h2, .summer-final-cta h2 {
+  margin: 0 0 18px; text-transform: uppercase; line-height: 1;
+}
+.summer-hero h1 { max-width: 760px; font-size: clamp(46px,6.2vw,72px); }
+.summer-section h2, .summer-price-section h2, .summer-final-cta h2 { max-width: 820px; font-size: clamp(34px,5vw,58px); }
+.summer-lead, .summer-section > p:not(.summer-eyebrow), .summer-price-section > p:not(.summer-eyebrow), .summer-final-cta > p:not(.summer-eyebrow) {
+  max-width: 720px; color: var(--summer-muted); font-size: clamp(17px,2vw,21px); line-height: 1.65;
+}
+.summer-price-inline { display: flex; align-items: center; gap: 14px; margin: 28px 0 18px; }
+.summer-price-inline strong { color: var(--summer-gold); font-size: clamp(38px,5vw,60px); }
+.summer-price-inline span, .summer-trust-line, .summer-checkout-status { color: var(--summer-muted); font-size: 13px; font-weight: 700; }
+.summer-primary-cta { min-height: 56px; padding: 15px 24px; font-size: 16px; box-shadow: 0 16px 36px rgba(245,196,0,.16); }
+.summer-primary-cta:hover, .summer-header-cta:hover, .summer-mobile-sticky button:hover { background: var(--summer-gold-soft); transform: translateY(-1px); }
+.summer-primary-cta:focus-visible, .summer-header-cta:focus-visible, .summer-mobile-sticky button:focus-visible, .summer-footer a:focus-visible, .summer-brand:focus-visible {
+  outline: 3px solid rgba(245,196,0,.4); outline-offset: 3px;
+}
+.summer-primary-cta:disabled, .summer-header-cta:disabled, .summer-mobile-sticky button:disabled { cursor: wait; opacity: .68; transform: none; }
+.summer-hero-media { position: relative; display: grid; place-items: center; }
+.summer-hero-media::before { content: ""; position: absolute; width: 80%; aspect-ratio: 1; border-radius: 50%; background: rgba(245,196,0,.15); filter: blur(70px); }
+.summer-hero-media img { position: relative; width: min(100%,470px); max-height: 610px; object-fit: contain; filter: drop-shadow(0 34px 50px rgba(0,0,0,.48)); }
+.summer-section { padding: clamp(56px,8vw,96px) 0; }
+.summer-card-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 14px; }
+.summer-card-grid article, .summer-panel, .summer-price-section, .summer-final-cta {
+  border: 1px solid var(--summer-line); border-radius: var(--summer-radius);
+  background: linear-gradient(145deg,rgba(245,196,0,.065),transparent 70%), var(--summer-panel);
+  box-shadow: 0 24px 70px rgba(0,0,0,.32);
+}
+.summer-card-grid article { min-height: 180px; padding: 24px; color: var(--summer-muted); line-height: 1.55; }
+.summer-card-grid article > span { color: var(--summer-gold); font-size: 12px; font-weight: 900; }
+.summer-card-grid h3 { margin: 36px 0 10px; color: var(--summer-white); font-size: 21px; }
+.summer-card-grid p { color: var(--summer-muted); line-height: 1.55; }
+.summer-panel, .summer-price-section, .summer-final-cta { padding: clamp(28px,5vw,60px); }
+.summer-included-list { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; margin: 28px 0 0; padding: 0; list-style: none; }
+.summer-included-list li { position: relative; padding: 17px 18px 17px 46px; border: 1px solid var(--summer-line); border-radius: 14px; background: var(--summer-panel); font-weight: 800; }
+.summer-included-list li::before { content: "✓"; position: absolute; left: 18px; color: var(--summer-gold); }
+.summer-proof { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; padding: 18px 0 clamp(56px,8vw,96px); }
+.summer-proof article { padding: clamp(26px,5vw,48px); border: 1px solid var(--summer-line); border-radius: var(--summer-radius); background: var(--summer-panel); text-align: center; }
+.summer-proof strong { display: block; color: var(--summer-gold); font-size: clamp(46px,7vw,76px); }
+.summer-proof span { font-weight: 900; text-transform: uppercase; }
+.summer-price-section, .summer-final-cta { margin-block: clamp(42px,7vw,84px); text-align: center; }
+.summer-price-section > *, .summer-final-cta > * { margin-inline: auto; }
+.summer-guarantee-grid article { min-height: 120px; color: var(--summer-white); font-weight: 900; }
+#summer-faq details { border-bottom: 1px solid rgba(255,255,255,.12); }
+#summer-faq summary { cursor: pointer; padding: 20px 0; font-weight: 900; }
+#summer-faq details p { max-width: 800px; padding: 0 0 20px; color: var(--summer-muted); line-height: 1.65; }
+.summer-footer { display: flex; justify-content: space-between; gap: 24px; padding: 34px 0 110px; border-top: 1px solid rgba(255,255,255,.1); }
+.summer-footer > div { display: grid; gap: 10px; }
+.summer-footer strong { color: var(--summer-gold); }
+.summer-footer nav { display: flex; flex-wrap: wrap; gap: 16px; }
+.summer-footer a { color: var(--summer-muted); font-size: 13px; font-weight: 700; text-decoration: none; }
+.summer-checkout-status:not(:empty) { margin-top: 14px; color: var(--summer-gold-soft); }
+.summer-mobile-sticky { display: none; }
+@media (max-width: 900px) {
+  .summer-hero { grid-template-columns: 1fr; }
+  .summer-card-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 720px) {
+  body.summer-sales-page { padding-bottom: 82px; }
+  .summer-header { min-height: 64px; }
+  .summer-header-cta { display: none; }
+  .summer-hero { grid-template-columns: 1fr; min-height: auto; padding: 46px 0 64px; }
+  .summer-hero h1 { font-size: clamp(38px,10.8vw,46px); }
+  .summer-hero-media img { max-height: 340px; }
+  .summer-card-grid, .summer-included-list, .summer-proof { grid-template-columns: 1fr; }
+  .summer-price-inline { align-items: flex-start; flex-direction: column; }
+  .summer-primary-cta { width: 100%; }
+  .summer-footer { align-items: flex-start; flex-direction: column; }
+  .summer-footer nav { flex-direction: column; }
+  .summer-mobile-sticky {
+    position: fixed; inset: auto 0 0; z-index: 30; display: flex; justify-content: space-between; align-items: center;
+    gap: 12px; padding: 10px 16px; border-top: 1px solid var(--summer-line);
+    background: rgba(5,5,5,.96); backdrop-filter: blur(16px);
+  }
+  .summer-mobile-sticky strong, .summer-mobile-sticky span { display: block; }
+  .summer-mobile-sticky strong { color: var(--summer-gold); font-size: 20px; }
+  .summer-mobile-sticky span { color: var(--summer-muted); font-size: 11px; }
+  .summer-mobile-sticky button { min-height: 48px; padding: 12px 16px; }
+}

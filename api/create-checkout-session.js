@@ -9,6 +9,8 @@ const {
   upsertOrders,
 } = require("./_shared");
 
+const cleanText = (value, maxLength) => String(value || "").trim().slice(0, maxLength);
+
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
@@ -24,6 +26,19 @@ module.exports = async (req, res) => {
   try {
     const body = await readJsonBody(req);
     const programs = getProgramsByIds(Array.isArray(body.items) ? body.items : [body.programId]);
+    const attribution = body.attribution || {};
+    const checkoutAttribution = {
+      landingSessionId: cleanText(attribution.sessionId, 100),
+      landingPageUrl: cleanText(attribution.landingPageUrl, 500),
+      pageVariant: cleanText(attribution.pageVariant, 160),
+      utm_source: cleanText(attribution.utm_source, 160),
+      utm_medium: cleanText(attribution.utm_medium, 160),
+      utm_campaign: cleanText(attribution.utm_campaign, 160),
+      utm_content: cleanText(attribution.utm_content, 160),
+      utm_term: cleanText(attribution.utm_term, 160),
+      referrer: cleanText(attribution.referrer, 500),
+      deviceType: cleanText(attribution.deviceType, 40),
+    };
     const customer = {
       customerName: String(body.customer?.customerName || "").trim(),
       customerEmail: String(body.customer?.customerEmail || "").trim(),
@@ -40,6 +55,7 @@ module.exports = async (req, res) => {
       programs,
       customer,
       origin: getOrigin(req),
+      attribution: checkoutAttribution,
     });
 
     if (hasSupabaseAdmin()) {

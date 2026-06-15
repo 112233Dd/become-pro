@@ -120,13 +120,23 @@ create table if not exists public.landing_analytics_events (
   event_name text not null check (
     event_name in (
       'page_view',
+      'scroll_25',
       'scroll_50',
+      'scroll_75',
       'scroll_90',
+      'view_problem',
+      'view_solution',
+      'view_program_contents',
+      'view_price',
       'click_primary_cta',
       'click_secondary_cta',
       'form_start',
       'form_submit_success',
-      'form_submit_error'
+      'form_submit_error',
+      'checkout_started',
+      'checkout_created',
+      'checkout_error',
+      'purchase_completed'
     )
   ),
   utm_source text,
@@ -136,8 +146,41 @@ create table if not exists public.landing_analytics_events (
   utm_term text,
   referrer text,
   device_type text,
+  stripe_checkout_session_id text,
+  program_id text,
   event_time timestamptz not null default now()
 );
+
+alter table public.landing_analytics_events add column if not exists stripe_checkout_session_id text;
+alter table public.landing_analytics_events add column if not exists program_id text;
+
+alter table public.landing_analytics_events
+  drop constraint if exists landing_analytics_events_event_name_check;
+
+alter table public.landing_analytics_events
+  add constraint landing_analytics_events_event_name_check
+  check (
+    event_name in (
+      'page_view',
+      'scroll_25',
+      'scroll_50',
+      'scroll_75',
+      'scroll_90',
+      'view_problem',
+      'view_solution',
+      'view_program_contents',
+      'view_price',
+      'click_primary_cta',
+      'click_secondary_cta',
+      'form_start',
+      'form_submit_success',
+      'form_submit_error',
+      'checkout_started',
+      'checkout_created',
+      'checkout_error',
+      'purchase_completed'
+    )
+  );
 
 alter table public.landing_analytics_events enable row level security;
 
@@ -155,6 +198,9 @@ create index if not exists landing_analytics_session_time_idx
 
 create index if not exists landing_analytics_event_name_time_idx
   on public.landing_analytics_events (event_name, event_time desc);
+
+create unique index if not exists landing_analytics_purchase_session_idx
+  on public.landing_analytics_events (stripe_checkout_session_id, program_id, event_name);
 
 create or replace function public.delete_expired_landing_analytics()
 returns integer

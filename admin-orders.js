@@ -277,7 +277,10 @@ const analyticsRows = (rows = []) =>
           <td>${escapeHtml(row.ctaClicks ?? 0)}</td>
           <td>${escapeHtml(row.formStarts ?? 0)}</td>
           <td>${escapeHtml(row.formSubmissions ?? 0)}</td>
+          <td>${escapeHtml(row.checkoutStarts ?? 0)}</td>
+          <td>${escapeHtml(row.purchases ?? 0)}</td>
           <td>${escapeHtml(`${Number(row.conversionRate || 0).toFixed(2)}%`)}</td>
+          <td>${escapeHtml(`${Number(row.purchaseConversionRate || 0).toFixed(2)}%`)}</td>
         </tr>
       `,
     )
@@ -308,7 +311,11 @@ const renderLandingAnalytics = () => {
     ["CTA кликове", summary.ctaClicks || 0],
     ["Започнати форми", summary.formStarts || 0],
     ["Изпратени форми", summary.formSubmissions || 0],
+    ["Checkout Starts", summary.checkoutStarts || 0],
+    ["Checkouts Created", summary.checkoutsCreated || 0],
+    ["Purchases", summary.purchases || 0],
     ["Conversion rate", `${Number(summary.conversionRate || 0).toFixed(2)}%`],
+    ["Purchase Conversion", `${Number(summary.purchaseConversionRate || 0).toFixed(2)}%`],
   ]
     .map(([label, value]) => analyticsMetricCard(label, value))
     .join("");

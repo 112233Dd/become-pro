@@ -2233,7 +2233,7 @@ blockquote:hover {
 }
 
 .admin-funnel-table {
-  min-width: 760px;
+  min-width: 1180px;
 }
 
 .admin-funnel-table th:not(:first-child),

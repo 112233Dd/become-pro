@@ -92,6 +92,10 @@
       "destination": "/admin-orders.html"
     },
     {
+      "source": "/summer-program",
+      "destination": "/summer-program.html"
+    },
+    {
       "source": "/programs/technical-pack",
       "destination": "/programs/technical-pack/index.html"
     },
