@@ -296,7 +296,10 @@ const analyticsFunnelRows = (rows = []) =>
           <td>${escapeHtml(row.ctaClicks ?? 0)}</td>
           <td>${escapeHtml(row.formStarts ?? 0)}</td>
           <td>${escapeHtml(row.formSubmissions ?? 0)}</td>
+          <td>${escapeHtml(row.checkoutStarts ?? 0)}</td>
+          <td>${escapeHtml(row.purchases ?? 0)}</td>
           <td>${escapeHtml(`${Number(row.conversionRate || 0).toFixed(2)}%`)}</td>
+          <td>${escapeHtml(`${Number(row.purchaseConversionRate || 0).toFixed(2)}%`)}</td>
         </tr>
       `,
     )

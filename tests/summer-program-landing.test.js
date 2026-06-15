@@ -175,14 +175,21 @@ test("admin analytics exposes checkout and purchase metrics", () => {
   const endpoint = read("api/admin/landing-analytics.js");
   const html = read("admin-orders.html");
   const script = read("admin-orders.js");
+  const funnelRenderer = script.match(/const analyticsFunnelRows[\s\S]*?\.join\(""\);/)?.[0] || "";
 
   ["checkoutStarts", "checkoutsCreated", "purchases", "purchaseConversionRate"].forEach((field) => {
     assert.match(endpoint, new RegExp(field));
     assert.match(script, new RegExp(field));
   });
+  ["checkoutStarts", "purchases", "purchaseConversionRate"].forEach((field) => {
+    assert.match(funnelRenderer, new RegExp(field));
+  });
   assert.match(html, /Checkout Starts/);
   assert.match(html, /Purchases/);
   assert.match(html, /Purchase Conversion/);
+  assert.equal((html.match(/<th>Checkout Starts<\/th>/g) || []).length, 3);
+  assert.equal((html.match(/<th>Purchases<\/th>/g) || []).length, 3);
+  assert.equal((html.match(/<th>Purchase Conversion<\/th>/g) || []).length, 3);
 });
 
 test("Vercel Hobby deployment remains within the function limit", () => {
