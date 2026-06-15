@@ -1,7 +1,8 @@
 (() => {
   const EVENT_NAMES = new Set([
     "page_view", "scroll_25", "scroll_50", "scroll_75", "scroll_90",
-    "view_problem", "view_solution", "view_program_contents", "view_price",
+    "view_problem", "view_solution", "view_program_contents", "view_product_preview",
+    "view_coach", "view_testimonials", "view_price",
     "click_primary_cta", "checkout_started", "checkout_created", "checkout_error",
   ]);
   const CAMPAIGN_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"];

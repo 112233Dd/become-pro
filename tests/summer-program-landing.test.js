@@ -59,6 +59,44 @@ test("summer program landing uses approved sales copy and trust content", () => 
   assert.match(html, /refund-policy/);
 });
 
+test("summer program landing adds real product, player, coach, and testimonial proof", () => {
+  const html = read("summer-program.html");
+  const heroIndex = html.indexOf('id="summer-hero"');
+  const proofIndex = html.indexOf('id="summer-proof"');
+  const problemIndex = html.indexOf('id="summer-problem"');
+
+  assert.ok(heroIndex >= 0 && proofIndex > heroIndex && problemIndex > proofIndex);
+  assert.match(html, /id="summer-preview"/);
+  [
+    "program-structure.webp",
+    "weekly-plan.webp",
+    "fitness-levels.webp",
+    "training-library.webp",
+  ].forEach((asset) => assert.match(html, new RegExp(asset)));
+
+  [
+    "Мирослав Маринов",
+    "Ирен Георгиева",
+    "Панайот Пасков",
+    "miroslav-marinov.jfif",
+    "iren-georgieva.jfif",
+    "panayot-paskov.jpg",
+  ].forEach((content) => assert.match(html, new RegExp(content)));
+
+  assert.match(html, /id="summer-coach"/);
+  assert.match(html, /Йордан Желев/);
+  assert.match(html, /coach-yordan-zhelev\.png/);
+  assert.match(html, /Първа лига на 16/);
+  assert.match(html, /България U15/);
+  assert.match(html, /Нотингам Форест/);
+
+  assert.match(html, /id="summer-testimonials"/);
+  assert.match(html, /Играч, 16 г\./);
+  assert.match(html, /Родител на играч, 13 г\./);
+  assert.match(html, /Играч, 18 г\./);
+  assert.ok((html.match(/Промо цена 0,50 €/g) || []).length >= 3);
+});
+
 test("summer program landing has isolated premium responsive styling", () => {
   const html = read("summer-program.html");
   const css = read("summer-program.css");
@@ -86,6 +124,9 @@ test("summer program tracker emits the approved anonymous commerce funnel", () =
     "view_solution",
     "view_program_contents",
     "view_price",
+    "view_product_preview",
+    "view_coach",
+    "view_testimonials",
     "click_primary_cta",
     "checkout_started",
     "checkout_created",
@@ -147,6 +188,9 @@ test("analytics API accepts summer funnel events but reserves purchases for the 
     "view_solution",
     "view_program_contents",
     "view_price",
+    "view_product_preview",
+    "view_coach",
+    "view_testimonials",
     "checkout_started",
     "checkout_created",
     "checkout_error",
