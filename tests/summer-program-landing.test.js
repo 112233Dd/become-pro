@@ -216,16 +216,27 @@ test("summer program guarantee section uses larger icon trust cards", () => {
   assert.doesNotMatch(guaranteeSection, /Поддръжка при въпроси/);
 });
 
-test("summer program player proof cards expose premium authority details", () => {
+test("summer program player proof cards mirror the official authority player cards", () => {
   const html = read("summer-program.html");
   const proofSection = html.match(/<section id="summer-proof"[\s\S]*?<\/section>/)?.[0] || "";
 
-  assert.equal((proofSection.match(/class="summer-player-badge"/g) || []).length, 3);
-  assert.equal((proofSection.match(/class="summer-player-meta"/g) || []).length, 3);
-  assert.match(proofSection, /Онлайн подготовка/);
-  assert.match(proofSection, /100\+ професионални мача/);
+  assert.equal((proofSection.match(/class="summer-player-card summer-player-profile-card"/g) || []).length, 3);
+  assert.equal((proofSection.match(/class="summer-player-photo"/g) || []).length, 3);
+  assert.equal((proofSection.match(/class="summer-player-detail-block summer-player-profile-facts"/g) || []).length, 3);
+  assert.equal((proofSection.match(/class="summer-player-detail-block summer-player-achievements"/g) || []).length, 3);
+  assert.equal((proofSection.match(/class="summer-player-fact-row"/g) || []).length, 9);
+  assert.doesNotMatch(proofSection, /summer-player-badge|Онлайн подготовка/);
+
+  ["Играе за:", "Години:", "Позиция:", "Отличия:"].forEach((label) => {
+    assert.match(proofSection, new RegExp(label));
+  });
+
+  assert.match(proofSection, /100\+ мача в професионалния футбол/);
+  assert.match(proofSection, /3-ти голмайстор във Втора лига - 14 гола/);
   assert.match(proofSection, /Националка на България U15/);
-  assert.match(proofSection, /80\+ професионални мача/);
+  assert.match(proofSection, /Играч на Brooke House \(Англия\)/);
+  assert.match(proofSection, /80\+ мача в професионалния футбол/);
+  assert.match(proofSection, /Участник на UEFA EURO U19/);
 });
 
 test("summer program landing has isolated premium responsive styling", () => {
