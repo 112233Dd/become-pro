@@ -22,6 +22,7 @@ test("summer program landing contains only the approved conversion structure", (
     'id="summer-hero"',
     'id="summer-problem"',
     'id="summer-solution"',
+    'id="summer-vision"',
     'id="summer-benefits"',
     'id="summer-contents"',
     'id="summer-fit"',
@@ -49,9 +50,9 @@ test("summer program landing uses approved sales copy and trust content", () => 
   assert.match(html, /50\+[\s\S]*футболисти/);
   assert.match(html, /100\+[\s\S]*проведени тренировки/);
   assert.match(html, /Сигурно плащане чрез Stripe/);
-  assert.match(html, /Моментален достъп след покупка/);
-  assert.match(html, /Без абонаменти и скрити такси/);
-  assert.match(html, /Поддръжка при въпроси/);
+  assert.match(html, /Достъп веднага след плащане/);
+  assert.match(html, /Получаваш програмата на имейл/);
+  assert.match(html, /Няма месечни такси/);
   assert.match(html, /become\.pro2024@gmail\.com/);
   assert.match(html, /privacy-policy/);
   assert.match(html, /terms/);
@@ -149,6 +150,32 @@ test("summer program fit section uses specific emotional cards and a direct chec
   assert.match(fitSection, /data-primary-cta/);
 });
 
+test("summer program vision section shows the imagined end-of-summer outcome before benefits", () => {
+  const html = read("summer-program.html");
+  const solutionIndex = html.indexOf('id="summer-solution"');
+  const visionIndex = html.indexOf('id="summer-vision"');
+  const benefitsIndex = html.indexOf('id="summer-benefits"');
+  const visionSection = html.match(/<section id="summer-vision"[\s\S]*?<\/section>/)?.[0] || "";
+
+  assert.ok(solutionIndex >= 0 && visionIndex > solutionIndex && benefitsIndex > visionIndex);
+  assert.match(visionSection, /ПРЕДСТАВИ СИ КРАЯ НА ЛЯТОТО/);
+  assert.match(
+    visionSection,
+    /Само няколко седмици постоянна работа могат да променят начина, по който играчът влиза в новия сезон\./
+  );
+  [
+    "По-уверен първи допир",
+    "По-бърза реакция",
+    "По-добра физическа подготовка",
+    "По-голяма увереност",
+    "По-малко загубено време",
+    "По-лесно връщане към клубните тренировки",
+  ].forEach((copy) => assert.match(visionSection, new RegExp(copy)));
+
+  assert.equal((visionSection.match(/class="summer-vision-icon"/g) || []).length, 6);
+  assert.match(visionSection, /class="summer-vision-grid"/);
+});
+
 test("summer program problem section uses premium emotional cards and bridges into the solution", () => {
   const html = read("summer-program.html");
   const problemSection = html.match(/<section id="summer-problem"[\s\S]*?<\/section>/)?.[0] || "";
@@ -171,6 +198,34 @@ test("summer program problem section uses premium emotional cards and bridges in
   assert.match(problemSection, /class="summer-problem-bridge"/);
   assert.match(problemSection, /Проблемът не е липсата на желание\./);
   assert.match(problemSection, /Проблемът е липсата на система\./);
+});
+
+test("summer program guarantee section uses larger icon trust cards", () => {
+  const html = read("summer-program.html");
+  const guaranteeSection = html.match(/<section id="summer-guarantee"[\s\S]*?<\/section>/)?.[0] || "";
+
+  [
+    "Сигурно плащане чрез Stripe",
+    "Достъп веднага след плащане",
+    "Получаваш програмата на имейл",
+    "Няма месечни такси",
+  ].forEach((copy) => assert.match(guaranteeSection, new RegExp(copy)));
+
+  assert.equal((guaranteeSection.match(/class="summer-guarantee-icon"/g) || []).length, 4);
+  assert.match(guaranteeSection, /class="summer-guarantee-grid"/);
+  assert.doesNotMatch(guaranteeSection, /Поддръжка при въпроси/);
+});
+
+test("summer program player proof cards expose premium authority details", () => {
+  const html = read("summer-program.html");
+  const proofSection = html.match(/<section id="summer-proof"[\s\S]*?<\/section>/)?.[0] || "";
+
+  assert.equal((proofSection.match(/class="summer-player-badge"/g) || []).length, 3);
+  assert.equal((proofSection.match(/class="summer-player-meta"/g) || []).length, 3);
+  assert.match(proofSection, /Онлайн подготовка/);
+  assert.match(proofSection, /100\+ професионални мача/);
+  assert.match(proofSection, /Националка на България U15/);
+  assert.match(proofSection, /80\+ професионални мача/);
 });
 
 test("summer program landing has isolated premium responsive styling", () => {

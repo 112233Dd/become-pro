@@ -131,6 +131,35 @@ button, a { transition: 0.2s ease; }
 .summer-problem-bridge span { color: var(--summer-muted); font-size: clamp(16px,2vw,20px); }
 .summer-problem-bridge strong { color: var(--summer-gold); font-size: clamp(18px,2.4vw,24px); text-align: right; }
 .summer-panel, .summer-price-section, .summer-final-cta { padding: clamp(28px,5vw,60px); }
+.summer-vision-section { position: relative; }
+.summer-vision-section::before {
+  content: ""; position: absolute; z-index: -1; inset: 14% auto auto 50%; width: min(860px,82vw); height: 360px;
+  transform: translateX(-50%); border-radius: 50%; background: rgba(245,196,0,.06); filter: blur(96px);
+}
+.summer-vision-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; }
+.summer-vision-grid article {
+  position: relative; overflow: hidden; min-height: 250px; padding: 28px;
+  border: 1px solid rgba(245,196,0,.24); border-radius: var(--summer-radius);
+  background: radial-gradient(circle at 100% 0,rgba(245,196,0,.12),transparent 34%), var(--summer-panel);
+  box-shadow: 0 24px 64px rgba(0,0,0,.32);
+  transition: transform .22s ease,border-color .22s ease,box-shadow .22s ease;
+}
+.summer-vision-grid article::after {
+  content: ""; position: absolute; inset: auto 0 0; height: 3px;
+  background: linear-gradient(90deg,var(--summer-gold),rgba(245,196,0,0));
+}
+.summer-vision-grid article:hover {
+  transform: translateY(-4px); border-color: rgba(245,196,0,.52);
+  box-shadow: 0 30px 76px rgba(0,0,0,.42),0 0 32px rgba(245,196,0,.07);
+}
+.summer-vision-icon {
+  width: 58px; height: 58px; display: grid; place-items: center; margin-bottom: 28px;
+  border: 1px solid rgba(245,196,0,.44); border-radius: 16px;
+  background: linear-gradient(145deg,rgba(245,196,0,.15),rgba(245,196,0,.04));
+  font-size: 28px; filter: saturate(.85);
+}
+.summer-vision-grid h3 { margin: 0 0 12px; color: var(--summer-white); font-size: clamp(20px,2.1vw,25px); line-height: 1.14; }
+.summer-vision-grid p { margin: 0; color: var(--summer-muted); font-size: 16px; line-height: 1.62; }
 .summer-included-list { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; margin: 28px 0 0; padding: 0; list-style: none; }
 .summer-included-list li { position: relative; padding: 17px 18px 17px 46px; border: 1px solid var(--summer-line); border-radius: 14px; background: var(--summer-panel); font-weight: 800; }
 .summer-included-list li::before { content: "✓"; position: absolute; left: 18px; color: var(--summer-gold); }
@@ -168,15 +197,28 @@ button, a { transition: 0.2s ease; }
 .summer-heading-center > p:not(.summer-eyebrow) { max-width: 760px; color: var(--summer-muted); font-size: clamp(16px,2vw,20px); line-height: 1.65; }
 .summer-player-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; }
 .summer-player-grid article {
-  overflow: hidden; border: 1px solid var(--summer-line); border-radius: var(--summer-radius);
+  position: relative; overflow: hidden; border: 1px solid var(--summer-line); border-radius: var(--summer-radius);
   background: linear-gradient(180deg,rgba(245,196,0,.08),transparent 40%), var(--summer-panel);
   box-shadow: 0 24px 60px rgba(0,0,0,.28);
+  transition: transform .22s ease,border-color .22s ease,box-shadow .22s ease;
+}
+.summer-player-grid article:hover {
+  transform: translateY(-4px); border-color: rgba(245,196,0,.5);
+  box-shadow: 0 30px 76px rgba(0,0,0,.42),0 0 32px rgba(245,196,0,.07);
 }
 .summer-player-grid img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: center top; display: block; }
 .summer-player-grid article > div { padding: 22px; }
+.summer-player-badge {
+  display: inline-flex; margin: 0 0 14px; padding: 7px 10px; border: 1px solid rgba(245,196,0,.36);
+  border-radius: 999px; background: rgba(245,196,0,.08); color: var(--summer-gold);
+  font-size: 11px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase;
+}
 .summer-player-grid h3 { margin: 0 0 8px; font-size: 21px; }
 .summer-player-grid p { min-height: 44px; margin: 0 0 14px; color: var(--summer-muted); line-height: 1.45; }
-.summer-player-grid strong { color: var(--summer-gold-soft); font-size: 13px; line-height: 1.5; }
+.summer-player-grid strong {
+  display: block; padding-top: 14px; border-top: 1px solid rgba(245,196,0,.18);
+  color: var(--summer-gold-soft); font-size: 13px; line-height: 1.5;
+}
 .summer-preview-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; }
 .summer-preview-grid figure {
   margin: 0; overflow: hidden; border: 1px solid var(--summer-line); border-radius: var(--summer-radius);
@@ -245,7 +287,27 @@ button, a { transition: 0.2s ease; }
 .summer-testimonial-grid cite { color: var(--summer-gold-soft); font-size: 13px; font-style: normal; font-weight: 900; text-transform: uppercase; }
 .summer-price-section, .summer-final-cta { margin-block: clamp(42px,7vw,84px); text-align: center; }
 .summer-price-section > *, .summer-final-cta > * { margin-inline: auto; }
-.summer-guarantee-grid article { min-height: 120px; color: var(--summer-white); font-weight: 900; }
+.summer-guarantee-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 16px; }
+.summer-guarantee-grid article {
+  min-height: 230px; padding: 30px 26px; border: 1px solid rgba(245,196,0,.28); border-radius: var(--summer-radius);
+  background:
+    radial-gradient(circle at 100% 0,rgba(245,196,0,.15),transparent 36%),
+    linear-gradient(145deg,rgba(255,255,255,.025),transparent 55%),
+    var(--summer-panel);
+  box-shadow: 0 26px 70px rgba(0,0,0,.36);
+  transition: transform .22s ease,border-color .22s ease,box-shadow .22s ease;
+}
+.summer-guarantee-grid article:hover {
+  transform: translateY(-4px); border-color: rgba(245,196,0,.55);
+  box-shadow: 0 32px 78px rgba(0,0,0,.45),0 0 34px rgba(245,196,0,.08);
+}
+.summer-guarantee-icon {
+  display: grid; place-items: center; width: 64px; height: 64px; margin: 0 0 32px;
+  border: 1px solid rgba(245,196,0,.48); border-radius: 18px;
+  background: linear-gradient(145deg,rgba(245,196,0,.16),rgba(245,196,0,.04));
+  font-size: 31px; filter: saturate(.85);
+}
+.summer-guarantee-grid h3 { margin: 0; color: var(--summer-white); font-size: clamp(20px,2.2vw,26px); line-height: 1.16; }
 #summer-faq details { border-bottom: 1px solid rgba(255,255,255,.12); }
 #summer-faq summary { cursor: pointer; padding: 20px 0; font-weight: 900; }
 #summer-faq details p { max-width: 800px; padding: 0 0 20px; color: var(--summer-muted); line-height: 1.65; }
@@ -261,6 +323,8 @@ button, a { transition: 0.2s ease; }
   .summer-card-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .summer-problem-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .summer-player-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .summer-vision-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .summer-guarantee-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .summer-fit-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .summer-training-video-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .summer-training-video-grid article:first-child { grid-column: 1 / -1; }
@@ -276,7 +340,7 @@ button, a { transition: 0.2s ease; }
   .summer-hero { grid-template-columns: 1fr; min-height: auto; padding: 46px 0 64px; }
   .summer-hero h1 { font-size: clamp(38px,10.8vw,46px); }
   .summer-hero-media img { max-height: 340px; }
-  .summer-card-grid, .summer-included-list, .summer-proof, .summer-player-grid, .summer-preview-grid, .summer-coach { grid-template-columns: 1fr; }
+  .summer-card-grid, .summer-included-list, .summer-proof, .summer-player-grid, .summer-preview-grid, .summer-coach, .summer-vision-grid, .summer-guarantee-grid { grid-template-columns: 1fr; }
   .summer-problem-grid { grid-template-columns: 1fr; }
   .summer-problem-grid article { min-height: auto; padding: 24px; }
   .summer-problem-number { top: 16px; right: 20px; font-size: 64px; }
@@ -294,6 +358,8 @@ button, a { transition: 0.2s ease; }
   .summer-explainer-frame video { max-height: 620px; border-radius: 12px; }
   .summer-player-grid article:last-child { grid-column: auto; max-width: none; }
   .summer-player-grid p { min-height: auto; }
+  .summer-vision-grid article, .summer-guarantee-grid article { min-height: auto; padding: 24px; }
+  .summer-vision-icon, .summer-guarantee-icon { margin-bottom: 24px; }
   .summer-preview-grid img { aspect-ratio: 4 / 3; }
   .summer-coach-media, .summer-coach-media img { min-height: 420px; }
   .summer-coach { gap: 26px; }
