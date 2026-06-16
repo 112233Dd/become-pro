@@ -125,6 +125,38 @@ test("summer program landing places the explainer and training videos in the app
   assert.ok((html.match(/autoplay muted loop playsinline/g) || []).length >= 3);
 });
 
+test("summer program training videos present the exercises as part of the online program", () => {
+  const html = read("summer-program.html");
+  const start = html.indexOf('id="summer-training-videos"');
+  const end = html.indexOf("ИГРАЧИ, КОИТО ТРЕНИРАТ ОНЛАЙН", start);
+  const trainingVideosSection = html.slice(start, end);
+
+  assert.ok(start >= 0 && end > start);
+  assert.match(trainingVideosSection, /ОТ ПРОГРАМАТА КЪМ ТЕРЕНА/);
+  assert.match(trainingVideosSection, /Виж упражненията, които стоят зад програмата/);
+  assert.match(
+    trainingVideosSection,
+    /Лятната програма използва реални футболни упражнения, които играчът може да следва самостоятелно с ясна структура, повторения и фокус\./
+  );
+  assert.doesNotMatch(trainingVideosSection, /РЕАЛНИ ТРЕНИРОВКИ|Виж как работим на терена|Техника и движение с топка/);
+
+  [
+    "Скорост и смяна на посоката",
+    "Упражнения за по-бърза реакция, първа крачка и динамика.",
+    "Техника и контрол с топка",
+    "Работа върху движение, контрол и увереност с топката.",
+    "Координация и реакция",
+    "Задачи, които развиват баланс, ориентация и вземане на решения.",
+  ].forEach((copy) => assert.match(trainingVideosSection, new RegExp(copy)));
+
+  assert.equal((trainingVideosSection.match(/class="summer-training-video-copy"/g) || []).length, 3);
+  assert.match(trainingVideosSection, /class="summer-training-video-shell"/);
+  assert.match(trainingVideosSection, /class="summer-training-video-cta"/);
+  assert.match(trainingVideosSection, /Това не са случайни клипове\. Това са упражнения, подредени в ясен летен план\./);
+  assert.match(trainingVideosSection, /href="#summer-contents"/);
+  assert.match(trainingVideosSection, /Виж какво включва програмата/);
+});
+
 test("summer program fit section uses specific emotional cards and a direct checkout CTA", () => {
   const html = read("summer-program.html");
   const fitSection = html.match(/<section id="summer-fit"[\s\S]*?<\/section>/)?.[0] || "";

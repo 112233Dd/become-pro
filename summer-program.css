@@ -178,21 +178,52 @@ button, a { transition: 0.2s ease; }
 .summer-proof strong { display: block; color: var(--summer-gold); font-size: clamp(46px,7vw,76px); }
 .summer-proof span { font-weight: 900; text-transform: uppercase; }
 .summer-training-videos { margin-bottom: clamp(64px,9vw,110px); }
-.summer-training-video-grid { display: grid; grid-template-columns: 1.2fr .9fr .9fr; gap: 16px; }
+.summer-training-video-shell { width: 100%; margin-inline: auto; text-align: center; }
+.summer-training-heading { width: min(100%, 880px); margin-bottom: clamp(26px,4vw,38px); }
+.summer-training-video-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; }
 .summer-training-video-grid article {
   position: relative; min-height: 420px; overflow: hidden; border: 1px solid var(--summer-line);
   border-radius: var(--summer-radius); background: var(--summer-panel); box-shadow: 0 24px 60px rgba(0,0,0,.3);
+  transition: transform .22s ease,border-color .22s ease,box-shadow .22s ease;
+}
+.summer-training-video-grid article:hover {
+  transform: translateY(-4px); border-color: rgba(245,196,0,.48);
+  box-shadow: 0 30px 76px rgba(0,0,0,.42),0 0 30px rgba(245,196,0,.07);
 }
 .summer-training-video-grid video { width: 100%; height: 100%; min-height: 420px; display: block; object-fit: cover; }
 .summer-training-video-grid article::after {
   content: ""; position: absolute; inset: auto 0 0; height: 42%; pointer-events: none;
   background: linear-gradient(transparent,rgba(5,5,5,.92));
 }
-.summer-training-video-grid span {
-  position: absolute; z-index: 1; inset: auto 20px 20px; color: var(--summer-white);
-  font-size: 15px; font-weight: 900; text-transform: uppercase;
+.summer-training-video-copy {
+  position: absolute; z-index: 1; inset: auto 20px 20px; text-align: left;
 }
-.summer-heading-center { margin: 0 auto 30px; text-align: center; }
+.summer-training-video-copy h3 {
+  margin: 0; color: var(--summer-white); font-size: clamp(18px,2vw,23px);
+  font-weight: 950; line-height: 1.12; text-transform: uppercase;
+}
+.summer-training-video-copy p {
+  max-width: 310px; margin: 9px 0 0; color: var(--summer-muted); font-size: 14px; line-height: 1.48;
+}
+.summer-training-video-cta {
+  display: flex; justify-content: space-between; align-items: center; gap: 22px;
+  width: min(100%, 920px); margin: 22px auto 0; padding: 22px 24px;
+  border: 1px solid rgba(245,196,0,.34); border-radius: var(--summer-radius);
+  background: linear-gradient(90deg,rgba(245,196,0,.1),rgba(245,196,0,.025));
+  box-shadow: 0 20px 55px rgba(0,0,0,.25); text-align: left;
+}
+.summer-training-video-cta p { margin: 0; color: var(--summer-white); font-size: clamp(16px,2vw,20px); font-weight: 800; line-height: 1.45; }
+.summer-secondary-cta {
+  display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto;
+  min-height: 48px; padding: 13px 18px; border: 1px solid var(--summer-gold);
+  border-radius: 12px; background: transparent; color: var(--summer-gold);
+  font-size: 14px; font-weight: 950; text-decoration: none;
+}
+.summer-secondary-cta:hover { background: var(--summer-gold); color: #050505; transform: translateY(-1px); }
+.summer-secondary-cta:focus-visible {
+  outline: 3px solid rgba(245,196,0,.4); outline-offset: 3px;
+}
+.summer-heading-center { width: min(100%, 860px); margin: 0 auto 30px; text-align: center; }
 .summer-heading-center > * { margin-inline: auto; }
 .summer-heading-center > p:not(.summer-eyebrow) { max-width: 760px; color: var(--summer-muted); font-size: clamp(16px,2vw,20px); line-height: 1.65; }
 .summer-player-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; }
@@ -369,6 +400,9 @@ button, a { transition: 0.2s ease; }
   .summer-training-video-grid { grid-template-columns: 1fr; }
   .summer-training-video-grid article:first-child { grid-column: auto; }
   .summer-training-video-grid article, .summer-training-video-grid video { min-height: 360px; }
+  .summer-training-video-copy { inset: auto 18px 18px; }
+  .summer-training-video-cta { align-items: stretch; flex-direction: column; text-align: center; }
+  .summer-training-video-cta .summer-secondary-cta { width: 100%; }
   .summer-explainer-frame { padding: 6px; border-radius: 18px; }
   .summer-explainer-frame video { max-height: 620px; border-radius: 12px; }
   .summer-player-grid article:last-child { grid-column: auto; max-width: none; }
