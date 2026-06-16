@@ -1,7 +1,9 @@
 (() => {
   const EVENT_NAMES = new Set([
     "page_view",
+    "scroll_25",
     "scroll_50",
+    "scroll_75",
     "scroll_90",
     "click_primary_cta",
     "click_secondary_cta",
@@ -12,7 +14,7 @@
   const CAMPAIGN_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"];
   const VARIANT_BY_PATH = new Map([
     ["/training", "general"],
-    ["/individual-training", "general"],
+    ["/individual-training", "individual-training"],
     ["/training/plovdiv", "plovdiv"],
     ["/training/sofia", "sofia"],
     ["/training/stara-zagora", "stara-zagora"],
@@ -75,7 +77,9 @@
     const scrollable = document.documentElement.scrollHeight - window.innerHeight;
     if (scrollable <= 0) return;
     const depth = window.scrollY / scrollable;
+    if (depth >= 0.25) track("scroll_25", true);
     if (depth >= 0.5) track("scroll_50", true);
+    if (depth >= 0.75) track("scroll_75", true);
     if (depth >= 0.9) {
       track("scroll_90", true);
       window.removeEventListener("scroll", onScroll);
@@ -100,11 +104,28 @@
   const markFormStart = () => track("form_start", true);
   ["focusin", "input", "change"].forEach((eventName) => form?.addEventListener(eventName, markFormStart));
 
+  const getFieldValue = (formData, key) => String(formData.get(key) || "").trim();
+  const validateTrainingForm = (formData) => {
+    if (!getFieldValue(formData, "applicant_type")) return "Моля, избери кого искаш да запишеш.";
+    if (getFieldValue(formData, "name").length < 2) return "Моля, въведи име.";
+    if (getFieldValue(formData, "city").length < 2) return "Моля, въведи град.";
+    if (getFieldValue(formData, "phone").length < 6) return "Моля, въведи валиден телефонен номер.";
+    return "";
+  };
+
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
     const submitButton = form.querySelector('button[type="submit"]');
     const formData = new FormData(form);
     const originalText = submitButton.textContent;
+    const validationError = validateTrainingForm(formData);
+
+    if (validationError) {
+      track("form_submit_error");
+      formStatus.textContent = validationError;
+      return;
+    }
+
     submitButton.disabled = true;
     submitButton.textContent = "Изпращане...";
     formStatus.textContent = "Изпращаме заявката...";
@@ -135,6 +156,7 @@
 
       track("form_submit_success");
       formStatus.textContent =
+        formStatus.dataset.successMessage ||
         "Благодаря ви! Заявката е изпратена успешно. Ще се свържем с вас възможно най-скоро.";
       form.reset();
     } catch (error) {

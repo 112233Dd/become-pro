@@ -52,13 +52,15 @@ test("landing page contains the approved conversion structure", () => {
     html,
     /Персонална работа върху техника, първо докосване, дрибъл, скорост, завършване и увереност с топката/,
   );
-  assert.match(html, /data-page-variant="general"/);
+  assert.match(html, /data-page-variant="individual-training"/);
   assert.match(html, /data-primary-cta/);
   assert.match(html, /data-secondary-cta/);
   assert.match(html, /id="training-fit"/);
   assert.match(html, /id="player-benefits"/);
   assert.match(html, /id="how-it-works"/);
+  assert.match(html, /class="landing-cta-panel early-form-cta"/);
   assert.match(html, /id="player-results"/);
+  assert.match(html, /id="coach-proof"/);
   assert.match(html, /id="training-video"/);
   assert.match(html, /id="training-faq"/);
   assert.match(html, /id="training-form"/);
@@ -74,6 +76,7 @@ test("landing form contains only the compact approved fields and success message
   ["applicant_type", "name", "city", "phone"].forEach((name) => {
     assert.match(form, new RegExp(`name="${name}"`));
   });
+  assert.match(form, /novalidate/);
   assert.doesNotMatch(form, /name="email"|player_age|position|goal/);
   assert.match(form, /Моето дете/);
   assert.match(form, /Себе си/);
@@ -87,7 +90,13 @@ test("landing form contains only the compact approved fields and success message
 test("landing page uses real training media, player proof, FAQ, and compact legal footer", () => {
   const html = read("individual-training.html");
 
-  assert.match(html, /assets\/videos\/hero-hat-swap-game\.mp4/);
+  assert.doesNotMatch(html, /assets\/videos\/hero-hat-swap-game\.mp4/);
+  assert.match(html, /assets\/videos\/one-touch-passing-drop\.mp4/);
+  assert.match(html, /coach-yordan-zhelev\.png/);
+  assert.match(html, /coach-proof-card/);
+  assert.match(html, /coach-cta-panel/);
+  assert.match(html, /video-cta-panel/);
+  assert.match(html, /faq-cta-panel/);
   assert.match(html, /Виж как изглежда една индивидуална тренировка/);
   assert.match(html, /За каква възраст са тренировките\?/);
   assert.match(html, /Къде се провеждат\?/);
@@ -104,7 +113,9 @@ test("landing tracker emits only approved anonymous funnel events", () => {
 
   [
     "page_view",
+    "scroll_25",
     "scroll_50",
+    "scroll_75",
     "scroll_90",
     "click_primary_cta",
     "click_secondary_cta",
@@ -126,6 +137,9 @@ test("landing tracker emits only approved anonymous funnel events", () => {
   assert.match(script, /landingPageUrl/);
   assert.match(script, /pageVariant/);
   assert.match(script, /VARIANT_BY_PATH/);
+  assert.match(script, /\["\/individual-training", "individual-training"\]/);
+  assert.match(script, /validateTrainingForm/);
+  assert.match(script, /form_submit_error/);
   assert.match(script, /\/training\/plovdiv/);
   assert.match(script, /CITY_BY_VARIANT/);
   assert.match(script, /deviceType/);
@@ -138,7 +152,9 @@ test("public landing analytics endpoint validates and stores anonymous events", 
 
   [
     "page_view",
+    "scroll_25",
     "scroll_50",
+    "scroll_75",
     "scroll_90",
     "click_primary_cta",
     "click_secondary_cta",

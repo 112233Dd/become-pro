@@ -59,6 +59,28 @@ img, video { display: block; max-width: 100%; }
 
 .landing-button-small { min-height: 44px; padding-inline: 18px; }
 .landing-button-ghost { color: var(--cream); background: transparent; border-color: rgba(255,255,255,.25); }
+.landing-cta-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  margin-top: 34px;
+  padding: clamp(22px, 4vw, 34px);
+  border: 1px solid rgba(245,196,0,.28);
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at 12% 0, rgba(245,196,0,.16), transparent 38%),
+    linear-gradient(135deg, rgba(255,255,255,.07), rgba(255,255,255,.025));
+  box-shadow: 0 22px 64px rgba(0,0,0,.3);
+}
+.landing-cta-panel h3 { margin: 0; color: var(--cream); font-size: clamp(24px,3vw,34px); line-height: 1.05; }
+.landing-cta-panel p { max-width: 640px; margin: 10px 0 0; color: var(--muted); font-size: 17px; line-height: 1.55; }
+.landing-section-gold .landing-cta-panel {
+  border-color: rgba(0,0,0,.18);
+  background: rgba(0,0,0,.08);
+}
+.landing-section-gold .landing-cta-panel h3,
+.landing-section-gold .landing-cta-panel p { color: #111; }
 
 .training-landing-hero {
   background: radial-gradient(circle at 70% 20%, rgba(245,196,0,.17), transparent 34%);
@@ -128,14 +150,45 @@ img, video { display: block; max-width: 100%; }
 .proof-grid p { color: var(--gold); font-weight: 900; }
 .proof-grid blockquote { margin: 14px 0 0; color: #d9d1c3; line-height: 1.55; }
 
+.coach-proof-section { background: radial-gradient(circle at 22% 22%, rgba(245,196,0,.12), transparent 34%), #080807; }
+.coach-proof-grid {
+  display: grid;
+  grid-template-columns: .82fr 1.18fr;
+  gap: clamp(30px, 6vw, 74px);
+  align-items: center;
+}
+.coach-proof-media {
+  overflow: hidden;
+  border: 1px solid rgba(245,196,0,.28);
+  border-radius: 30px;
+  background: #15130d;
+  box-shadow: 0 28px 78px rgba(0,0,0,.42);
+}
+.coach-proof-media img { width: 100%; min-height: 520px; object-fit: cover; object-position: center top; }
+.coach-proof-copy { margin-bottom: 0; }
+.coach-proof-copy > p:not(.landing-eyebrow) { color: #ddd5c5; }
+.coach-proof-card {
+  margin-top: 24px;
+  padding: 24px;
+  border: 1px solid rgba(245,196,0,.24);
+  border-radius: 22px;
+  background: rgba(255,255,255,.045);
+}
+.coach-proof-card h3 { margin: 0; color: var(--cream); font-size: 28px; }
+.coach-proof-card p { margin: 8px 0 0; color: var(--gold); font-weight: 900; }
+.coach-proof-card ul { margin: 20px 0 0; padding-left: 20px; color: #e7dfcf; line-height: 1.75; }
+.coach-cta-panel { grid-column: 1 / -1; margin-top: 0; }
+
 .video-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 50px; align-items: center; }
 .video-grid video { width: 100%; border: 1px solid rgba(245,196,0,.3); border-radius: 28px; background: #111; }
+.video-cta-panel { grid-column: 1 / -1; }
 
 .faq-shell { display: grid; grid-template-columns: .75fr 1.25fr; gap: 56px; }
 .landing-faq { display: grid; gap: 10px; }
 .landing-faq details { padding: 20px; border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,.04); }
 .landing-faq summary { cursor: pointer; font-weight: 900; }
 .landing-faq p { margin: 14px 0 0; color: var(--muted); line-height: 1.6; }
+.faq-cta-panel { grid-column: 1 / -1; }
 
 .form-section { background: radial-gradient(circle at 15% 30%, rgba(245,196,0,.13), transparent 32%); }
 .form-grid { display: grid; grid-template-columns: .85fr 1.15fr; gap: clamp(34px, 7vw, 90px); align-items: start; }
@@ -146,6 +199,7 @@ img, video { display: block; max-width: 100%; }
 .landing-form button { width: 100%; font: inherit; }
 .form-note, .landing-form-status { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
 .landing-form-status { color: var(--gold); font-weight: 800; }
+.landing-form-status:not(:empty) { padding: 12px 14px; border: 1px solid rgba(245,196,0,.22); border-radius: 14px; background: rgba(245,196,0,.08); }
 
 .training-landing-footer { padding-block: 36px; border-top: 1px solid var(--line); color: var(--muted); }
 .training-landing-footer .training-landing-shell { display: grid; grid-template-columns: 1fr auto auto; gap: 28px; align-items: center; }
@@ -155,7 +209,9 @@ img, video { display: block; max-width: 100%; }
 
 @media (max-width: 900px) {
   .hero-grid, .video-grid, .faq-shell, .form-grid { grid-template-columns: 1fr; }
+  .coach-proof-grid { grid-template-columns: 1fr; }
   .hero-media, .hero-media video { min-height: 520px; }
+  .coach-proof-media img { min-height: 480px; }
   .fit-grid { grid-template-columns: repeat(2, 1fr); }
   .benefit-grid, .process-grid, .proof-grid { grid-template-columns: repeat(2, 1fr); }
   .process-grid article:last-child, .proof-grid article:last-child { grid-column: span 2; }
@@ -171,9 +227,12 @@ img, video { display: block; max-width: 100%; }
   .hero-copy h1 { font-size: clamp(38px, 12vw, 55px); }
   .hero-media, .hero-media video { min-height: 430px; }
   .landing-actions .landing-button { width: 100%; }
+  .landing-cta-panel { align-items: stretch; flex-direction: column; text-align: center; }
+  .landing-cta-panel .landing-button { width: 100%; }
   .fit-grid, .benefit-grid, .process-grid, .proof-grid { grid-template-columns: 1fr; }
   .fit-wide, .process-grid article:last-child, .proof-grid article:last-child { grid-column: auto; }
   .landing-section { padding-block: 72px; }
+  .coach-proof-media img { min-height: 420px; }
   .training-sticky-cta {
     position: fixed;
     display: flex;
