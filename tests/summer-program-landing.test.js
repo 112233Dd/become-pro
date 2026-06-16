@@ -113,7 +113,8 @@ test("player proof remains authoritative and compact-ready for mobile", () => {
 
   assert.match(proof, /summer-player-proof-section/);
   assert.equal((proof.match(/class="summer-player-card summer-player-profile-card"/g) || []).length, 3);
-  assert.equal((proof.match(/class="summer-player-photo"/g) || []).length, 3);
+  assert.equal((proof.match(/class="summer-player-photo/g) || []).length, 3);
+  assert.match(proof, /summer-player-photo-iren/);
   assert.equal((proof.match(/class="summer-player-detail-block summer-player-profile-facts"/g) || []).length, 3);
   assert.equal((proof.match(/class="summer-player-detail-block summer-player-achievements"/g) || []).length, 3);
 
