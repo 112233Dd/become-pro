@@ -12,7 +12,7 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; background: var(--summer-bg); }
+html { overflow-x: hidden; scroll-behavior: smooth; background: var(--summer-bg); }
 body.summer-sales-page {
   margin: 0;
   overflow-x: hidden;
@@ -173,14 +173,14 @@ button, a { transition: 0.2s ease; }
   width: 100%; max-height: 760px; display: block; border-radius: 16px; background: #000; object-fit: contain;
 }
 .summer-section-cta {
-  display: flex; justify-content: space-between; align-items: center; gap: 22px;
+  display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 18px;
   width: min(100%, 920px); margin: 28px auto 0; padding: 22px 24px;
   border: 1px solid rgba(245,196,0,.32); border-radius: var(--summer-radius);
   background: linear-gradient(90deg,rgba(245,196,0,.095),rgba(245,196,0,.025));
-  box-shadow: 0 20px 55px rgba(0,0,0,.24); text-align: left;
+  box-shadow: 0 20px 55px rgba(0,0,0,.24); text-align: center;
 }
 .summer-section-cta p {
-  margin: 0; color: var(--summer-white); font-size: clamp(17px,2vw,21px);
+  max-width: 760px; margin: 0 auto; color: var(--summer-white); font-size: clamp(17px,2vw,21px);
   font-weight: 850; line-height: 1.45;
 }
 .summer-section-cta .summer-primary-cta { flex: 0 0 auto; }
@@ -359,21 +359,23 @@ button, a { transition: 0.2s ease; }
 .summer-price-trust-grid {
   width: min(100%, 920px);
   margin: clamp(24px,4vw,34px) auto 0;
+  grid-template-columns: repeat(3,minmax(0,1fr));
 }
 .summer-price-trust-grid article {
   min-height: 132px;
   padding: 22px 20px;
-  text-align: left;
+  text-align: center;
 }
 .summer-price-trust-grid .summer-guarantee-icon {
   width: 42px;
   height: 42px;
-  margin-bottom: 18px;
+  margin: 0 auto 18px;
   font-size: 21px;
   color: var(--summer-gold);
 }
 .summer-price-trust-grid h3 { font-size: clamp(17px,1.7vw,21px); }
 .summer-guarantee-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 16px; }
+.summer-guarantee-grid.summer-price-trust-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
 .summer-guarantee-grid article {
   min-height: 230px; padding: 30px 26px; border: 1px solid rgba(245,196,0,.28); border-radius: var(--summer-radius);
   background:
@@ -456,7 +458,8 @@ button, a { transition: 0.2s ease; }
   .summer-player-proof-section .summer-proof article { padding: 18px; }
   .summer-player-proof-section .summer-proof strong { font-size: 40px; }
   .summer-player-proof-section .summer-player-card { padding: 14px; }
-  .summer-player-proof-section .summer-player-photo { aspect-ratio: 16 / 12; margin-bottom: 14px; }
+  .summer-player-proof-section .summer-player-photo { aspect-ratio: 4 / 5; margin-bottom: 14px; }
+  .summer-player-proof-section .summer-player-photo img { object-position: center; }
   .summer-player-proof-section .summer-player-profile-copy { min-height: auto; gap: 10px; }
   .summer-player-proof-section .summer-player-detail-block { padding: 12px; }
   .summer-player-proof-section .summer-player-achievements li { line-height: 1.42; }

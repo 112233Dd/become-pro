@@ -73,13 +73,14 @@ test("main price and trust block is immediately after the contents section", () 
   assert.match(price, /Промо цена 0,50 €/);
   assert.match(price, /data-summer-checkout/);
   assert.match(price, /summer-price-trust-grid/);
+  assert.equal((price.match(/<article>/g) || []).length, 3);
 
   [
     "Сигурно плащане чрез Stripe",
     "Моментален достъп",
     "Еднократно плащане",
-    "Без абонамент",
   ].forEach((copy) => assert.match(price, new RegExp(copy)));
+  assert.doesNotMatch(price, /<h3>Без абонамент<\/h3>/);
 });
 
 test("training videos stay after price and describe the online program proof", () => {
@@ -145,6 +146,8 @@ test("product preview, vision, coach, reviews, faq, and final CTA remain in the 
   assert.match(html, /training-library.webp/);
   assert.match(html, /coach-yordan-zhelev\.png/);
   assert.match(sectionHtml(html, "summer-final-cta"), /data-summer-checkout/);
+  assert.match(sectionHtml(html, "summer-vision"), /След 4 седмици така може да изглежда и твоят напредък\./);
+  assert.doesNotMatch(sectionHtml(html, "summer-vision"), /След 8 седмици така може да изглежда и твоят напредък\./);
 });
 
 test("strategic purchase CTAs all use the summer checkout handler", () => {
