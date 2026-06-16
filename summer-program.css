@@ -162,7 +162,7 @@ button, a { transition: 0.2s ease; }
 .summer-vision-grid p { margin: 0; color: var(--summer-muted); font-size: 16px; line-height: 1.62; }
 .summer-included-list { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; margin: 28px 0 0; padding: 0; list-style: none; }
 .summer-included-list li { position: relative; padding: 17px 18px 17px 46px; border: 1px solid var(--summer-line); border-radius: 14px; background: var(--summer-panel); font-weight: 800; }
-.summer-included-list li::before { content: "✓"; position: absolute; left: 18px; color: var(--summer-gold); }
+.summer-included-list li::before { content: "\2713"; position: absolute; left: 18px; color: var(--summer-gold); }
 .summer-explainer { padding-top: clamp(40px,6vw,72px); }
 .summer-explainer-frame {
   width: min(100%,760px); margin: 0 auto; padding: 10px; border: 1px solid var(--summer-line);
@@ -186,11 +186,12 @@ button, a { transition: 0.2s ease; }
 .summer-section-cta .summer-primary-cta { flex: 0 0 auto; }
 .summer-coach-cta { grid-column: 1 / -1; }
 .summer-proof-section { padding-top: 18px; }
+.summer-player-proof-section { padding-top: clamp(42px,6vw,72px); }
 .summer-proof { width: 100%; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; padding: 0 0 clamp(48px,7vw,76px); }
 .summer-proof article { padding: clamp(26px,5vw,48px); border: 1px solid var(--summer-line); border-radius: var(--summer-radius); background: var(--summer-panel); text-align: center; }
 .summer-proof strong { display: block; color: var(--summer-gold); font-size: clamp(46px,7vw,76px); }
 .summer-proof span { font-weight: 900; text-transform: uppercase; }
-.summer-training-videos { margin-bottom: clamp(64px,9vw,110px); }
+.summer-training-videos { margin-bottom: 0; }
 .summer-training-video-shell { width: 100%; margin-inline: auto; text-align: center; }
 .summer-training-heading { width: min(100%, 880px); margin-bottom: clamp(26px,4vw,38px); }
 .summer-training-video-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; }
@@ -346,6 +347,32 @@ button, a { transition: 0.2s ease; }
 .summer-testimonial-grid cite { color: var(--summer-gold-soft); font-size: 13px; font-style: normal; font-weight: 900; text-transform: uppercase; }
 .summer-price-section, .summer-final-cta { margin-block: clamp(42px,7vw,84px); text-align: center; }
 .summer-price-section > *, .summer-final-cta > * { margin-inline: auto; }
+.summer-price-trust-section {
+  margin-block: clamp(30px,5vw,58px);
+  padding: clamp(30px,5vw,56px);
+  background:
+    radial-gradient(circle at 50% 0,rgba(245,196,0,.16),transparent 44%),
+    linear-gradient(145deg,rgba(245,196,0,.09),transparent 68%),
+    var(--summer-panel);
+}
+.summer-price-trust-section .summer-primary-cta { margin-top: 8px; }
+.summer-price-trust-grid {
+  width: min(100%, 920px);
+  margin: clamp(24px,4vw,34px) auto 0;
+}
+.summer-price-trust-grid article {
+  min-height: 132px;
+  padding: 22px 20px;
+  text-align: left;
+}
+.summer-price-trust-grid .summer-guarantee-icon {
+  width: 42px;
+  height: 42px;
+  margin-bottom: 18px;
+  font-size: 21px;
+  color: var(--summer-gold);
+}
+.summer-price-trust-grid h3 { font-size: clamp(17px,1.7vw,21px); }
 .summer-guarantee-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 16px; }
 .summer-guarantee-grid article {
   min-height: 230px; padding: 30px 26px; border: 1px solid rgba(245,196,0,.28); border-radius: var(--summer-radius);
@@ -425,6 +452,16 @@ button, a { transition: 0.2s ease; }
   .summer-explainer-frame video { max-height: 620px; border-radius: 12px; }
   .summer-player-grid article:last-child { grid-column: auto; max-width: none; }
   .summer-player-grid p { min-height: auto; }
+  .summer-player-proof-section .summer-proof { gap: 10px; padding-bottom: 28px; }
+  .summer-player-proof-section .summer-proof article { padding: 18px; }
+  .summer-player-proof-section .summer-proof strong { font-size: 40px; }
+  .summer-player-proof-section .summer-player-card { padding: 14px; }
+  .summer-player-proof-section .summer-player-photo { aspect-ratio: 16 / 12; margin-bottom: 14px; }
+  .summer-player-proof-section .summer-player-profile-copy { min-height: auto; gap: 10px; }
+  .summer-player-proof-section .summer-player-detail-block { padding: 12px; }
+  .summer-player-proof-section .summer-player-achievements li { line-height: 1.42; }
+  .summer-price-trust-grid article { min-height: auto; padding: 20px; text-align: center; }
+  .summer-price-trust-grid .summer-guarantee-icon { margin-inline: auto; }
   .summer-vision-grid article, .summer-guarantee-grid article { min-height: auto; padding: 24px; }
   .summer-vision-icon, .summer-guarantee-icon { margin-bottom: 24px; }
   .summer-preview-grid img { aspect-ratio: 4 / 3; }
