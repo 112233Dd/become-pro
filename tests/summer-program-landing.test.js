@@ -123,6 +123,13 @@ test("summer program landing places the explainer and training videos in the app
     "change-direction-back.mp4",
   ].forEach((video) => assert.match(html, new RegExp(video)));
   assert.ok((html.match(/autoplay muted loop playsinline/g) || []).length >= 3);
+  assert.equal((html.match(/data-lazy-video/g) || []).length, 3);
+  assert.equal((html.match(/preload="none"/g) || []).length, 3);
+  [
+    "field-drill-side-forward-back-poster.jpg",
+    "overlap-passing-cones-poster.jpg",
+    "change-direction-back-poster.jpg",
+  ].forEach((poster) => assert.match(html, new RegExp(poster)));
 });
 
 test("summer program training videos present the exercises as part of the online program", () => {
@@ -345,6 +352,9 @@ test("summer program tracker emits the approved anonymous commerce funnel", () =
   assert.match(script, /sessionStorage/);
   assert.match(script, /crypto\.randomUUID/);
   assert.match(script, /IntersectionObserver/);
+  assert.match(script, /data-lazy-video/);
+  assert.match(script, /data-src/);
+  assert.match(script, /rootMargin:\s*"700px 0px"/);
   assert.match(script, /\/api\/landing-analytics/);
   assert.doesNotMatch(script, /analyticsPayload[\s\S]{0,900}\b(name|phone|email)\s*:/);
 });

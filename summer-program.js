@@ -50,6 +50,33 @@
   document.querySelector("[data-explainer-video]")?.addEventListener("play", () => {
     track("play_explainer_video", true);
   });
+
+  const loadLazyVideo = (video) => {
+    if (!video || video.dataset.videoLoaded === "true") return;
+    video.querySelectorAll("source[data-src]").forEach((source) => {
+      source.src = source.dataset.src;
+      source.removeAttribute("data-src");
+    });
+    video.dataset.videoLoaded = "true";
+    video.load();
+    if (video.autoplay) {
+      video.play().catch(() => {});
+    }
+  };
+  const lazyVideos = [...document.querySelectorAll("video[data-lazy-video]")];
+  if ("IntersectionObserver" in window) {
+    const lazyVideoObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        loadLazyVideo(entry.target);
+        lazyVideoObserver.unobserve(entry.target);
+      });
+    }, { rootMargin: "700px 0px", threshold: 0.01 });
+    lazyVideos.forEach((video) => lazyVideoObserver.observe(video));
+  } else {
+    lazyVideos.forEach(loadLazyVideo);
+  }
+
   const mobileStickyCta = document.querySelector("[data-mobile-sticky-cta]");
   let mobileStickyRevealed = false;
   const updateMobileStickyCta = () => {
