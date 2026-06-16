@@ -152,9 +152,34 @@ test("summer program training videos present the exercises as part of the online
   assert.equal((trainingVideosSection.match(/class="summer-training-video-copy"/g) || []).length, 3);
   assert.match(trainingVideosSection, /class="summer-training-video-shell"/);
   assert.match(trainingVideosSection, /class="summer-training-video-cta"/);
-  assert.match(trainingVideosSection, /Това не са случайни клипове\. Това са упражнения, подредени в ясен летен план\./);
+  assert.match(trainingVideosSection, /Тези упражнения са само малка част от цялата система\./);
   assert.match(trainingVideosSection, /href="#summer-contents"/);
   assert.match(trainingVideosSection, /Виж какво включва програмата/);
+});
+
+test("summer program adds strategic CTAs after key persuasion sections", () => {
+  const html = read("summer-program.html");
+
+  [
+    "Готов ли си да използваш лятото по правилния начин?",
+    "Вземи достъп сега",
+    "Тези упражнения са само малка част от цялата система.",
+    "Виж какво включва програмата",
+    "Програмите са създадени за играчи с реални цели и желание за развитие.",
+    "Започни още днес",
+    "След 8 седмици така може да изглежда и твоят напредък.",
+    "Искам този резултат",
+    "Вземи цялата структура и започни още днес.",
+    "Вземи програмата за 0,50 €",
+    "Работи по система, създадена от човек, който е минал по този път.",
+    "Започни подготовката си",
+    "Следващият положителен резултат може да бъде твоят.",
+  ].forEach((copy) => assert.match(html, new RegExp(copy)));
+
+  assert.equal((html.match(/class="summer-section-cta/g) || []).length, 6);
+  assert.ok((html.match(/data-summer-checkout/g) || []).length >= 11);
+  assert.match(html, /class="summer-training-video-cta"[\s\S]*href="#summer-contents"/);
+  assert.match(html, /data-mobile-sticky-cta[\s\S]*Вземи програмата - 0,50 €/);
 });
 
 test("summer program fit section uses specific emotional cards and a direct checkout CTA", () => {
@@ -283,6 +308,8 @@ test("summer program landing has isolated premium responsive styling", () => {
   assert.match(css, /@media \(max-width:\s*720px\)/);
   assert.match(css, /grid-template-columns:\s*1fr/);
   assert.match(css, /overflow-x:\s*hidden/);
+  assert.match(css, /\.summer-section-cta/);
+  assert.match(css, /\.summer-mobile-sticky\.is-visible/);
 });
 
 test("summer program tracker emits the approved anonymous commerce funnel", () => {
@@ -331,6 +358,9 @@ test("summer program CTA creates checkout only for the summer program", () => {
   assert.match(script, /checkout_created/);
   assert.match(script, /checkout_error/);
   assert.match(script, /window\.location\.href\s*=\s*data\.url/);
+  assert.match(script, /data-mobile-sticky-cta/);
+  assert.match(script, /is-visible/);
+  assert.match(script, /scrollY\s*>\s*80/);
 });
 
 test("checkout copies anonymous landing attribution into Stripe metadata", () => {

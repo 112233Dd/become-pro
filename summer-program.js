@@ -50,6 +50,27 @@
   document.querySelector("[data-explainer-video]")?.addEventListener("play", () => {
     track("play_explainer_video", true);
   });
+  const mobileStickyCta = document.querySelector("[data-mobile-sticky-cta]");
+  let mobileStickyRevealed = false;
+  const updateMobileStickyCta = () => {
+    if (!mobileStickyCta) return;
+    const visible = mobileStickyRevealed || window.scrollY > 80;
+    mobileStickyCta.classList.toggle("is-visible", visible);
+    mobileStickyCta.style.opacity = visible ? "1" : "0";
+    mobileStickyCta.style.pointerEvents = visible ? "auto" : "none";
+    mobileStickyCta.style.transform = visible ? "translateY(0)" : "translateY(100%)";
+  };
+  const revealMobileStickyCta = () => {
+    mobileStickyRevealed = true;
+    updateMobileStickyCta();
+  };
+  updateMobileStickyCta();
+  window.addEventListener("scroll", updateMobileStickyCta, { passive: true });
+  window.addEventListener("wheel", revealMobileStickyCta, { passive: true, once: true });
+  window.addEventListener("touchmove", revealMobileStickyCta, { passive: true, once: true });
+  window.addEventListener("keydown", (event) => {
+    if (["ArrowDown", "PageDown", " "].includes(event.key)) revealMobileStickyCta();
+  }, { once: true });
 
   window.summerProgramAnalytics = { sessionId, landingPageUrl, pageVariant, campaign, referrer, deviceType, track };
 
