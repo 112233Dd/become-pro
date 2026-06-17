@@ -287,6 +287,10 @@ test("protected admin analytics API supports filters and funnel summaries", () =
   assert.match(endpoint, /byLandingPage/);
   assert.match(endpoint, /byVariant/);
   assert.match(endpoint, /byCampaign/);
+  assert.match(endpoint, /mainWebsite/);
+  assert.match(endpoint, /bySourceCampaign/);
+  assert.match(endpoint, /byDevice/);
+  assert.match(endpoint, /byReferrer/);
 });
 
 test("admin panel shows lead attribution and landing analytics", () => {
@@ -296,6 +300,7 @@ test("admin panel shows lead attribution and landing analytics", () => {
   assert.match(html, /<h2>Landing Pages<\/h2>/);
   assert.match(html, /Individual Training Dashboard/);
   assert.match(html, /Summer Program Dashboard/);
+  assert.match(html, /Main Website \/ General/);
   assert.match(html, /data-landing-comparison/);
   assert.match(html, /data-individual-dashboard-summary/);
   assert.match(html, /data-summer-dashboard-summary/);
@@ -320,6 +325,7 @@ test("admin panel shows lead attribution and landing analytics", () => {
   assert.match(script, /landingComparison/);
   assert.match(script, /individualDashboardSummary/);
   assert.match(script, /summerDashboardSummary/);
+  assert.match(script, /mainWebsiteDashboardSummary/);
   assert.match(script, /individualLeadsTable/);
   assert.match(script, /summerOrdersTable/);
   assert.match(script, /analyticsDateRange/);

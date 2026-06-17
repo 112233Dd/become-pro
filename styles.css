@@ -2129,6 +2129,257 @@ blockquote:hover {
   padding: clamp(22px, 4vw, 42px);
 }
 
+.admin-layout {
+  display: grid;
+  grid-template-columns: 292px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+  width: min(100% - 28px, 1680px);
+  margin-inline: auto;
+}
+
+.admin-layout.admin-page {
+  padding-inline: 0;
+}
+
+.admin-main {
+  width: 100%;
+}
+
+.admin-sidebar {
+  position: sticky;
+  top: 104px;
+  display: grid;
+  gap: 16px;
+  max-height: calc(100vh - 128px);
+  overflow: auto;
+  padding: 16px;
+  border: 1px solid rgba(245, 196, 0, 0.18);
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(245, 196, 0, 0.12), transparent 34%),
+    rgba(3, 8, 8, 0.94);
+  box-shadow: var(--shadow);
+}
+
+.admin-sidebar-brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.admin-sidebar-brand strong,
+.admin-sidebar-brand small {
+  display: block;
+}
+
+.admin-sidebar-brand strong {
+  color: var(--white);
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+.admin-sidebar-brand small,
+.admin-sidebar-footer span {
+  color: var(--muted);
+}
+
+.admin-sidebar-nav {
+  display: grid;
+  gap: 8px;
+}
+
+.admin-sidebar-nav button {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  color: rgba(255, 255, 255, 0.72);
+  background: transparent;
+  font: inherit;
+  font-weight: 950;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease,
+    color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.admin-sidebar-nav button span {
+  color: var(--lime);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
+.admin-sidebar-nav button:hover,
+.admin-sidebar-nav button.is-active {
+  border-color: rgba(245, 196, 0, 0.45);
+  color: var(--white);
+  background: rgba(245, 196, 0, 0.1);
+  transform: translateX(2px);
+}
+
+.admin-sidebar-footer {
+  display: grid;
+  gap: 4px;
+  padding: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--white);
+  font-size: 13px;
+}
+
+.admin-topbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+  padding: clamp(18px, 3vw, 28px);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(5, 14, 14, 0.92), rgba(245, 196, 0, 0.06));
+}
+
+.admin-topbar h2 {
+  margin: 0;
+  color: var(--white);
+  font-size: clamp(28px, 4vw, 52px);
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.admin-topbar p {
+  margin: 8px 0 0;
+  color: var(--muted);
+}
+
+.admin-mobile-menu {
+  display: none;
+  min-height: 44px;
+  border: 1px solid rgba(245, 196, 0, 0.35);
+  border-radius: 14px;
+  padding: 0 14px;
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.05);
+  font-weight: 950;
+}
+
+.admin-orders[hidden],
+.admin-stripe-diagnostics[hidden],
+.admin-contact-inquiries[hidden],
+.admin-logs[hidden] {
+  display: none;
+}
+
+.admin-overview,
+.admin-marketing,
+.admin-deep-analytics,
+.admin-placeholder-section,
+.admin-settings-overview {
+  padding: clamp(20px, 3vw, 30px);
+  border: 1px solid rgba(245, 196, 0, 0.18);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 90% 0%, rgba(245, 196, 0, 0.11), transparent 30%),
+    rgba(255, 255, 255, 0.035);
+}
+
+.admin-two-column,
+.admin-placeholder-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.admin-module-card {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid rgba(245, 196, 0, 0.22);
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.26);
+}
+
+.admin-module-card h3 {
+  margin: 0;
+  color: var(--white);
+  font-size: clamp(20px, 2vw, 28px);
+  line-height: 1;
+}
+
+.admin-module-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.admin-activity-list {
+  display: grid;
+  gap: 10px;
+}
+
+.admin-activity-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 8px 12px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.admin-activity-item span {
+  grid-row: span 2;
+  align-self: start;
+  border: 1px solid rgba(245, 196, 0, 0.24);
+  border-radius: 999px;
+  padding: 4px 8px;
+  color: var(--lime);
+  font-size: 11px;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.admin-activity-item strong {
+  color: var(--white);
+}
+
+.admin-activity-item p,
+.admin-activity-item small {
+  margin: 0;
+  color: var(--muted);
+}
+
+.admin-mini-funnel {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.admin-mini-funnel span {
+  min-height: 58px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(245, 196, 0, 0.2);
+  border-radius: 14px;
+  color: var(--white);
+  background: rgba(245, 196, 0, 0.08);
+  font-size: 12px;
+  font-weight: 950;
+  text-align: center;
+}
+
 .admin-shell > *,
 .admin-orders {
   min-width: 0;
@@ -2614,6 +2865,56 @@ blockquote:hover {
 @media (max-width: 760px) {
   .admin-page {
     padding-top: 96px;
+  }
+
+  .admin-layout {
+    grid-template-columns: 1fr;
+    width: min(100% - 18px, 100%);
+    gap: 14px;
+  }
+
+  .admin-sidebar {
+    position: static;
+    max-height: none;
+    padding: 12px;
+    border-radius: 20px;
+  }
+
+  .admin-sidebar-nav {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .admin-sidebar-nav button {
+    flex: 0 0 auto;
+    width: auto;
+    min-height: 42px;
+    white-space: nowrap;
+  }
+
+  .admin-sidebar-footer {
+    display: none;
+  }
+
+  .admin-mobile-menu {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .admin-topbar {
+    align-items: flex-start;
+  }
+
+  .admin-two-column,
+  .admin-placeholder-grid,
+  .admin-mini-funnel {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-activity-item {
+    grid-template-columns: 1fr;
   }
 
   .admin-controls {

@@ -49,6 +49,21 @@ const individualLeadsTable = document.querySelector("[data-individual-leads-tabl
 const summerDashboardSummary = document.querySelector("[data-summer-dashboard-summary]");
 const summerFunnel = document.querySelector("[data-summer-funnel]");
 const summerOrdersTable = document.querySelector("[data-summer-orders-table]");
+const adminNavButtons = [...document.querySelectorAll("[data-admin-nav]")];
+const adminViews = [...document.querySelectorAll("[data-admin-view]")];
+const adminViewTitle = document.querySelector("[data-admin-view-title]");
+const adminViewSubtitle = document.querySelector("[data-admin-view-subtitle]");
+const adminMobileMenu = document.querySelector("[data-admin-mobile-menu]");
+const adminOverviewSummary = document.querySelector("[data-admin-overview-summary]");
+const adminRecentActivity = document.querySelector("[data-admin-recent-activity]");
+const marketingSummary = document.querySelector("[data-marketing-summary]");
+const marketingTable = document.querySelector("[data-marketing-table]");
+const deepAnalyticsSummary = document.querySelector("[data-deep-analytics-summary]");
+const deviceTable = document.querySelector("[data-device-table]");
+const referrerTable = document.querySelector("[data-referrer-table]");
+const scrollTable = document.querySelector("[data-scroll-table]");
+const mainWebsiteDashboardSummary = document.querySelector("[data-main-website-dashboard-summary]");
+const mainWebsiteFunnel = document.querySelector("[data-main-website-funnel]");
 
 let orders = [];
 let selectedStatus = "all";
@@ -69,6 +84,49 @@ let adminLogs = [];
 let stripeDiagnostics = null;
 let landingAnalytics = null;
 let selectedLandingDashboard = "individual";
+
+const adminViewMeta = {
+  dashboard: {
+    title: "Dashboard",
+    subtitle: "Quick view of traffic, leads, sales, revenue and recent activity.",
+  },
+  landing: {
+    title: "Landing Pages",
+    subtitle: "Compare Individual Training, Summer Program and general website performance.",
+  },
+  leads: {
+    title: "Leads",
+    subtitle: "All individual training requests with source, campaign, city and status.",
+  },
+  sales: {
+    title: "Sales",
+    subtitle: "All program purchases, Stripe sessions, payment status and UTM attribution.",
+  },
+  marketing: {
+    title: "Marketing",
+    subtitle: "Campaign performance by UTM source and UTM campaign.",
+  },
+  analytics: {
+    title: "Analytics",
+    subtitle: "Device, referrer, scroll depth, funnel drop-off and variant data.",
+  },
+  players: {
+    title: "Players",
+    subtitle: "Prepared CRM space for player profiles, goals, progress and notes.",
+  },
+  programs: {
+    title: "Programs",
+    subtitle: "Prepared product catalog for current and future Become Pro programs.",
+  },
+  testimonials: {
+    title: "Testimonials",
+    subtitle: "Prepared proof library for player and parent testimonials.",
+  },
+  settings: {
+    title: "Settings",
+    subtitle: "Admin access, Stripe, email delivery, tracking and legal links.",
+  },
+};
 
 const trainingStatusLabels = {
   new: "Нова",
@@ -120,6 +178,20 @@ const formatMinorAmount = (amount, currency = "eur") =>
 const rate = (part, total) => (total ? `${Number(((part / total) * 100).toFixed(2))}%` : "0%");
 
 const formatPercent = (value) => `${Number(value || 0).toFixed(2)}%`;
+
+const setAdminView = (view = "dashboard") => {
+  const nextView = adminViewMeta[view] ? view : "dashboard";
+  const meta = adminViewMeta[nextView];
+  adminNavButtons.forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.adminNav === nextView);
+  });
+  adminViews.forEach((section) => {
+    section.hidden = section.dataset.adminView !== nextView;
+  });
+  if (adminViewTitle) adminViewTitle.textContent = meta.title;
+  if (adminViewSubtitle) adminViewSubtitle.textContent = meta.subtitle;
+  window.history.replaceState(null, "", `#${nextView}`);
+};
 
 const ymd = (date) => date.toISOString().slice(0, 10);
 
@@ -253,6 +325,8 @@ const renderOrders = () => {
       `;
     })
     .join("");
+  renderAdminOverview();
+  renderMarketingDashboard();
 };
 
 const getFilteredTrainingRequests = () =>
@@ -310,6 +384,8 @@ const renderTrainingRequests = () => {
       `;
     })
     .join("");
+  renderAdminOverview();
+  renderMarketingDashboard();
 };
 
 const getFilteredContactInquiries = () =>
@@ -359,6 +435,7 @@ const renderContactInquiries = () => {
       `;
     })
     .join("");
+  renderAdminOverview();
 };
 
 const analyticsMetricCard = (label, value) => `
@@ -441,6 +518,221 @@ const analyticsFunnelRows = (rows = []) =>
       `,
     )
     .join("");
+
+const paidOrders = () => orders.filter(isPaidOrder);
+
+const renderRecentActivity = () => {
+  if (!adminRecentActivity) return;
+  const activities = [
+    ...orders.slice(0, 8).map((order) => ({
+      type: "Sale",
+      title: orderField(order, "program_name", "programName") || "Program purchase",
+      detail: `${orderField(order, "customer_email", "customerEmail") || "No email"} · ${formatPrice(orderField(order, "program_price", "programPrice"))}`,
+      date: orderField(order, "created_at", "createdAt"),
+    })),
+    ...trainingRequests.slice(0, 8).map((request) => ({
+      type: "Lead",
+      title: request.name || "Training request",
+      detail: `${request.city || "-"} · ${request.utm_campaign || "No campaign"}`,
+      date: request.created_at,
+    })),
+    ...contactInquiries.slice(0, 5).map((inquiry) => ({
+      type: "Contact",
+      title: inquiry.name || "Contact inquiry",
+      detail: inquiry.email || inquiry.phone || "-",
+      date: inquiry.created_at,
+    })),
+  ]
+    .filter((item) => item.date)
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 8);
+
+  adminRecentActivity.innerHTML =
+    activities
+      .map(
+        (item) => `
+          <article class="admin-activity-item">
+            <span>${escapeHtml(item.type)}</span>
+            <strong>${escapeHtml(item.title)}</strong>
+            <p>${escapeHtml(item.detail)}</p>
+            <small>${escapeHtml(formatDate(item.date))}</small>
+          </article>
+        `,
+      )
+      .join("") || '<p class="admin-state">No activity yet.</p>';
+};
+
+const renderAdminOverview = () => {
+  if (!adminOverviewSummary) return;
+  const summary = landingAnalytics?.summary || {};
+  const paid = paidOrders();
+  const revenue = paid.reduce((sum, order) => sum + Number(orderField(order, "program_price", "programPrice") || 0), 0);
+  const leads = trainingRequests.length;
+  const combinedConversions = leads + paid.length;
+  adminOverviewSummary.innerHTML = dashboardMetricCards([
+    ["Visits", summary.pageViews || 0],
+    ["Unique Sessions", summary.uniqueSessions || 0],
+    ["Leads", leads],
+    ["Sales", paid.length],
+    ["Conversion", rate(combinedConversions, summary.uniqueSessions || summary.pageViews || 0)],
+    ["Revenue", formatPrice(revenue)],
+  ]);
+  renderRecentActivity();
+};
+
+const campaignKey = (source, campaign) => `${source || "No source"}|||${campaign || "No campaign"}`;
+
+const renderMarketingDashboard = () => {
+  if (!marketingSummary || !marketingTable) return;
+  const grouped = new Map();
+
+  (landingAnalytics?.bySourceCampaign || []).forEach((row) => {
+    const key = campaignKey(row.utm_source || row.source || "No source", row.utm_campaign || row.name || "No campaign");
+    grouped.set(key, {
+      source: row.utm_source || row.source || "No source",
+      campaign: row.utm_campaign || row.name || "No campaign",
+      views: row.pageViews || 0,
+      ctaClicks: row.ctaClicks || 0,
+      leads: row.formSubmitSuccess || 0,
+      purchases: row.purchaseCompleted || 0,
+      revenue: 0,
+    });
+  });
+
+  trainingRequests.filter((request) => matchesLandingFilters(request)).forEach((request) => {
+    const key = campaignKey(request.utm_source, request.utm_campaign);
+    const row =
+      grouped.get(key) ||
+      grouped.set(key, {
+        source: request.utm_source || "No source",
+        campaign: request.utm_campaign || "No campaign",
+        views: 0,
+        ctaClicks: 0,
+        leads: 0,
+        purchases: 0,
+        revenue: 0,
+      }).get(key);
+    row.leads += 1;
+  });
+
+  orders.filter((order) => matchesLandingFilters(order)).forEach((order) => {
+    const source = orderField(order, "utm_source", "utmSource") || "No source";
+    const campaign = orderField(order, "utm_campaign", "utmCampaign") || "No campaign";
+    const key = campaignKey(source, campaign);
+    const row =
+      grouped.get(key) ||
+      grouped.set(key, {
+        source,
+        campaign,
+        views: 0,
+        ctaClicks: 0,
+        leads: 0,
+        purchases: 0,
+        revenue: 0,
+      }).get(key);
+    if (isPaidOrder(order)) {
+      row.purchases += 1;
+      row.revenue += Number(orderField(order, "program_price", "programPrice") || 0);
+    }
+  });
+
+  const rows = [...grouped.values()].sort((a, b) => b.revenue - a.revenue || b.leads - a.leads || b.views - a.views);
+  const totalRevenue = rows.reduce((sum, row) => sum + row.revenue, 0);
+  const totalLeads = rows.reduce((sum, row) => sum + row.leads, 0);
+  const totalPurchases = rows.reduce((sum, row) => sum + row.purchases, 0);
+  marketingSummary.innerHTML = dashboardMetricCards([
+    ["Campaigns", rows.length],
+    ["Leads", totalLeads],
+    ["Purchases", totalPurchases],
+    ["Revenue", formatPrice(totalRevenue)],
+  ]);
+  marketingTable.innerHTML =
+    rows
+      .map(
+        (row) => `
+          <tr>
+            <td>${escapeHtml(row.source)}</td>
+            <td><strong>${escapeHtml(row.campaign)}</strong></td>
+            <td>${escapeHtml(row.views)}</td>
+            <td>${escapeHtml(row.ctaClicks)}</td>
+            <td>${escapeHtml(row.leads)}</td>
+            <td>${escapeHtml(row.purchases)}</td>
+            <td>${escapeHtml(formatPrice(row.revenue))}</td>
+            <td>${escapeHtml(rate(row.leads + row.purchases, row.views))}</td>
+          </tr>
+        `,
+      )
+      .join("") || '<tr><td colspan="8">No campaign data yet.</td></tr>';
+};
+
+const compactAnalyticsRows = (rows = []) =>
+  rows
+    .map(
+      (row) => `
+        <tr>
+          <td><strong>${escapeHtml(row.name || "-")}</strong></td>
+          <td>${escapeHtml(row.pageViews ?? 0)}</td>
+          <td>${escapeHtml(row.uniqueSessions ?? 0)}</td>
+          <td>${escapeHtml(row.ctaClicks ?? 0)}</td>
+          <td>${escapeHtml(row.formSubmitSuccess ?? row.formSubmissions ?? 0)}</td>
+          <td>${escapeHtml(row.purchaseCompleted ?? row.purchases ?? 0)}</td>
+        </tr>
+      `,
+    )
+    .join("");
+
+const renderDeepAnalytics = () => {
+  if (!deepAnalyticsSummary || !deviceTable || !referrerTable || !scrollTable) return;
+  const summary = landingAnalytics?.summary || {};
+  const pageViews = summary.pageViews || 0;
+  deepAnalyticsSummary.innerHTML = dashboardMetricCards([
+    ["Device types", landingAnalytics?.byDevice?.length || 0],
+    ["Referrers", landingAnalytics?.byReferrer?.length || 0],
+    ["Scroll 25%", summary.scroll25 || 0],
+    ["Scroll 50%", summary.scroll50 || 0],
+    ["Scroll 75%", summary.scroll75 || 0],
+    ["Scroll 90%", summary.scroll90 || 0],
+  ]);
+  deviceTable.innerHTML = compactAnalyticsRows(landingAnalytics?.byDevice) || '<tr><td colspan="6">No device data yet.</td></tr>';
+  referrerTable.innerHTML = compactAnalyticsRows(landingAnalytics?.byReferrer) || '<tr><td colspan="6">No referrer data yet.</td></tr>';
+  scrollTable.innerHTML = [
+    ["25%", summary.scroll25 || 0],
+    ["50%", summary.scroll50 || 0],
+    ["75%", summary.scroll75 || 0],
+    ["90%", summary.scroll90 || 0],
+  ]
+    .map(
+      ([label, value]) => `
+        <tr>
+          <td><strong>${escapeHtml(label)}</strong></td>
+          <td>${escapeHtml(value)}</td>
+          <td>${escapeHtml(rate(pageViews - value, pageViews))}</td>
+        </tr>
+      `,
+    )
+    .join("");
+};
+
+const renderMainWebsiteDashboard = () => {
+  const summary = landingAnalytics?.dashboards?.mainWebsite?.summary || {};
+  if (mainWebsiteDashboardSummary) {
+    mainWebsiteDashboardSummary.innerHTML = dashboardMetricCards([
+      ["Page Views", summary.pageViews || 0],
+      ["Unique Sessions", summary.uniqueSessions || 0],
+      ["CTA Clicks", summary.ctaClicks || 0],
+      ["Form Starts", summary.formStarts || 0],
+      ["Leads", summary.formSubmitSuccess || 0],
+      ["Purchases", summary.purchaseCompleted || 0],
+      ["Conversion Rate", formatPercent(summary.conversionRate || summary.purchaseConversionRate)],
+    ]);
+  }
+  renderFunnelVisual(mainWebsiteFunnel, [
+    ["Page Views", summary.pageViews || 0],
+    ["CTA Clicks", summary.ctaClicks || 0],
+    ["Form Starts", summary.formStarts || 0],
+    ["Conversions", (summary.formSubmitSuccess || 0) + (summary.purchaseCompleted || 0)],
+  ]);
+};
 
 const renderLandingAnalytics = () => {
   if (!landingAnalyticsSummary || !landingFunnelTable || !landingVariantTable || !landingCampaignTable) return;
@@ -570,6 +862,10 @@ const renderLandingAnalytics = () => {
   landingFunnelTable.innerHTML = analyticsFunnelRows(landingAnalytics?.byLandingPage);
   landingVariantTable.innerHTML = analyticsRows(landingAnalytics?.byVariant);
   landingCampaignTable.innerHTML = analyticsRows(landingAnalytics?.byCampaign);
+  renderMainWebsiteDashboard();
+  renderAdminOverview();
+  renderMarketingDashboard();
+  renderDeepAnalytics();
 };
 
 const renderAdminLogs = () => {
@@ -919,10 +1215,20 @@ dashboardTabs.forEach((button) => {
   });
 });
 
+adminNavButtons.forEach((button) => {
+  button.addEventListener("click", () => setAdminView(button.dataset.adminNav));
+});
+
+adminMobileMenu?.addEventListener("click", () => {
+  document.querySelector("[data-admin-sidebar]")?.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
 logoutButton?.addEventListener("click", async () => {
   await fetch("/api/admin/logout", { method: "POST" });
   window.location.replace("/admin/login");
 });
+
+setAdminView((window.location.hash || "").replace("#", "") || "dashboard");
 
 Promise.all([
   loadStripeDiagnostics(),

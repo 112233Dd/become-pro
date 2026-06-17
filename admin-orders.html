@@ -19,15 +19,83 @@
     </div>
   </header>
 
-  <main class="admin-page section-dark">
-    <section class="admin-shell">
+  <main class="admin-page section-dark admin-layout">
+    <aside class="admin-sidebar" data-admin-sidebar>
+      <div class="admin-sidebar-brand">
+        <span class="brand-mark"><img src="/assets/become-pro-logo.png" alt="" /></span>
+        <div>
+          <strong>Become Pro Admin</strong>
+          <small>Business console</small>
+        </div>
+      </div>
+
+      <nav class="admin-sidebar-nav" aria-label="Admin navigation">
+        <button class="is-active" type="button" data-admin-nav="dashboard"><span>01</span>Dashboard</button>
+        <button type="button" data-admin-nav="landing"><span>02</span>Landing Pages</button>
+        <button type="button" data-admin-nav="leads"><span>03</span>Leads</button>
+        <button type="button" data-admin-nav="sales"><span>04</span>Sales</button>
+        <button type="button" data-admin-nav="marketing"><span>05</span>Marketing</button>
+        <button type="button" data-admin-nav="analytics"><span>06</span>Analytics</button>
+        <button type="button" data-admin-nav="players"><span>07</span>Players</button>
+        <button type="button" data-admin-nav="programs"><span>08</span>Programs</button>
+        <button type="button" data-admin-nav="testimonials"><span>09</span>Testimonials</button>
+        <button type="button" data-admin-nav="settings"><span>10</span>Settings</button>
+      </nav>
+
+      <div class="admin-sidebar-footer">
+        <strong>Version 1.0</strong>
+        <span>Focus: leads, sales, campaigns.</span>
+      </div>
+    </aside>
+
+    <section class="admin-shell admin-main">
       <div class="section-heading">
         <p class="eyebrow">Admin</p>
         <h1>Become Pro панел</h1>
         <p>Поръчки от онлайн програмите и заявки за индивидуални тренировки.</p>
       </div>
 
-      <section class="admin-orders admin-stripe-diagnostics" data-stripe-diagnostics>
+      <div class="admin-topbar">
+        <button class="admin-mobile-menu" type="button" data-admin-mobile-menu>Menu</button>
+        <div>
+          <p class="eyebrow">Become Pro Operations</p>
+          <h2 data-admin-view-title>Dashboard</h2>
+          <p data-admin-view-subtitle>Quick view of traffic, leads, sales, revenue and recent activity.</p>
+        </div>
+      </div>
+
+      <section class="admin-orders admin-overview" data-admin-view="dashboard">
+        <div class="admin-section-heading">
+          <div>
+            <p class="eyebrow">Overview</p>
+            <h2>Business Dashboard</h2>
+            <p>Visits, leads, sales, conversion and revenue in one place.</p>
+          </div>
+        </div>
+
+        <div class="admin-analytics-summary admin-overview-grid" data-admin-overview-summary></div>
+
+        <div class="admin-two-column">
+          <section class="admin-module-card">
+            <p class="eyebrow">Activity</p>
+            <h3>Recent activity</h3>
+            <div class="admin-activity-list" data-admin-recent-activity></div>
+          </section>
+          <section class="admin-module-card">
+            <p class="eyebrow">Decision focus</p>
+            <h3>What matters this week</h3>
+            <p>Track which landing page and campaign produces real leads or purchases, not just clicks.</p>
+            <div class="admin-mini-funnel">
+              <span>Views</span>
+              <span>CTA</span>
+              <span>Lead / Purchase</span>
+              <span>Revenue</span>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="admin-orders admin-stripe-diagnostics" data-admin-view="settings" data-stripe-diagnostics hidden>
         <div class="admin-section-heading">
           <div>
             <p class="eyebrow">Stripe</p>
@@ -61,7 +129,7 @@
         </div>
       </section>
 
-      <section class="admin-orders" data-admin-orders>
+      <section class="admin-orders" data-admin-view="sales" data-admin-orders hidden>
         <div class="admin-section-heading">
           <div>
             <p class="eyebrow">Онлайн програми</p>
@@ -113,7 +181,7 @@
         </div>
       </section>
 
-      <section class="admin-orders admin-training-requests" data-training-requests>
+      <section class="admin-orders admin-training-requests" data-admin-view="leads" data-training-requests hidden>
         <div class="admin-section-heading">
           <div>
             <p class="eyebrow">Работа на терен</p>
@@ -169,7 +237,7 @@
         </div>
       </section>
 
-      <section class="admin-orders admin-contact-inquiries" data-contact-inquiries>
+      <section class="admin-orders admin-contact-inquiries" data-admin-view="settings" data-contact-inquiries hidden>
         <div class="admin-section-heading">
           <div>
             <p class="eyebrow">Контакт</p>
@@ -222,7 +290,7 @@
         </div>
       </section>
 
-      <section class="admin-orders admin-landing-analytics admin-landing-pages" data-landing-analytics>
+      <section class="admin-orders admin-landing-analytics admin-landing-pages" data-admin-view="landing" data-landing-analytics hidden>
         <div class="admin-section-heading">
           <div>
             <p class="eyebrow">Landing Pages</p>
@@ -278,6 +346,9 @@
           </button>
           <button class="admin-dashboard-tab" type="button" role="tab" data-landing-dashboard-tab="summer">
             Summer Program Dashboard
+          </button>
+          <button class="admin-dashboard-tab" type="button" role="tab" data-landing-dashboard-tab="main">
+            Main Website / General
           </button>
         </div>
 
@@ -345,6 +416,18 @@
           </div>
         </section>
 
+        <section class="admin-dashboard-panel" data-landing-dashboard-panel="main" hidden>
+          <div class="admin-dashboard-title">
+            <div>
+              <p class="eyebrow">Main website</p>
+              <h3>Main Website / General</h3>
+              <p>General website traffic and mixed landing page events outside the two campaign pages.</p>
+            </div>
+          </div>
+          <div class="admin-analytics-summary" data-main-website-dashboard-summary></div>
+          <div class="admin-funnel-visual" data-main-website-funnel></div>
+        </section>
+
         <div class="admin-analytics-summary" data-landing-analytics-summary></div>
 
         <div class="admin-analytics-tables">
@@ -378,7 +461,134 @@
         </div>
       </section>
 
-      <section class="admin-orders admin-logs" data-admin-logs>
+      <section class="admin-orders admin-marketing" data-admin-view="marketing" hidden>
+        <div class="admin-section-heading">
+          <div>
+            <p class="eyebrow">Campaigns</p>
+            <h2>Marketing</h2>
+            <p>UTM performance by source and campaign: traffic, CTA clicks, leads, purchases and revenue.</p>
+          </div>
+        </div>
+        <div class="admin-analytics-summary" data-marketing-summary></div>
+        <div class="admin-table-wrap">
+          <table class="admin-table admin-analytics-table">
+            <thead>
+              <tr>
+                <th>UTM source</th>
+                <th>UTM campaign</th>
+                <th>Views</th>
+                <th>CTA clicks</th>
+                <th>Leads</th>
+                <th>Purchases</th>
+                <th>Revenue</th>
+                <th>Conversion rate</th>
+              </tr>
+            </thead>
+            <tbody data-marketing-table></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="admin-orders admin-deep-analytics" data-admin-view="analytics" hidden>
+        <div class="admin-section-heading">
+          <div>
+            <p class="eyebrow">Deep analytics</p>
+            <h2>Analytics</h2>
+            <p>Devices, referrers, scroll depth, funnel drop-off and page variants.</p>
+          </div>
+        </div>
+        <div class="admin-analytics-summary" data-deep-analytics-summary></div>
+        <div class="admin-analytics-tables">
+          <section>
+            <h3>Devices</h3>
+            <div class="admin-table-wrap">
+              <table class="admin-table admin-analytics-table">
+                <thead><tr><th>Device</th><th>Views</th><th>Sessions</th><th>CTA</th><th>Leads</th><th>Purchases</th></tr></thead>
+                <tbody data-device-table></tbody>
+              </table>
+            </div>
+          </section>
+          <section>
+            <h3>Referrers</h3>
+            <div class="admin-table-wrap">
+              <table class="admin-table admin-analytics-table">
+                <thead><tr><th>Referrer</th><th>Views</th><th>Sessions</th><th>CTA</th><th>Leads</th><th>Purchases</th></tr></thead>
+                <tbody data-referrer-table></tbody>
+              </table>
+            </div>
+          </section>
+          <section>
+            <h3>Scroll events</h3>
+            <div class="admin-table-wrap">
+              <table class="admin-table admin-analytics-table">
+                <thead><tr><th>Depth</th><th>Events</th><th>Drop-off from page views</th></tr></thead>
+                <tbody data-scroll-table></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="admin-orders admin-placeholder-section" data-admin-view="players" hidden>
+        <div class="admin-section-heading">
+          <div>
+            <p class="eyebrow">Future CRM</p>
+            <h2>Players</h2>
+            <p>Prepared section for player profiles, goals, programs, progress and notes.</p>
+          </div>
+        </div>
+        <div class="admin-placeholder-grid">
+          <article class="admin-module-card"><h3>Player database</h3><p>Name, age, position, city and development goals.</p></article>
+          <article class="admin-module-card"><h3>Progress notes</h3><p>Training focus, program history and coach notes.</p></article>
+        </div>
+      </section>
+
+      <section class="admin-orders admin-placeholder-section" data-admin-view="programs" hidden>
+        <div class="admin-section-heading">
+          <div>
+            <p class="eyebrow">Catalog</p>
+            <h2>Programs</h2>
+            <p>Prepared section for Summer Program, future products, active status, pricing and sales.</p>
+          </div>
+        </div>
+        <div class="admin-placeholder-grid">
+          <article class="admin-module-card"><h3>Summer Program</h3><p>Active product, checkout connected, tracked through Stripe webhook.</p></article>
+          <article class="admin-module-card"><h3>Future programs</h3><p>New products can be added here without changing the admin structure.</p></article>
+        </div>
+      </section>
+
+      <section class="admin-orders admin-placeholder-section" data-admin-view="testimonials" hidden>
+        <div class="admin-section-heading">
+          <div>
+            <p class="eyebrow">Proof</p>
+            <h2>Testimonials</h2>
+            <p>Prepared section for player and parent testimonials, photos, videos and visibility status.</p>
+          </div>
+        </div>
+        <div class="admin-placeholder-grid">
+          <article class="admin-module-card"><h3>Approved testimonials</h3><p>Show active testimonials on public pages.</p></article>
+          <article class="admin-module-card"><h3>Hidden testimonials</h3><p>Keep draft or archived proof without deleting it.</p></article>
+        </div>
+      </section>
+
+      <section class="admin-orders admin-settings-overview" data-admin-view="settings" hidden>
+        <div class="admin-section-heading">
+          <div>
+            <p class="eyebrow">Operations</p>
+            <h2>Settings</h2>
+            <p>Admin users, Stripe, email delivery, tracking and legal links.</p>
+          </div>
+        </div>
+        <div class="admin-placeholder-grid">
+          <article class="admin-module-card"><h3>Admin users</h3><p>Login and access controls.</p></article>
+          <article class="admin-module-card"><h3>Stripe settings</h3><p>Checkout and webhook diagnostics below.</p></article>
+          <article class="admin-module-card"><h3>Email settings</h3><p>Program delivery and fulfillment logs.</p></article>
+          <article class="admin-module-card"><h3>Tracking settings</h3><p>First-party analytics and UTM attribution.</p></article>
+          <article class="admin-module-card"><h3>Legal links</h3><p>Privacy, terms, cookies and refunds.</p></article>
+        </div>
+      </section>
+
+      <section class="admin-orders admin-logs" data-admin-view="settings" data-admin-logs hidden>
         <div class="admin-section-heading">
           <div>
             <p class="eyebrow">System</p>

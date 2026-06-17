@@ -102,6 +102,8 @@ const isIndividualTrainingEvent = (event) =>
 const isSummerProgramEvent = (event) =>
   event.page_variant === "summer-program" || String(event.landing_page_url || "").includes("/summer-program");
 
+const isMainWebsiteEvent = (event) => !isIndividualTrainingEvent(event) && !isSummerProgramEvent(event);
+
 const groupEvents = (events, field, fallback) => {
   const grouped = new Map();
   events.forEach((event) => {
@@ -111,6 +113,25 @@ const groupEvents = (events, field, fallback) => {
   });
   return [...grouped.entries()]
     .map(([name, rows]) => ({ name, ...buildStats(rows) }))
+    .sort((a, b) => b.uniqueSessions - a.uniqueSessions);
+};
+
+const groupSourceCampaign = (events) => {
+  const grouped = new Map();
+  events.forEach((event) => {
+    const source = event.utm_source || "No source";
+    const campaign = event.utm_campaign || "No campaign";
+    const key = `${source}|||${campaign}`;
+    if (!grouped.has(key)) grouped.set(key, { source, campaign, rows: [] });
+    grouped.get(key).rows.push(event);
+  });
+  return [...grouped.values()]
+    .map(({ source, campaign, rows }) => ({
+      name: campaign,
+      utm_source: source,
+      utm_campaign: campaign,
+      ...buildStats(rows),
+    }))
     .sort((a, b) => b.uniqueSessions - a.uniqueSessions);
 };
 
@@ -157,6 +178,7 @@ module.exports = async (req, res) => {
     const distinct = (field) => [...new Set(events.map((event) => event[field]).filter(Boolean))].sort();
     const individualEvents = events.filter(isIndividualTrainingEvent);
     const summerEvents = events.filter(isSummerProgramEvent);
+    const mainWebsiteEvents = events.filter(isMainWebsiteEvent);
 
     return sendJson(res, 200, {
       range: { start: start.toISOString(), end: end.toISOString() },
@@ -174,10 +196,19 @@ module.exports = async (req, res) => {
           byVariant: groupEvents(summerEvents, "page_variant", "summer-program"),
           byCampaign: groupEvents(summerEvents, "utm_campaign", "No campaign"),
         },
+        mainWebsite: {
+          summary: buildStats(mainWebsiteEvents),
+          funnel: groupEvents(mainWebsiteEvents, "landing_page_url", "Main website"),
+          byVariant: groupEvents(mainWebsiteEvents, "page_variant", "general"),
+          byCampaign: groupEvents(mainWebsiteEvents, "utm_campaign", "No campaign"),
+        },
       },
       byLandingPage: groupEvents(events, "landing_page_url", "Landing page"),
       byVariant: groupEvents(events, "page_variant", "general"),
       byCampaign: groupEvents(events, "utm_campaign", "No campaign"),
+      bySourceCampaign: groupSourceCampaign(events),
+      byDevice: groupEvents(events, "device_type", "unknown"),
+      byReferrer: groupEvents(events, "referrer", "Direct"),
       filters: {
         landingPages: distinct("landing_page_url"),
         pageVariants: distinct("page_variant"),

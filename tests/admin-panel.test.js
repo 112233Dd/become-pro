@@ -126,6 +126,42 @@ test("admin orders dashboard exposes search, filters, refresh, and empty state",
   assert.match(ordersHtml, /Program Link/);
 });
 
+test("admin panel exposes the Become Pro business sidebar structure", () => {
+  const ordersHtml = read("admin-orders.html");
+  const ordersScript = read("admin-orders.js");
+
+  assert.match(ordersHtml, /data-admin-sidebar/);
+  assert.match(ordersHtml, /Become Pro Admin/);
+  [
+    "dashboard",
+    "landing",
+    "leads",
+    "sales",
+    "marketing",
+    "analytics",
+    "players",
+    "programs",
+    "testimonials",
+    "settings",
+  ].forEach((view) => {
+    assert.match(ordersHtml, new RegExp(`data-admin-nav="${view}"`));
+    assert.match(ordersHtml, new RegExp(`data-admin-view="${view}"`));
+  });
+
+  assert.match(ordersHtml, /data-admin-overview-summary/);
+  assert.match(ordersHtml, /data-admin-recent-activity/);
+  assert.match(ordersHtml, /data-marketing-summary/);
+  assert.match(ordersHtml, /data-marketing-table/);
+  assert.match(ordersHtml, /data-deep-analytics-summary/);
+  assert.match(ordersHtml, /data-device-table/);
+  assert.match(ordersHtml, /data-referrer-table/);
+  assert.match(ordersHtml, /data-scroll-table/);
+  assert.match(ordersScript, /setAdminView/);
+  assert.match(ordersScript, /renderAdminOverview/);
+  assert.match(ordersScript, /renderMarketingDashboard/);
+  assert.match(ordersScript, /renderDeepAnalytics/);
+});
+
 test("admin dashboard exposes Stripe diagnostics without leaking secret keys", () => {
   const ordersHtml = read("admin-orders.html");
   const ordersScript = read("admin-orders.js");
