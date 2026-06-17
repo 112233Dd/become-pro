@@ -347,6 +347,11 @@ button, a { transition: 0.2s ease; }
 .summer-testimonial-grid cite { color: var(--summer-gold-soft); font-size: 13px; font-style: normal; font-weight: 900; text-transform: uppercase; }
 .summer-price-section, .summer-final-cta { margin-block: clamp(42px,7vw,84px); text-align: center; }
 .summer-price-section > *, .summer-final-cta > * { margin-inline: auto; }
+.summer-final-cta h2 {
+  width: 100%;
+  max-width: none;
+  text-align: center;
+}
 .summer-price-trust-section {
   margin-block: clamp(30px,5vw,58px);
   padding: clamp(30px,5vw,56px);
