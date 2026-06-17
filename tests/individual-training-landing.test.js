@@ -47,7 +47,10 @@ test("individual training campaign route and page exist", () => {
 test("landing page contains the approved conversion structure", () => {
   const html = read("individual-training.html");
 
-  assert.match(html, /Индивидуални футболни тренировки за играчи, които искат реален прогрес/);
+  assert.match(html, /<span>Индивидуални футболни<\/span>/);
+  assert.match(html, /<span>тренировки за играчи,<\/span>/);
+  assert.match(html, /<span>които искат<\/span>/);
+  assert.match(html, /<span>реален прогрес<\/span>/);
   assert.match(
     html,
     /Персонална работа върху техника, първо докосване, дрибъл, скорост, завършване и увереност с топката/,
@@ -57,6 +60,7 @@ test("landing page contains the approved conversion structure", () => {
   assert.match(html, /data-secondary-cta/);
   assert.match(html, /id="training-fit"/);
   assert.match(html, /id="player-benefits"/);
+  assert.match(html, /training-process-section/);
   assert.match(html, /id="how-it-works"/);
   assert.match(html, /class="landing-cta-panel early-form-cta"/);
   assert.match(html, /id="player-results"/);
@@ -93,7 +97,7 @@ test("landing page uses real training media, player proof, FAQ, and compact lega
   assert.doesNotMatch(html, /assets\/videos\/hero-hat-swap-game\.mp4/);
   assert.match(html, /assets\/videos\/one-touch-passing-drop\.mp4/);
   assert.match(html, /coach-yordan-zhelev\.png/);
-  assert.match(html, /coach-proof-card/);
+  assert.match(html, /coach-achievement-list/);
   assert.match(html, /coach-cta-panel/);
   assert.match(html, /video-cta-panel/);
   assert.match(html, /faq-cta-panel/);
