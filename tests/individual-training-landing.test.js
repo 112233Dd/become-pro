@@ -227,6 +227,7 @@ test("training requests persist optional campaign attribution", () => {
     "referrer",
     "device_type",
     "browser",
+    "session_id",
   ].forEach((field) => {
     assert.match(endpoint, new RegExp(field));
     assert.match(adminEndpoint, new RegExp(field));
@@ -266,6 +267,17 @@ test("protected admin analytics API supports filters and funnel summaries", () =
   assert.match(endpoint, /utm_source/);
   assert.match(endpoint, /utm_medium/);
   assert.match(endpoint, /utm_campaign/);
+  assert.match(endpoint, /device_type/);
+  assert.match(endpoint, /dashboards/);
+  assert.match(endpoint, /individualTraining/);
+  assert.match(endpoint, /summerProgram/);
+  assert.match(endpoint, /primaryCtaClicks/);
+  assert.match(endpoint, /secondaryCtaClicks/);
+  assert.match(endpoint, /scroll25/);
+  assert.match(endpoint, /scroll75/);
+  assert.match(endpoint, /formSubmitSuccess/);
+  assert.match(endpoint, /formSubmitError/);
+  assert.match(endpoint, /ctaConversionRate/);
   assert.match(endpoint, /pageViews/);
   assert.match(endpoint, /uniqueSessions/);
   assert.match(endpoint, /ctaClicks/);
@@ -281,11 +293,22 @@ test("admin panel shows lead attribution and landing analytics", () => {
   const html = read("admin-orders.html");
   const script = read("admin-orders.js");
 
-  assert.match(html, /<h2>Analytics<\/h2>/);
+  assert.match(html, /<h2>Landing Pages<\/h2>/);
+  assert.match(html, /Individual Training Dashboard/);
+  assert.match(html, /Summer Program Dashboard/);
+  assert.match(html, /data-landing-comparison/);
+  assert.match(html, /data-individual-dashboard-summary/);
+  assert.match(html, /data-summer-dashboard-summary/);
+  assert.match(html, /data-individual-funnel/);
+  assert.match(html, /data-summer-funnel/);
+  assert.match(html, /data-individual-leads-table/);
+  assert.match(html, /data-summer-orders-table/);
   assert.match(html, /data-landing-analytics-filters/);
   assert.match(html, /data-landing-analytics-summary/);
+  assert.match(html, /name="period"/);
   assert.match(html, /name="landing_page_url"/);
   assert.match(html, /name="page_variant"/);
+  assert.match(html, /name="device_type"/);
   assert.match(html, /Funnel heatmap/);
   assert.match(html, /data-landing-funnel-table/);
   assert.match(html, /data-landing-variant-table/);
@@ -294,6 +317,13 @@ test("admin panel shows lead attribution and landing analytics", () => {
   assert.match(html, /Кампания/);
   assert.match(script, /\/api\/admin\/landing-analytics/);
   assert.match(script, /landingFunnelTable/);
+  assert.match(script, /landingComparison/);
+  assert.match(script, /individualDashboardSummary/);
+  assert.match(script, /summerDashboardSummary/);
+  assert.match(script, /individualLeadsTable/);
+  assert.match(script, /summerOrdersTable/);
+  assert.match(script, /analyticsDateRange/);
+  assert.match(script, /matchesLandingFilters/);
   assert.match(script, /byLandingPage/);
   assert.match(script, /page_variant/);
   assert.match(script, /utm_campaign/);

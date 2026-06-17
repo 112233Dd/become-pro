@@ -40,6 +40,15 @@ const landingAnalyticsSummary = document.querySelector("[data-landing-analytics-
 const landingFunnelTable = document.querySelector("[data-landing-funnel-table]");
 const landingVariantTable = document.querySelector("[data-landing-variant-table]");
 const landingCampaignTable = document.querySelector("[data-landing-campaign-table]");
+const landingComparison = document.querySelector("[data-landing-comparison]");
+const dashboardTabs = [...document.querySelectorAll("[data-landing-dashboard-tab]")];
+const dashboardPanels = [...document.querySelectorAll("[data-landing-dashboard-panel]")];
+const individualDashboardSummary = document.querySelector("[data-individual-dashboard-summary]");
+const individualFunnel = document.querySelector("[data-individual-funnel]");
+const individualLeadsTable = document.querySelector("[data-individual-leads-table]");
+const summerDashboardSummary = document.querySelector("[data-summer-dashboard-summary]");
+const summerFunnel = document.querySelector("[data-summer-funnel]");
+const summerOrdersTable = document.querySelector("[data-summer-orders-table]");
 
 let orders = [];
 let selectedStatus = "all";
@@ -59,6 +68,7 @@ const contactInquiryStatusLabels = {
 let adminLogs = [];
 let stripeDiagnostics = null;
 let landingAnalytics = null;
+let selectedLandingDashboard = "individual";
 
 const trainingStatusLabels = {
   new: "Нова",
@@ -106,6 +116,98 @@ const formatMinorAmount = (amount, currency = "eur") =>
   new Intl.NumberFormat("bg-BG", { style: "currency", currency: String(currency || "eur").toUpperCase() }).format(
     Number(amount || 0) / 100,
   );
+
+const rate = (part, total) => (total ? `${Number(((part / total) * 100).toFixed(2))}%` : "0%");
+
+const formatPercent = (value) => `${Number(value || 0).toFixed(2)}%`;
+
+const ymd = (date) => date.toISOString().slice(0, 10);
+
+const analyticsDateRange = () => {
+  const form = landingAnalyticsFilters;
+  const period = form?.querySelector("[name='period']")?.value || "30d";
+  const now = new Date();
+  const start = new Date(now);
+  if (period === "today") {
+    return { start: ymd(now), end: ymd(now) };
+  }
+  if (period === "7d") {
+    start.setDate(start.getDate() - 6);
+    return { start: ymd(start), end: ymd(now) };
+  }
+  if (period === "30d") {
+    start.setDate(start.getDate() - 29);
+    return { start: ymd(start), end: ymd(now) };
+  }
+  const formData = form ? new FormData(form) : new FormData();
+  return {
+    start: String(formData.get("start") || ""),
+    end: String(formData.get("end") || ""),
+  };
+};
+
+const getLandingFilterValues = () => {
+  const values = {};
+  if (!landingAnalyticsFilters) return values;
+  new FormData(landingAnalyticsFilters).forEach((value, key) => {
+    if (key === "period" || key === "start" || key === "end") return;
+    const cleanValue = String(value || "").trim().toLowerCase();
+    if (cleanValue) values[key] = cleanValue;
+  });
+  return values;
+};
+
+const valueMatches = (value, expected, contains = false) => {
+  if (!expected) return true;
+  const current = String(value || "").toLowerCase();
+  return contains ? current.includes(expected) : current === expected;
+};
+
+const isInDateRange = (value) => {
+  const { start, end } = analyticsDateRange();
+  if (!start && !end) return true;
+  const date = value ? new Date(value) : null;
+  if (!date || Number.isNaN(date.getTime())) return false;
+  if (start && date < new Date(`${start}T00:00:00.000`)) return false;
+  if (end && date > new Date(`${end}T23:59:59.999`)) return false;
+  return true;
+};
+
+const matchesLandingFilters = (row, forcedVariant) => {
+  const filters = getLandingFilterValues();
+  if (forcedVariant && !valueMatches(row.page_variant, forcedVariant)) return false;
+  if (!isInDateRange(row.created_at || row.event_time)) return false;
+  return (
+    valueMatches(row.landing_page_url, filters.landing_page_url, true) &&
+    valueMatches(row.page_variant, filters.page_variant) &&
+    valueMatches(row.utm_source, filters.utm_source) &&
+    valueMatches(row.utm_medium, filters.utm_medium) &&
+    valueMatches(row.utm_campaign, filters.utm_campaign) &&
+    valueMatches(row.device_type, filters.device_type)
+  );
+};
+
+const isSummerOrder = (order) => {
+  const programId = orderField(order, "program_id", "programId");
+  const programName = orderField(order, "program_name", "programName");
+  return String(programId || "").includes("summer-program") || /summer|лятн/i.test(String(programName || ""));
+};
+
+const isIndividualTrainingRequest = (request) => {
+  const variant = String(request.page_variant || "");
+  const url = String(request.landing_page_url || "");
+  return (
+    variant === "individual-training" ||
+    ["plovdiv", "sofia", "stara-zagora", "parents", "players"].includes(variant) ||
+    url.includes("/individual-training") ||
+    url.includes("/training")
+  );
+};
+
+const isPaidOrder = (order) => {
+  const status = normalizeStatus(orderField(order, "payment_status", "paymentStatus"));
+  return status === "paid" || status === "delivery_failed";
+};
 
 const setError = (node, message = "") => {
   if (!node) return;
@@ -266,6 +368,41 @@ const analyticsMetricCard = (label, value) => `
   </article>
 `;
 
+const dashboardMetricCards = (items) => items.map(([label, value]) => analyticsMetricCard(label, value)).join("");
+
+const renderFunnelVisual = (node, steps) => {
+  if (!node) return;
+  node.innerHTML = steps
+    .map(
+      ([label, value], index) => `
+        <article class="admin-funnel-step">
+          <span>${escapeHtml(label)}</span>
+          <strong>${escapeHtml(value)}</strong>
+          ${index < steps.length - 1 ? '<em aria-hidden="true">→</em>' : ""}
+        </article>
+      `,
+    )
+    .join("");
+};
+
+const renderComparison = (individualSummary, summerSummary, summerOrders) => {
+  if (!landingComparison) return;
+  const paidSummerOrders = summerOrders.filter(isPaidOrder);
+  const revenue = paidSummerOrders.reduce((sum, order) => sum + Number(orderField(order, "program_price", "programPrice") || 0), 0);
+  landingComparison.innerHTML = `
+    <article class="admin-comparison-card">
+      <span>Individual Training</span>
+      <strong>${escapeHtml(individualSummary.pageViews || 0)} visits</strong>
+      <p>${escapeHtml(individualSummary.formSubmitSuccess || 0)} leads · ${escapeHtml(formatPercent(individualSummary.conversionRate))} conversion</p>
+    </article>
+    <article class="admin-comparison-card">
+      <span>Summer Program</span>
+      <strong>${escapeHtml(summerSummary.pageViews || 0)} visits</strong>
+      <p>${escapeHtml(paidSummerOrders.length)} purchases · ${escapeHtml(formatPrice(revenue))} revenue · ${escapeHtml(formatPercent(summerSummary.purchaseConversionRate))} conversion</p>
+    </article>
+  `;
+};
+
 const analyticsRows = (rows = []) =>
   rows
     .map(
@@ -308,6 +445,114 @@ const analyticsFunnelRows = (rows = []) =>
 const renderLandingAnalytics = () => {
   if (!landingAnalyticsSummary || !landingFunnelTable || !landingVariantTable || !landingCampaignTable) return;
   const summary = landingAnalytics?.summary || {};
+  const individualSummary = landingAnalytics?.dashboards?.individualTraining?.summary || {};
+  const summerSummary = landingAnalytics?.dashboards?.summerProgram?.summary || {};
+  const filteredLeads = trainingRequests
+    .filter((request) => isIndividualTrainingRequest(request) && matchesLandingFilters(request))
+    .slice(0, 25);
+  const filteredSummerOrders = orders.filter((order) => isSummerOrder(order) && matchesLandingFilters(order));
+  const paidSummerOrders = filteredSummerOrders.filter(isPaidOrder);
+  const revenue = paidSummerOrders.reduce(
+    (sum, order) => sum + Number(orderField(order, "program_price", "programPrice") || 0),
+    0,
+  );
+
+  renderComparison(individualSummary, summerSummary, filteredSummerOrders);
+  if (individualDashboardSummary) {
+    individualDashboardSummary.innerHTML = dashboardMetricCards([
+      ["Page Views", individualSummary.pageViews || 0],
+      ["Unique Sessions", individualSummary.uniqueSessions || 0],
+      ["CTA Clicks", individualSummary.primaryCtaClicks || 0],
+      ["Secondary CTA Clicks", individualSummary.secondaryCtaClicks || 0],
+      ["Scroll 25%", individualSummary.scroll25 || 0],
+      ["Scroll 50%", individualSummary.scroll50 || 0],
+      ["Scroll 75%", individualSummary.scroll75 || 0],
+      ["Scroll 90%", individualSummary.scroll90 || 0],
+      ["Form Starts", individualSummary.formStarts || 0],
+      ["Form Submit Success", individualSummary.formSubmitSuccess || 0],
+      ["Form Submit Error", individualSummary.formSubmitError || 0],
+      ["Conversion Rate", formatPercent(individualSummary.conversionRate)],
+      ["CTA Conversion Rate", formatPercent(individualSummary.ctaConversionRate)],
+    ]);
+  }
+  renderFunnelVisual(individualFunnel, [
+    ["Page Views", individualSummary.pageViews || 0],
+    ["CTA Clicks", individualSummary.primaryCtaClicks || 0],
+    ["Form Starts", individualSummary.formStarts || 0],
+    ["Form Submits", individualSummary.formSubmitSuccess || 0],
+  ]);
+  if (individualLeadsTable) {
+    individualLeadsTable.innerHTML = filteredLeads
+      .map(
+        (request) => `
+          <tr>
+            <td>${escapeHtml(formatDate(request.created_at))}</td>
+            <td><strong>${escapeHtml(request.name || "-")}</strong></td>
+            <td>${escapeHtml(request.city || "-")}</td>
+            <td>${escapeHtml(request.phone || "-")}</td>
+            <td>${escapeHtml(request.applicant_type || request.who || "-")}</td>
+            <td>${escapeHtml(trainingStatusLabels[request.status] || request.status || "new")}</td>
+            <td>${escapeHtml(request.page_variant || "-")}</td>
+            <td>${escapeHtml(request.utm_source || "-")}</td>
+            <td>${escapeHtml(request.utm_medium || "-")}</td>
+            <td>${escapeHtml(request.utm_campaign || "-")}</td>
+            <td>${escapeHtml(request.referrer || "-")}</td>
+          </tr>
+        `,
+      )
+      .join("");
+  }
+  if (summerDashboardSummary) {
+    summerDashboardSummary.innerHTML = dashboardMetricCards([
+      ["Page Views", summerSummary.pageViews || 0],
+      ["Unique Sessions", summerSummary.uniqueSessions || 0],
+      ["CTA Clicks", summerSummary.primaryCtaClicks || 0],
+      ["Secondary CTA Clicks", summerSummary.secondaryCtaClicks || 0],
+      ["Scroll 25%", summerSummary.scroll25 || 0],
+      ["Scroll 50%", summerSummary.scroll50 || 0],
+      ["Scroll 75%", summerSummary.scroll75 || 0],
+      ["Scroll 90%", summerSummary.scroll90 || 0],
+      ["Checkout Started", summerSummary.checkoutStarted || 0],
+      ["Checkout Created", summerSummary.checkoutCreated || 0],
+      ["Checkout Error", summerSummary.checkoutError || 0],
+      ["Purchase Completed", summerSummary.purchaseCompleted || 0],
+      ["Conversion Rate", formatPercent(summerSummary.purchaseConversionRate)],
+      ["Checkout Conversion Rate", formatPercent(summerSummary.checkoutConversionRate)],
+      ["Revenue", formatPrice(revenue)],
+      ["Orders Count", paidSummerOrders.length],
+    ]);
+  }
+  renderFunnelVisual(summerFunnel, [
+    ["Page Views", summerSummary.pageViews || 0],
+    ["CTA Clicks", summerSummary.primaryCtaClicks || 0],
+    ["Checkout Started", summerSummary.checkoutStarted || 0],
+    ["Purchase Completed", summerSummary.purchaseCompleted || 0],
+  ]);
+  if (summerOrdersTable) {
+    summerOrdersTable.innerHTML = filteredSummerOrders
+      .slice(0, 25)
+      .map((order) => {
+        const status = normalizeStatus(orderField(order, "payment_status", "paymentStatus"));
+        return `
+          <tr>
+            <td>${escapeHtml(formatDate(orderField(order, "created_at", "createdAt")))}</td>
+            <td>${escapeHtml(orderField(order, "customer_email", "customerEmail") || "-")}</td>
+            <td>${escapeHtml(orderField(order, "program_name", "programName") || "-")}</td>
+            <td>${escapeHtml(formatPrice(orderField(order, "program_price", "programPrice")))}</td>
+            <td>${escapeHtml(status)}</td>
+            <td><code>${escapeHtml(orderField(order, "stripe_checkout_session_id", "stripeCheckoutSessionId") || "-")}</code></td>
+            <td>${escapeHtml(orderField(order, "payment_status", "paymentStatus") || "-")}</td>
+            <td>${escapeHtml(orderField(order, "page_variant", "pageVariant") || "-")}</td>
+            <td>${escapeHtml(orderField(order, "utm_source", "utmSource") || "-")}</td>
+            <td>${escapeHtml(orderField(order, "utm_medium", "utmMedium") || "-")}</td>
+            <td>${escapeHtml(orderField(order, "utm_campaign", "utmCampaign") || "-")}</td>
+            <td>${escapeHtml(orderField(order, "referrer", "referrer") || "-")}</td>
+          </tr>
+        `;
+      })
+      .join("");
+  }
+
   landingAnalyticsSummary.innerHTML = [
     ["Общо посещения", summary.pageViews || 0],
     ["Уникални сесии", summary.uniqueSessions || 0],
@@ -424,6 +669,7 @@ const loadOrders = async () => {
     if (!response.ok) throw new Error(data.error || "Не успяхме да заредим поръчките.");
     orders = Array.isArray(data.orders) ? data.orders : [];
     renderOrders();
+    renderLandingAnalytics();
   } catch (error) {
     orders = [];
     renderOrders();
@@ -443,6 +689,7 @@ const loadTrainingRequests = async () => {
     if (!response.ok) throw new Error(data.error || "Не успяхме да заредим заявките.");
     trainingRequests = Array.isArray(data.requests) ? data.requests : [];
     renderTrainingRequests();
+    renderLandingAnalytics();
   } catch (error) {
     trainingRequests = [];
     renderTrainingRequests();
@@ -514,8 +761,12 @@ const loadLandingAnalytics = async () => {
   setError(landingAnalyticsError);
   try {
     const params = new URLSearchParams();
+    const range = analyticsDateRange();
+    if (range.start) params.set("start", range.start);
+    if (range.end) params.set("end", range.end);
     if (landingAnalyticsFilters) {
       new FormData(landingAnalyticsFilters).forEach((value, key) => {
+        if (key === "period" || key === "start" || key === "end") return;
         const cleanValue = String(value || "").trim();
         if (cleanValue) params.set(key, cleanValue);
       });
@@ -656,6 +907,16 @@ landingAnalyticsFilters?.addEventListener("submit", (event) => {
 landingAnalyticsReset?.addEventListener("click", () => {
   landingAnalyticsFilters?.reset();
   loadLandingAnalytics();
+});
+
+dashboardTabs.forEach((button) => {
+  button.addEventListener("click", () => {
+    selectedLandingDashboard = button.dataset.landingDashboardTab || "individual";
+    dashboardTabs.forEach((tab) => tab.classList.toggle("is-active", tab === button));
+    dashboardPanels.forEach((panel) => {
+      panel.hidden = panel.dataset.landingDashboardPanel !== selectedLandingDashboard;
+    });
+  });
 });
 
 logoutButton?.addEventListener("click", async () => {

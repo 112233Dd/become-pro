@@ -111,7 +111,7 @@ module.exports = async (req, res) => {
       let requests;
       try {
         requests = await supabaseRequest(
-          "training_requests?select=id,created_at,applicant_type,who,name,city,phone,status,landing_page_url,page_variant,utm_source,utm_medium,utm_campaign,utm_content,utm_term,referrer,device_type,browser&order=created_at.desc",
+          "training_requests?select=id,created_at,applicant_type,who,name,city,phone,status,landing_page_url,page_variant,utm_source,utm_medium,utm_campaign,utm_content,utm_term,referrer,device_type,browser,session_id&order=created_at.desc",
         );
       } catch (schemaError) {
         if (!isLegacyTrainingSchemaError(schemaError)) throw schemaError;

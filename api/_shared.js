@@ -268,7 +268,7 @@ const supabaseRequest = async (path, options = {}) => {
 const hasSupabaseAdmin = () => Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
 const isCheckoutEnabled = () => process.env.CHECKOUT_ENABLED === "true";
 
-const orderRowsFromPrograms = ({ programs, customer, status, sessionId, paymentIntentId }) =>
+const orderRowsFromPrograms = ({ programs, customer, status, sessionId, paymentIntentId, attribution = {} }) =>
   programs.map((program) => ({
     customer_name: customer.customerName,
     customer_email: customer.customerEmail,
@@ -283,12 +283,22 @@ const orderRowsFromPrograms = ({ programs, customer, status, sessionId, paymentI
     payment_provider: "stripe",
     stripe_checkout_session_id: sessionId || null,
     stripe_payment_intent_id: paymentIntentId || null,
+    landing_page_url: attribution.landingPageUrl || null,
+    page_variant: attribution.pageVariant || null,
+    utm_source: attribution.utm_source || null,
+    utm_medium: attribution.utm_medium || null,
+    utm_campaign: attribution.utm_campaign || null,
+    utm_content: attribution.utm_content || null,
+    utm_term: attribution.utm_term || null,
+    referrer: attribution.referrer || null,
+    device_type: attribution.deviceType || null,
+    session_id: attribution.landingSessionId || attribution.sessionId || null,
     updated_at: new Date().toISOString(),
   }));
 
-const upsertOrders = async ({ programs, customer, status, sessionId, paymentIntentId }) => {
+const upsertOrders = async ({ programs, customer, status, sessionId, paymentIntentId, attribution }) => {
   if (!ORDER_STATUSES.has(status)) throw new Error("Invalid order status.");
-  const rows = orderRowsFromPrograms({ programs, customer, status, sessionId, paymentIntentId });
+  const rows = orderRowsFromPrograms({ programs, customer, status, sessionId, paymentIntentId, attribution });
   await supabaseRequest("orders?on_conflict=stripe_checkout_session_id,program_id", {
     method: "POST",
     headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
@@ -353,6 +363,16 @@ const listStripeOrders = async () => {
       payment_provider: "stripe",
       stripe_checkout_session_id: session.id,
       stripe_payment_intent_id: session.payment_intent || "",
+      landing_page_url: metadata.landingPageUrl || "",
+      page_variant: metadata.pageVariant || "",
+      utm_source: metadata.utm_source || "",
+      utm_medium: metadata.utm_medium || "",
+      utm_campaign: metadata.utm_campaign || "",
+      utm_content: metadata.utm_content || "",
+      utm_term: metadata.utm_term || "",
+      referrer: metadata.referrer || "",
+      device_type: metadata.deviceType || "",
+      session_id: metadata.landingSessionId || "",
       created_at: new Date((session.created || 0) * 1000).toISOString(),
       updated_at: new Date((session.created || 0) * 1000).toISOString(),
     }));

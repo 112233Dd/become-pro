@@ -66,6 +66,7 @@ module.exports = async (req, res) => {
           status: "pending",
           sessionId: session.id,
           paymentIntentId: session.payment_intent || null,
+          attribution: checkoutAttribution,
         });
       } catch (persistenceError) {
         console.error("Pending order persistence failed:", persistenceError);

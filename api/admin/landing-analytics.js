@@ -7,65 +7,100 @@ const isoDate = (value, endOfDay = false) => {
   return Number.isNaN(date.getTime()) ? null : date;
 };
 
+const rate = (part, total) => (total ? Number(((part / total) * 100).toFixed(2)) : 0);
+
 const buildStats = (events) => {
-  const pageViewSessions = new Set();
   const allSessions = new Set();
+  const pageViewSessions = new Set();
+  const primaryCtaSessions = new Set();
   const submitSessions = new Set();
   const purchaseSessions = new Set();
   let pageViews = 0;
-  let ctaClicks = 0;
+  let primaryCtaClicks = 0;
+  let secondaryCtaClicks = 0;
+  let scroll25 = 0;
+  let scroll50 = 0;
+  let scroll75 = 0;
+  let scroll90 = 0;
   let formStarts = 0;
-  let formSubmissions = 0;
-  let formErrors = 0;
-  let checkoutStarts = 0;
-  let checkoutsCreated = 0;
-  let checkoutErrors = 0;
-  let purchases = 0;
+  let formSubmitSuccess = 0;
+  let formSubmitError = 0;
+  let checkoutStarted = 0;
+  let checkoutCreated = 0;
+  let checkoutError = 0;
+  let purchaseCompleted = 0;
 
   events.forEach((event) => {
-    allSessions.add(event.session_id);
+    const sessionId = event.session_id || "";
+    if (sessionId) allSessions.add(sessionId);
     if (event.event_name === "page_view") {
       pageViews += 1;
-      pageViewSessions.add(event.session_id);
+      if (sessionId) pageViewSessions.add(sessionId);
     }
-    if (event.event_name === "click_primary_cta" || event.event_name === "click_secondary_cta") ctaClicks += 1;
+    if (event.event_name === "click_primary_cta") {
+      primaryCtaClicks += 1;
+      if (sessionId) primaryCtaSessions.add(sessionId);
+    }
+    if (event.event_name === "click_secondary_cta") secondaryCtaClicks += 1;
+    if (event.event_name === "scroll_25") scroll25 += 1;
+    if (event.event_name === "scroll_50") scroll50 += 1;
+    if (event.event_name === "scroll_75") scroll75 += 1;
+    if (event.event_name === "scroll_90") scroll90 += 1;
     if (event.event_name === "form_start") formStarts += 1;
     if (event.event_name === "form_submit_success") {
-      formSubmissions += 1;
-      submitSessions.add(event.session_id);
+      formSubmitSuccess += 1;
+      if (sessionId) submitSessions.add(sessionId);
     }
-    if (event.event_name === "form_submit_error") formErrors += 1;
-    if (event.event_name === "checkout_started") checkoutStarts += 1;
-    if (event.event_name === "checkout_created") checkoutsCreated += 1;
-    if (event.event_name === "checkout_error") checkoutErrors += 1;
+    if (event.event_name === "form_submit_error") formSubmitError += 1;
+    if (event.event_name === "checkout_started") checkoutStarted += 1;
+    if (event.event_name === "checkout_created") checkoutCreated += 1;
+    if (event.event_name === "checkout_error") checkoutError += 1;
     if (event.event_name === "purchase_completed") {
-      purchases += 1;
-      purchaseSessions.add(event.session_id);
+      purchaseCompleted += 1;
+      if (sessionId) purchaseSessions.add(sessionId);
     }
   });
 
-  const conversionRate = pageViewSessions.size
-    ? Number(((submitSessions.size / pageViewSessions.size) * 100).toFixed(2))
-    : 0;
-  const purchaseConversionRate = pageViewSessions.size
-    ? Number(((purchaseSessions.size / pageViewSessions.size) * 100).toFixed(2))
-    : 0;
+  const uniqueSessions = allSessions.size || pageViewSessions.size;
+  const ctaClicks = primaryCtaClicks + secondaryCtaClicks;
 
   return {
     pageViews,
-    uniqueSessions: allSessions.size,
+    uniqueSessions,
+    primaryCtaClicks,
+    secondaryCtaClicks,
     ctaClicks,
+    scroll25,
+    scroll50,
+    scroll75,
+    scroll90,
     formStarts,
-    formSubmissions,
-    formErrors,
-    conversionRate,
-    checkoutStarts,
-    checkoutsCreated,
-    checkoutErrors,
-    purchases,
-    purchaseConversionRate,
+    formSubmitSuccess,
+    formSubmitError,
+    formSubmissions: formSubmitSuccess,
+    formErrors: formSubmitError,
+    checkoutStarted,
+    checkoutStarts: checkoutStarted,
+    checkoutCreated,
+    checkoutsCreated: checkoutCreated,
+    checkoutError,
+    checkoutErrors: checkoutError,
+    purchaseCompleted,
+    purchases: purchaseCompleted,
+    conversionRate: rate(submitSessions.size || formSubmitSuccess, uniqueSessions),
+    ctaConversionRate: rate(primaryCtaSessions.size || primaryCtaClicks, uniqueSessions),
+    purchaseConversionRate: rate(purchaseSessions.size || purchaseCompleted, uniqueSessions),
+    checkoutConversionRate: rate(purchaseCompleted, checkoutStarted),
   };
 };
+
+const isIndividualTrainingEvent = (event) =>
+  event.page_variant === "individual-training" ||
+  String(event.landing_page_url || "").includes("/individual-training") ||
+  String(event.landing_page_url || "").includes("/training");
+
+const isSummerProgramEvent = (event) =>
+  event.page_variant === "summer-program" || String(event.landing_page_url || "").includes("/summer-program");
 
 const groupEvents = (events, field, fallback) => {
   const grouped = new Map();
@@ -103,9 +138,11 @@ module.exports = async (req, res) => {
       utm_source: cleanFilter(req.query?.utm_source),
       utm_medium: cleanFilter(req.query?.utm_medium),
       utm_campaign: cleanFilter(req.query?.utm_campaign),
+      device_type: cleanFilter(req.query?.device_type, 40),
     };
     const query = new URLSearchParams({
-      select: "session_id,event_name,landing_page_url,page_variant,utm_source,utm_medium,utm_campaign,event_time,stripe_checkout_session_id,program_id",
+      select:
+        "session_id,event_name,landing_page_url,page_variant,utm_source,utm_medium,utm_campaign,utm_content,utm_term,referrer,device_type,event_time,stripe_checkout_session_id,program_id",
       event_time: `gte.${start.toISOString()}`,
       order: "event_time.desc",
       limit: "10000",
@@ -118,19 +155,36 @@ module.exports = async (req, res) => {
 
     const events = (await supabaseRequest(`landing_analytics_events?${query.toString()}`)) || [];
     const distinct = (field) => [...new Set(events.map((event) => event[field]).filter(Boolean))].sort();
+    const individualEvents = events.filter(isIndividualTrainingEvent);
+    const summerEvents = events.filter(isSummerProgramEvent);
 
     return sendJson(res, 200, {
       range: { start: start.toISOString(), end: end.toISOString() },
       summary: buildStats(events),
+      dashboards: {
+        individualTraining: {
+          summary: buildStats(individualEvents),
+          funnel: groupEvents(individualEvents, "landing_page_url", "/individual-training"),
+          byVariant: groupEvents(individualEvents, "page_variant", "individual-training"),
+          byCampaign: groupEvents(individualEvents, "utm_campaign", "No campaign"),
+        },
+        summerProgram: {
+          summary: buildStats(summerEvents),
+          funnel: groupEvents(summerEvents, "landing_page_url", "/summer-program"),
+          byVariant: groupEvents(summerEvents, "page_variant", "summer-program"),
+          byCampaign: groupEvents(summerEvents, "utm_campaign", "No campaign"),
+        },
+      },
       byLandingPage: groupEvents(events, "landing_page_url", "Landing page"),
       byVariant: groupEvents(events, "page_variant", "general"),
-      byCampaign: groupEvents(events, "utm_campaign", "Без кампания"),
+      byCampaign: groupEvents(events, "utm_campaign", "No campaign"),
       filters: {
         landingPages: distinct("landing_page_url"),
         pageVariants: distinct("page_variant"),
         utmSources: distinct("utm_source"),
         utmMediums: distinct("utm_medium"),
         utmCampaigns: distinct("utm_campaign"),
+        deviceTypes: distinct("device_type"),
       },
     });
   } catch (error) {

@@ -101,6 +101,7 @@ module.exports = async (req, res) => {
       referrer: cleanText(attribution.referrer, 500) || null,
       device_type: cleanText(attribution.deviceType, 40) || null,
       browser: cleanText(attribution.browser, 300) || null,
+      session_id: cleanText(attribution.sessionId, 100) || null,
     };
 
     if (!APPLICANT_TYPES.has(applicantType)) {

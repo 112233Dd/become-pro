@@ -39,6 +39,7 @@ alter table public.training_requests add column if not exists utm_term text;
 alter table public.training_requests add column if not exists referrer text;
 alter table public.training_requests add column if not exists device_type text;
 alter table public.training_requests add column if not exists browser text;
+alter table public.training_requests add column if not exists session_id text;
 
 update public.training_requests
 set applicant_type = who
@@ -77,6 +78,9 @@ create index if not exists training_requests_page_variant_idx
 
 create index if not exists training_requests_utm_campaign_idx
   on public.training_requests (utm_campaign);
+
+create index if not exists training_requests_session_id_idx
+  on public.training_requests (session_id);
 
 create table if not exists public.contact_inquiries (
   id uuid primary key default gen_random_uuid(),
@@ -279,6 +283,16 @@ alter table public.orders add column if not exists payment_status text default '
 alter table public.orders add column if not exists payment_provider text default 'stripe';
 alter table public.orders add column if not exists stripe_checkout_session_id text;
 alter table public.orders add column if not exists stripe_payment_intent_id text;
+alter table public.orders add column if not exists landing_page_url text;
+alter table public.orders add column if not exists page_variant text;
+alter table public.orders add column if not exists utm_source text;
+alter table public.orders add column if not exists utm_medium text;
+alter table public.orders add column if not exists utm_campaign text;
+alter table public.orders add column if not exists utm_content text;
+alter table public.orders add column if not exists utm_term text;
+alter table public.orders add column if not exists referrer text;
+alter table public.orders add column if not exists device_type text;
+alter table public.orders add column if not exists session_id text;
 alter table public.orders add column if not exists created_at timestamptz default now();
 alter table public.orders add column if not exists updated_at timestamptz default now();
 
@@ -301,6 +315,12 @@ create index if not exists orders_created_at_idx
 
 create index if not exists orders_payment_status_idx
   on public.orders (payment_status);
+
+create index if not exists orders_page_variant_idx
+  on public.orders (page_variant);
+
+create index if not exists orders_utm_campaign_idx
+  on public.orders (utm_campaign);
 
 alter table public.orders enable row level security;
 

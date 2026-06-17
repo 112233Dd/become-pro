@@ -222,11 +222,12 @@
         </div>
       </section>
 
-      <section class="admin-orders admin-landing-analytics" data-landing-analytics>
+      <section class="admin-orders admin-landing-analytics admin-landing-pages" data-landing-analytics>
         <div class="admin-section-heading">
           <div>
-            <p class="eyebrow">Analytics</p>
-            <h2>Analytics</h2>
+            <p class="eyebrow">Landing Pages</p>
+            <h2>Landing Pages</h2>
+            <p>Separate dashboards for the individual training funnel and the summer program purchase funnel.</p>
           </div>
           <div class="admin-toolbar">
             <strong data-landing-analytics-status>Последни 30 дни</strong>
@@ -237,6 +238,14 @@
         </div>
 
         <form class="admin-analytics-filters" data-landing-analytics-filters>
+          <label>Period
+            <select name="period" data-analytics-period>
+              <option value="30d">Last 30 days</option>
+              <option value="7d">Last 7 days</option>
+              <option value="today">Today</option>
+              <option value="custom">Custom</option>
+            </select>
+          </label>
           <label>От дата<input type="date" name="start" data-analytics-start /></label>
           <label>До дата<input type="date" name="end" data-analytics-end /></label>
           <label>Landing page<input type="text" name="landing_page_url" placeholder="/training/plovdiv" /></label>
@@ -244,6 +253,7 @@
           <label>UTM source<input type="text" name="utm_source" placeholder="instagram" /></label>
           <label>UTM medium<input type="text" name="utm_medium" placeholder="paid_social" /></label>
           <label>UTM campaign<input type="text" name="utm_campaign" placeholder="campaign_name" /></label>
+          <label>Device type<input type="text" name="device_type" placeholder="mobile" /></label>
           <div class="admin-analytics-actions">
             <button class="btn btn-primary" type="submit">Приложи</button>
             <button class="btn btn-secondary" type="button" data-landing-analytics-reset>Изчисти</button>
@@ -251,6 +261,90 @@
         </form>
 
         <p class="admin-state admin-error" data-landing-analytics-error hidden></p>
+
+        <section class="admin-dashboard-block">
+          <div class="admin-dashboard-title">
+            <div>
+              <p class="eyebrow">Comparison</p>
+              <h3>Landing page comparison</h3>
+            </div>
+          </div>
+          <div class="admin-comparison-grid" data-landing-comparison></div>
+        </section>
+
+        <div class="admin-dashboard-tabs" role="tablist" aria-label="Landing page dashboards">
+          <button class="admin-dashboard-tab is-active" type="button" role="tab" data-landing-dashboard-tab="individual">
+            Individual Training Dashboard
+          </button>
+          <button class="admin-dashboard-tab" type="button" role="tab" data-landing-dashboard-tab="summer">
+            Summer Program Dashboard
+          </button>
+        </div>
+
+        <section class="admin-dashboard-panel" data-landing-dashboard-panel="individual">
+          <div class="admin-dashboard-title">
+            <div>
+              <p class="eyebrow">/individual-training</p>
+              <h3>Individual Training Dashboard</h3>
+            </div>
+          </div>
+          <div class="admin-analytics-summary" data-individual-dashboard-summary></div>
+          <div class="admin-funnel-visual" data-individual-funnel></div>
+          <div class="admin-table-wrap">
+            <table class="admin-table admin-analytics-table admin-leads-dashboard-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Name</th>
+                  <th>City</th>
+                  <th>Phone</th>
+                  <th>Applicant</th>
+                  <th>Status</th>
+                  <th>Variant</th>
+                  <th>UTM source</th>
+                  <th>UTM medium</th>
+                  <th>UTM campaign</th>
+                  <th>Referrer</th>
+                </tr>
+              </thead>
+              <tbody data-individual-leads-table></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="admin-dashboard-panel" data-landing-dashboard-panel="summer" hidden>
+          <div class="admin-dashboard-title">
+            <div>
+              <p class="eyebrow">/summer-program</p>
+              <h3>Summer Program Dashboard</h3>
+              <p>Revenue and Orders Count are calculated from paid summer program orders.</p>
+            </div>
+          </div>
+          <div class="admin-analytics-summary" data-summer-dashboard-summary></div>
+          <div class="admin-funnel-visual" data-summer-funnel></div>
+          <div class="admin-table-wrap">
+            <table class="admin-table admin-analytics-table admin-orders-dashboard-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Customer email</th>
+                  <th>Program</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                  <th>Stripe session id</th>
+                  <th>Payment status</th>
+                  <th>Variant</th>
+                  <th>UTM source</th>
+                  <th>UTM medium</th>
+                  <th>UTM campaign</th>
+                  <th>Referrer</th>
+                </tr>
+              </thead>
+              <tbody data-summer-orders-table></tbody>
+            </table>
+          </div>
+        </section>
+
         <div class="admin-analytics-summary" data-landing-analytics-summary></div>
 
         <div class="admin-analytics-tables">

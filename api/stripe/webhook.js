@@ -62,6 +62,19 @@ const customerFromSession = (session = {}) => {
   };
 };
 
+const attributionFromMetadata = (metadata = {}) => ({
+  landingSessionId: metadata.landingSessionId || "",
+  landingPageUrl: metadata.landingPageUrl || "",
+  pageVariant: metadata.pageVariant || "",
+  utm_source: metadata.utm_source || "",
+  utm_medium: metadata.utm_medium || "",
+  utm_campaign: metadata.utm_campaign || "",
+  utm_content: metadata.utm_content || "",
+  utm_term: metadata.utm_term || "",
+  referrer: metadata.referrer || "",
+  deviceType: metadata.deviceType || "",
+});
+
 const programsFromMetadata = (metadata = {}) => {
   const ids = String(metadata.programId || "")
     .split(",")
@@ -235,6 +248,7 @@ const markDeliveryFailed = async ({ programs, customer, session, reason, error }
       status: "delivery_failed",
       sessionId: session.id,
       paymentIntentId: session.payment_intent || null,
+      attribution: attributionFromMetadata(session.metadata || {}),
     });
   } catch (deliveryStatusError) {
     console.error("Delivery-failed order persistence failed:", deliveryStatusError);
@@ -315,6 +329,7 @@ module.exports = async (req, res) => {
             status: "paid",
             sessionId: session.id,
             paymentIntentId: session.payment_intent || null,
+            attribution: attributionFromMetadata(session.metadata || {}),
           });
         } catch (persistenceError) {
           console.error("Paid order persistence failed:", persistenceError);
@@ -372,6 +387,7 @@ module.exports = async (req, res) => {
           status: "failed",
           sessionId: null,
           paymentIntentId: paymentIntent.id,
+          attribution: attributionFromMetadata(metadata),
         });
       }
     }
@@ -389,6 +405,7 @@ module.exports = async (req, res) => {
           status: "expired",
           sessionId: session.id,
           paymentIntentId: session.payment_intent || null,
+          attribution: attributionFromMetadata(metadata),
         });
       }
     }

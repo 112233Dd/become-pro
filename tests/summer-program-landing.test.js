@@ -293,13 +293,27 @@ test("admin analytics exposes checkout and purchase metrics", () => {
   const script = read("admin-orders.js");
   const funnelRenderer = script.match(/const analyticsFunnelRows[\s\S]*?\.join\(""\);/)?.[0] || "";
 
-  ["checkoutStarts", "checkoutsCreated", "purchases", "purchaseConversionRate"].forEach((field) => {
+  [
+    "checkoutStarted",
+    "checkoutStarts",
+    "checkoutCreated",
+    "checkoutsCreated",
+    "purchaseCompleted",
+    "purchases",
+    "purchaseConversionRate",
+    "checkoutConversionRate",
+  ].forEach((field) => {
     assert.match(endpoint, new RegExp(field));
     assert.match(script, new RegExp(field));
   });
   ["checkoutStarts", "purchases", "purchaseConversionRate"].forEach((field) => {
     assert.match(funnelRenderer, new RegExp(field));
   });
+  assert.match(html, /Summer Program Dashboard/);
+  assert.match(html, /Revenue/);
+  assert.match(html, /Orders Count/);
+  assert.match(html, /data-summer-funnel/);
+  assert.match(html, /data-summer-orders-table/);
   assert.match(html, /Checkout Starts/);
   assert.match(html, /Purchases/);
   assert.match(html, /Purchase Conversion/);
