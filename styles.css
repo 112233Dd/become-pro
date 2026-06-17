@@ -2380,6 +2380,110 @@ blockquote:hover {
   text-align: center;
 }
 
+.admin-training-requests > .admin-controls {
+  display: none;
+}
+
+.admin-crm-metrics,
+.admin-crm-funnel,
+.admin-followups-card,
+.admin-crm-filters {
+  margin-top: 12px;
+}
+
+.admin-followups-card {
+  background:
+    radial-gradient(circle at 90% 0%, rgba(245, 196, 0, 0.12), transparent 34%),
+    rgba(0, 0, 0, 0.24);
+}
+
+.admin-mini-button {
+  min-height: 34px;
+  padding: 8px 12px;
+  font-size: 12px;
+}
+
+.admin-lead-modal {
+  width: min(1040px, calc(100vw - 28px));
+  max-height: min(860px, calc(100vh - 28px));
+  border: 1px solid rgba(245, 196, 0, 0.28);
+  border-radius: 26px;
+  padding: 0;
+  color: var(--white);
+  background:
+    radial-gradient(circle at 80% 0%, rgba(245, 196, 0, 0.14), transparent 34%),
+    #070707;
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.72);
+}
+
+.admin-lead-modal::backdrop {
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(8px);
+}
+
+.admin-lead-modal-shell {
+  display: grid;
+  gap: 18px;
+  padding: clamp(18px, 3vw, 30px);
+}
+
+.admin-lead-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 14px;
+}
+
+.admin-lead-detail-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.admin-lead-detail-list div {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.admin-lead-detail-list span,
+.admin-lead-modal label {
+  color: var(--lime);
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.admin-lead-detail-list strong {
+  color: var(--white);
+  overflow-wrap: anywhere;
+}
+
+.admin-lead-modal label {
+  display: grid;
+  gap: 8px;
+}
+
+.admin-lead-modal input,
+.admin-lead-modal select,
+.admin-lead-modal textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: var(--white);
+  background: rgba(0, 0, 0, 0.34);
+}
+
+.admin-training-table {
+  min-width: 1500px;
+}
+
 .admin-shell > *,
 .admin-orders {
   min-width: 0;
@@ -2909,7 +3013,9 @@ blockquote:hover {
 
   .admin-two-column,
   .admin-placeholder-grid,
-  .admin-mini-funnel {
+  .admin-mini-funnel,
+  .admin-lead-detail-grid,
+  .admin-lead-detail-list {
     grid-template-columns: 1fr;
   }
 

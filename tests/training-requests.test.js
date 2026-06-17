@@ -87,6 +87,56 @@ test("admin contact inquiry API is protected and supports status updates", () =>
   assert.match(endpoint, /archived/);
 });
 
+test("admin training requests API supports CRM statuses, notes, follow-ups, and history", () => {
+  const endpoint = read("api/admin/training-requests.js");
+
+  ["new", "contacted", "conversation", "follow_up", "booked", "declined"].forEach((status) => {
+    assert.match(endpoint, new RegExp(status));
+  });
+
+  [
+    "player_age",
+    "position",
+    "notes",
+    "last_contacted_at",
+    "next_follow_up_date",
+    "next_follow_up_note",
+    "training_request_events",
+    "note_added",
+    "follow_up_set",
+    "status_changed",
+  ].forEach((field) => assert.match(endpoint, new RegExp(field)));
+
+  assert.match(endpoint, /req\.method === "POST"/);
+  assert.match(endpoint, /req\.method === "PATCH"/);
+  assert.match(endpoint, /fetchTrainingEvents/);
+  assert.match(endpoint, /addTrainingEvent/);
+});
+
+test("admin panel exposes Leads & CRM metrics, filters, detail modal, and follow-ups", () => {
+  const html = read("admin-orders.html");
+  const script = read("admin-orders.js");
+
+  assert.match(html, /Leads & CRM/);
+  assert.match(html, /data-crm-metrics/);
+  assert.match(html, /data-crm-funnel/);
+  assert.match(html, /data-crm-followups/);
+  assert.match(html, /data-crm-filters/);
+  assert.match(html, /data-lead-modal/);
+  assert.match(html, /data-lead-detail-info/);
+  assert.match(html, /data-lead-history/);
+  assert.match(html, /data-lead-save-crm/);
+  assert.match(html, /data-lead-add-note/);
+  assert.match(html, /next_follow_up_date|Next follow-up date/);
+  assert.match(script, /renderCrmMetrics/);
+  assert.match(script, /renderCrmFollowups/);
+  assert.match(script, /openLeadModal/);
+  assert.match(script, /saveLeadCrm/);
+  assert.match(script, /addLeadNote/);
+  assert.match(script, /data-lead-open/);
+  assert.match(script, /crmFilterValue/);
+});
+
 test("admin panel includes a separate contact inquiries dashboard", () => {
   const html = read("admin-orders.html");
   const script = read("admin-orders.js");
@@ -123,6 +173,26 @@ test("Supabase schema defines contact inquiries and allowed statuses", () => {
   assert.match(schema, /'new'/);
   assert.match(schema, /'answered'/);
   assert.match(schema, /'archived'/);
+});
+
+test("Supabase schema defines CRM fields and lead event history", () => {
+  const schema = read("supabase/schema.sql");
+
+  [
+    "notes text",
+    "last_contacted_at timestamptz",
+    "next_follow_up_date date",
+    "next_follow_up_note text",
+    "updated_at timestamptz",
+    "conversation",
+    "follow_up",
+    "create table if not exists public.training_request_events",
+    "training_request_id uuid",
+    "event_type text",
+    "training_request_events_request_created_idx",
+    "training_requests_next_follow_up_idx",
+    "training_requests_status_created_idx",
+  ].forEach((pattern) => assert.match(schema, new RegExp(pattern.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))));
 });
 
 test("online program purchase controls do not use the training form", () => {

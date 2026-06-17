@@ -40,6 +40,11 @@ alter table public.training_requests add column if not exists referrer text;
 alter table public.training_requests add column if not exists device_type text;
 alter table public.training_requests add column if not exists browser text;
 alter table public.training_requests add column if not exists session_id text;
+alter table public.training_requests add column if not exists notes text;
+alter table public.training_requests add column if not exists last_contacted_at timestamptz;
+alter table public.training_requests add column if not exists next_follow_up_date date;
+alter table public.training_requests add column if not exists next_follow_up_note text;
+alter table public.training_requests add column if not exists updated_at timestamptz default now();
 
 update public.training_requests
 set applicant_type = who
@@ -60,7 +65,7 @@ alter table public.training_requests
 
 alter table public.training_requests
   add constraint training_requests_status_check
-  check (status in ('new', 'contacted', 'booked', 'declined'));
+  check (status in ('new', 'contacted', 'conversation', 'follow_up', 'booked', 'declined'));
 
 alter table public.training_requests enable row level security;
 
@@ -81,6 +86,56 @@ create index if not exists training_requests_utm_campaign_idx
 
 create index if not exists training_requests_session_id_idx
   on public.training_requests (session_id);
+
+create index if not exists training_requests_next_follow_up_idx
+  on public.training_requests (next_follow_up_date)
+  where next_follow_up_date is not null;
+
+create index if not exists training_requests_status_created_idx
+  on public.training_requests (status, created_at desc);
+
+create table if not exists public.training_request_events (
+  id uuid primary key default gen_random_uuid(),
+  training_request_id uuid not null references public.training_requests(id) on delete cascade,
+  event_type text not null check (event_type in ('created', 'status_changed', 'note_added', 'follow_up_set', 'booked', 'declined')),
+  previous_status text,
+  new_status text,
+  note text,
+  follow_up_date date,
+  follow_up_note text,
+  created_at timestamptz not null default now()
+);
+
+alter table public.training_request_events add column if not exists training_request_id uuid;
+alter table public.training_request_events add column if not exists event_type text;
+alter table public.training_request_events add column if not exists previous_status text;
+alter table public.training_request_events add column if not exists new_status text;
+alter table public.training_request_events add column if not exists note text;
+alter table public.training_request_events add column if not exists follow_up_date date;
+alter table public.training_request_events add column if not exists follow_up_note text;
+alter table public.training_request_events add column if not exists created_at timestamptz default now();
+
+alter table public.training_request_events
+  drop constraint if exists training_request_events_training_request_id_fkey;
+
+alter table public.training_request_events
+  add constraint training_request_events_training_request_id_fkey
+  foreign key (training_request_id) references public.training_requests(id) on delete cascade;
+
+alter table public.training_request_events
+  drop constraint if exists training_request_events_event_type_check;
+
+alter table public.training_request_events
+  add constraint training_request_events_event_type_check
+  check (event_type in ('created', 'status_changed', 'note_added', 'follow_up_set', 'booked', 'declined'));
+
+alter table public.training_request_events enable row level security;
+
+create index if not exists training_request_events_request_created_idx
+  on public.training_request_events (training_request_id, created_at desc);
+
+create index if not exists training_request_events_created_at_idx
+  on public.training_request_events (created_at desc);
 
 create table if not exists public.contact_inquiries (
   id uuid primary key default gen_random_uuid(),

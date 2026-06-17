@@ -32,7 +32,7 @@
       <nav class="admin-sidebar-nav" aria-label="Admin navigation">
         <button class="is-active" type="button" data-admin-nav="dashboard"><span>01</span>Dashboard</button>
         <button type="button" data-admin-nav="landing"><span>02</span>Landing Pages</button>
-        <button type="button" data-admin-nav="leads"><span>03</span>Leads</button>
+        <button type="button" data-admin-nav="leads"><span>03</span>Leads & CRM</button>
         <button type="button" data-admin-nav="sales"><span>04</span>Sales</button>
         <button type="button" data-admin-nav="marketing"><span>05</span>Marketing</button>
         <button type="button" data-admin-nav="analytics"><span>06</span>Analytics</button>
@@ -195,6 +195,72 @@
           </div>
         </div>
 
+        <div class="admin-analytics-summary admin-crm-metrics" data-crm-metrics></div>
+        <div class="admin-funnel-visual admin-crm-funnel" data-crm-funnel></div>
+
+        <section class="admin-module-card admin-followups-card">
+          <div class="admin-dashboard-title">
+            <div>
+              <p class="eyebrow">Today</p>
+              <h3>Follow-ups за днес</h3>
+            </div>
+          </div>
+          <div class="admin-activity-list" data-crm-followups></div>
+        </section>
+
+        <form class="admin-analytics-filters admin-crm-filters" data-crm-filters>
+          <label class="admin-search">
+            <span>Search</span>
+            <input
+              type="search"
+              name="search"
+              placeholder="Име, телефон, град или бележка"
+              data-training-request-search
+            />
+          </label>
+          <label>Status
+            <select name="status" data-crm-filter="status">
+              <option value="all">Всички</option>
+              <option value="new">Нова</option>
+              <option value="contacted">Потърсен</option>
+              <option value="conversation">Разговор проведен</option>
+              <option value="follow_up">Follow Up</option>
+              <option value="booked">Записан</option>
+              <option value="declined">Отказан</option>
+            </select>
+          </label>
+          <label>City<input type="text" name="city" placeholder="София" data-crm-filter="city" /></label>
+          <label>UTM source<input type="text" name="utm_source" placeholder="instagram" data-crm-filter="utm_source" /></label>
+          <label>UTM campaign<input type="text" name="utm_campaign" placeholder="campaign" data-crm-filter="utm_campaign" /></label>
+          <label>Page variant<input type="text" name="page_variant" placeholder="individual-training" data-crm-filter="page_variant" /></label>
+          <label>Applicant
+            <select name="applicant_type" data-crm-filter="applicant_type">
+              <option value="all">Всички</option>
+              <option value="Моето дете">Моето дете</option>
+              <option value="Себе си">Себе си</option>
+            </select>
+          </label>
+          <label>Period
+            <select name="period" data-crm-filter="period">
+              <option value="all">All time</option>
+              <option value="today">Today</option>
+              <option value="7d">Last 7 days</option>
+              <option value="30d">Last 30 days</option>
+            </select>
+          </label>
+          <label>Follow-up
+            <select name="follow_up" data-crm-filter="follow_up">
+              <option value="all">Всички</option>
+              <option value="today">Follow-up today</option>
+              <option value="missing">Без последващ контакт</option>
+            </select>
+          </label>
+          <div class="admin-analytics-actions">
+            <button class="btn btn-primary" type="submit">Филтрирай</button>
+            <button class="btn btn-secondary" type="button" data-crm-reset>Изчисти</button>
+          </div>
+        </form>
+
         <div class="admin-controls">
           <label class="admin-search">
             <span>Търсене</span>
@@ -227,9 +293,15 @@
                 <th>Име</th>
                 <th>Град</th>
                 <th>Телефон</th>
+                <th>Възраст</th>
+                <th>Позиция</th>
                 <th>Landing page</th>
                 <th>Кампания</th>
                 <th>Статус</th>
+                <th>Последен контакт</th>
+                <th>Следващ контакт</th>
+                <th>Бележка</th>
+                <th>Детайли</th>
               </tr>
             </thead>
             <tbody data-training-request-table></tbody>
@@ -620,6 +692,57 @@
           </table>
         </div>
       </section>
+
+      <dialog class="admin-lead-modal" data-lead-modal>
+        <form method="dialog" class="admin-lead-modal-shell">
+          <div class="admin-section-heading">
+            <div>
+              <p class="eyebrow">Lead detail</p>
+              <h2 data-lead-modal-title>Lead</h2>
+              <p data-lead-modal-subtitle></p>
+            </div>
+            <button class="btn btn-secondary" type="submit">Затвори</button>
+          </div>
+
+          <div class="admin-lead-detail-grid">
+            <section class="admin-module-card">
+              <h3>Основна информация</h3>
+              <div class="admin-lead-detail-list" data-lead-detail-info></div>
+            </section>
+            <section class="admin-module-card">
+              <h3>CRM управление</h3>
+              <label>Status
+                <select data-lead-detail-status>
+                  <option value="new">Нова</option>
+                  <option value="contacted">Потърсен</option>
+                  <option value="conversation">Разговор проведен</option>
+                  <option value="follow_up">Follow Up</option>
+                  <option value="booked">Записан</option>
+                  <option value="declined">Отказан</option>
+                </select>
+              </label>
+              <label>Next follow-up date
+                <input type="date" data-lead-follow-up-date />
+              </label>
+              <label>Next follow-up note
+                <textarea rows="3" data-lead-follow-up-note></textarea>
+              </label>
+              <button class="btn btn-primary" type="button" data-lead-save-crm>Запази CRM</button>
+            </section>
+          </div>
+
+          <section class="admin-module-card">
+            <h3>Бележки</h3>
+            <textarea rows="4" placeholder="Добави нова бележка..." data-lead-new-note></textarea>
+            <button class="btn btn-secondary" type="button" data-lead-add-note>Добави бележка</button>
+          </section>
+
+          <section class="admin-module-card">
+            <h3>История на контактите</h3>
+            <div class="admin-activity-list" data-lead-history></div>
+          </section>
+        </form>
+      </dialog>
     </section>
   </main>
 

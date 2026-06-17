@@ -14,6 +14,22 @@ const trainingStatusButtons = [...document.querySelectorAll("[data-training-requ
 const trainingRefreshButton = document.querySelector("[data-training-request-refresh]");
 const trainingEmptyState = document.querySelector("[data-training-request-empty]");
 const trainingErrorState = document.querySelector("[data-training-request-error]");
+const crmMetrics = document.querySelector("[data-crm-metrics]");
+const crmFunnel = document.querySelector("[data-crm-funnel]");
+const crmFollowups = document.querySelector("[data-crm-followups]");
+const crmFiltersForm = document.querySelector("[data-crm-filters]");
+const crmResetButton = document.querySelector("[data-crm-reset]");
+const leadModal = document.querySelector("[data-lead-modal]");
+const leadModalTitle = document.querySelector("[data-lead-modal-title]");
+const leadModalSubtitle = document.querySelector("[data-lead-modal-subtitle]");
+const leadDetailInfo = document.querySelector("[data-lead-detail-info]");
+const leadDetailStatus = document.querySelector("[data-lead-detail-status]");
+const leadFollowUpDate = document.querySelector("[data-lead-follow-up-date]");
+const leadFollowUpNote = document.querySelector("[data-lead-follow-up-note]");
+const leadSaveCrmButton = document.querySelector("[data-lead-save-crm]");
+const leadNewNote = document.querySelector("[data-lead-new-note]");
+const leadAddNoteButton = document.querySelector("[data-lead-add-note]");
+const leadHistory = document.querySelector("[data-lead-history]");
 const contactInquiryTableBody = document.querySelector("[data-contact-inquiry-table]");
 const contactInquiryCountNode = document.querySelector("[data-contact-inquiry-count]");
 const contactInquirySearchInput = document.querySelector("[data-contact-inquiry-search]");
@@ -71,6 +87,7 @@ let searchTerm = "";
 let trainingRequests = [];
 let selectedTrainingStatus = "all";
 let trainingSearchTerm = "";
+let selectedLeadId = "";
 let contactInquiries = [];
 let selectedContactInquiryStatus = "all";
 let contactInquirySearchTerm = "";
@@ -95,8 +112,8 @@ const adminViewMeta = {
     subtitle: "Compare Individual Training, Summer Program and general website performance.",
   },
   leads: {
-    title: "Leads",
-    subtitle: "All individual training requests with source, campaign, city and status.",
+    title: "Leads & CRM",
+    subtitle: "Manage individual training leads, statuses, notes, follow-ups and contact history.",
   },
   sales: {
     title: "Sales",
@@ -130,10 +147,14 @@ const adminViewMeta = {
 
 const trainingStatusLabels = {
   new: "Нова",
-  contacted: "Свързан",
+  contacted: "Потърсен",
+  conversation: "Разговор проведен",
+  follow_up: "Follow Up",
   booked: "Записан",
   declined: "Отказан",
 };
+
+const crmPipelineOrder = ["new", "contacted", "conversation", "follow_up", "booked", "declined"];
 
 const orderField = (order, snakeKey, camelKey) => order?.[snakeKey] ?? order?.[camelKey] ?? "";
 
@@ -178,6 +199,22 @@ const formatMinorAmount = (amount, currency = "eur") =>
 const rate = (part, total) => (total ? `${Number(((part / total) * 100).toFixed(2))}%` : "0%");
 
 const formatPercent = (value) => `${Number(value || 0).toFixed(2)}%`;
+
+const formatDateOnly = (value) => {
+  if (!value) return "-";
+  const date = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(date.getTime())) return "-";
+  return new Intl.DateTimeFormat("bg-BG", { dateStyle: "medium" }).format(date);
+};
+
+const todayYmd = () => {
+  const now = new Date();
+  const offset = now.getTimezoneOffset();
+  return new Date(now.getTime() - offset * 60 * 1000).toISOString().slice(0, 10);
+};
+
+const crmFilterValue = (name) =>
+  String(crmFiltersForm?.querySelector(`[name="${name}"]`)?.value || "").trim().toLowerCase();
 
 const setAdminView = (view = "dashboard") => {
   const nextView = adminViewMeta[view] ? view : "dashboard";
@@ -332,12 +369,90 @@ const renderOrders = () => {
 const getFilteredTrainingRequests = () =>
   trainingRequests.filter((request) => {
     const status = request.status || "new";
-    const haystack = [request.applicant_type, request.name, request.city, request.phone].join(" ").toLowerCase();
-    return (
-      (selectedTrainingStatus === "all" || status === selectedTrainingStatus) &&
-      (!trainingSearchTerm || haystack.includes(trainingSearchTerm))
-    );
+    const filters = {
+      status: crmFilterValue("status") || selectedTrainingStatus,
+      city: crmFilterValue("city"),
+      utm_source: crmFilterValue("utm_source"),
+      utm_campaign: crmFilterValue("utm_campaign"),
+      page_variant: crmFilterValue("page_variant"),
+      applicant_type: crmFilterValue("applicant_type"),
+      period: crmFilterValue("period"),
+      follow_up: crmFilterValue("follow_up"),
+    };
+    const haystack = [
+      request.applicant_type,
+      request.name,
+      request.city,
+      request.phone,
+      request.notes,
+      request.next_follow_up_note,
+    ]
+      .join(" ")
+      .toLowerCase();
+    const createdAt = request.created_at ? new Date(request.created_at) : null;
+    const now = new Date();
+    const today = todayYmd();
+    if (filters.status && filters.status !== "all" && status !== filters.status) return false;
+    if (filters.city && !String(request.city || "").toLowerCase().includes(filters.city)) return false;
+    if (filters.utm_source && String(request.utm_source || "").toLowerCase() !== filters.utm_source) return false;
+    if (filters.utm_campaign && String(request.utm_campaign || "").toLowerCase() !== filters.utm_campaign) return false;
+    if (filters.page_variant && String(request.page_variant || "").toLowerCase() !== filters.page_variant) return false;
+    if (filters.applicant_type && filters.applicant_type !== "all" && String(request.applicant_type || "").toLowerCase() !== filters.applicant_type) return false;
+    if (filters.follow_up === "today" && request.next_follow_up_date !== today) return false;
+    if (filters.follow_up === "missing" && request.next_follow_up_date) return false;
+    if (filters.period && filters.period !== "all" && createdAt && !Number.isNaN(createdAt.getTime())) {
+      const days = filters.period === "today" ? 1 : filters.period === "7d" ? 7 : filters.period === "30d" ? 30 : 0;
+      if (days) {
+        const start = new Date(now);
+        start.setDate(start.getDate() - (days - 1));
+        start.setHours(0, 0, 0, 0);
+        if (createdAt < start) return false;
+      }
+    }
+    return !trainingSearchTerm || haystack.includes(trainingSearchTerm);
   });
+
+const renderCrmMetrics = () => {
+  if (!crmMetrics) return;
+  const counts = Object.fromEntries(crmPipelineOrder.map((status) => [status, 0]));
+  trainingRequests.forEach((request) => {
+    counts[request.status || "new"] = (counts[request.status || "new"] || 0) + 1;
+  });
+  crmMetrics.innerHTML = dashboardMetricCards([
+    ["Нови leads", counts.new || 0],
+    ["Потърсени", counts.contacted || 0],
+    ["Разговори", counts.conversation || 0],
+    ["Follow-ups", counts.follow_up || 0],
+    ["Записани", counts.booked || 0],
+    ["Отказани", counts.declined || 0],
+    ["Lead-to-booked", rate(counts.booked || 0, trainingRequests.length)],
+  ]);
+  renderFunnelVisual(
+    crmFunnel,
+    crmPipelineOrder.map((status) => [trainingStatusLabels[status] || status, counts[status] || 0]),
+  );
+};
+
+const renderCrmFollowups = () => {
+  if (!crmFollowups) return;
+  const today = todayYmd();
+  const rows = trainingRequests
+    .filter((request) => request.next_follow_up_date === today && !["booked", "declined"].includes(request.status))
+    .sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")));
+  crmFollowups.innerHTML =
+    rows
+      .map(
+        (request) => `
+          <article class="admin-activity-item">
+            <span>${escapeHtml(trainingStatusLabels[request.status] || request.status || "Нова")}</span>
+            <strong>${escapeHtml(request.name || "-")}</strong>
+            <p>${escapeHtml([request.city, request.phone].filter(Boolean).join(" · ") || "-")}</p>
+            <small>${escapeHtml(request.next_follow_up_note || "Няма бележка")}</small>
+          </article>
+        `,
+      )
+      .join("") || '<p class="admin-state">Няма follow-ups за днес.</p>';
+};
 
 const renderTrainingRequests = () => {
   if (!trainingTableBody) return;
@@ -362,6 +477,8 @@ const renderTrainingRequests = () => {
           <td><strong>${escapeHtml(request.name || "-")}</strong></td>
           <td>${escapeHtml(request.city || "-")}</td>
           <td><a href="tel:${escapeHtml(request.phone || "")}">${escapeHtml(request.phone || "-")}</a></td>
+          <td>${escapeHtml(request.player_age || "-")}</td>
+          <td>${escapeHtml(request.position || "-")}</td>
           <td>
             <strong>${escapeHtml(request.page_variant || "-")}</strong>
             ${request.landing_page_url ? `<span>${escapeHtml(request.landing_page_url)}</span>` : ""}
@@ -380,10 +497,19 @@ const renderTrainingRequests = () => {
               ${options}
             </select>
           </td>
+          <td>${escapeHtml(formatDate(request.last_contacted_at))}</td>
+          <td>
+            <strong>${escapeHtml(formatDateOnly(request.next_follow_up_date))}</strong>
+            ${request.next_follow_up_note ? `<span>${escapeHtml(request.next_follow_up_note)}</span>` : ""}
+          </td>
+          <td class="admin-message-cell">${escapeHtml(request.notes || "-")}</td>
+          <td><button class="btn btn-secondary admin-mini-button" type="button" data-lead-open="${escapeHtml(request.id)}">Отвори</button></td>
         </tr>
       `;
     })
     .join("");
+  renderCrmMetrics();
+  renderCrmFollowups();
   renderAdminOverview();
   renderMarketingDashboard();
 };
@@ -1087,6 +1213,141 @@ const loadLandingAnalytics = async () => {
   }
 };
 
+const selectedLead = () => trainingRequests.find((request) => request.id === selectedLeadId);
+
+const renderLeadModal = () => {
+  const lead = selectedLead();
+  if (!lead || !leadModal) return;
+  if (leadModalTitle) leadModalTitle.textContent = lead.name || "Lead";
+  if (leadModalSubtitle) {
+    leadModalSubtitle.textContent = [lead.city, lead.phone, trainingStatusLabels[lead.status] || lead.status]
+      .filter(Boolean)
+      .join(" · ");
+  }
+  if (leadDetailStatus) leadDetailStatus.value = lead.status || "new";
+  if (leadFollowUpDate) leadFollowUpDate.value = lead.next_follow_up_date || "";
+  if (leadFollowUpNote) leadFollowUpNote.value = lead.next_follow_up_note || "";
+  if (leadNewNote) leadNewNote.value = "";
+  if (leadDetailInfo) {
+    const items = [
+      ["Дата", formatDate(lead.created_at)],
+      ["Име", lead.name || "-"],
+      ["Телефон", lead.phone || "-"],
+      ["Град", lead.city || "-"],
+      ["Кого записват", lead.applicant_type || lead.who || "-"],
+      ["Възраст", lead.player_age || "-"],
+      ["Позиция", lead.position || "-"],
+      ["UTM source", lead.utm_source || "-"],
+      ["UTM medium", lead.utm_medium || "-"],
+      ["UTM campaign", lead.utm_campaign || "-"],
+      ["UTM content", lead.utm_content || "-"],
+      ["UTM term", lead.utm_term || "-"],
+      ["Page variant", lead.page_variant || "-"],
+      ["Landing page", lead.landing_page_url || "-"],
+      ["Referrer", lead.referrer || "-"],
+      ["Device", lead.device_type || "-"],
+      ["Browser", lead.browser || "-"],
+      ["Session ID", lead.session_id || "-"],
+      ["Last contacted", formatDate(lead.last_contacted_at)],
+      ["Next follow-up", formatDateOnly(lead.next_follow_up_date)],
+      ["Current notes", lead.notes || "-"],
+    ];
+    leadDetailInfo.innerHTML = items
+      .map(
+        ([label, value]) => `
+          <div>
+            <span>${escapeHtml(label)}</span>
+            <strong>${escapeHtml(value)}</strong>
+          </div>
+        `,
+      )
+      .join("");
+  }
+  if (leadHistory) {
+    const events = Array.isArray(lead.events) ? lead.events : [];
+    leadHistory.innerHTML =
+      events
+        .map((event) => {
+          const statusText = [event.previous_status, event.new_status]
+            .filter(Boolean)
+            .map((status) => trainingStatusLabels[status] || status)
+            .join(" → ");
+          const detail = event.note || event.follow_up_note || statusText || event.event_type;
+          return `
+            <article class="admin-activity-item">
+              <span>${escapeHtml(event.event_type || "event")}</span>
+              <strong>${escapeHtml(detail || "-")}</strong>
+              <p>${escapeHtml(event.follow_up_date ? `Follow-up: ${formatDateOnly(event.follow_up_date)}` : "")}</p>
+              <small>${escapeHtml(formatDate(event.created_at))}</small>
+            </article>
+          `;
+        })
+        .join("") || '<p class="admin-state">Няма история.</p>';
+  }
+};
+
+const openLeadModal = (id) => {
+  selectedLeadId = id;
+  renderLeadModal();
+  if (leadModal?.showModal) leadModal.showModal();
+};
+
+const replaceTrainingRequest = (request) => {
+  if (!request?.id) return;
+  trainingRequests = trainingRequests.map((item) => (item.id === request.id ? { ...item, ...request } : item));
+  renderTrainingRequests();
+  renderLandingAnalytics();
+  renderLeadModal();
+};
+
+const saveLeadCrm = async () => {
+  const lead = selectedLead();
+  if (!lead) return;
+  setLoading(leadSaveCrmButton, true, "Запази CRM", "Запазване...");
+  try {
+    const response = await fetch("/api/admin/training-requests", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: lead.id,
+        status: leadDetailStatus?.value || lead.status || "new",
+        next_follow_up_date: leadFollowUpDate?.value || null,
+        next_follow_up_note: leadFollowUpNote?.value || "",
+      }),
+    });
+    const data = await response.json();
+    if (handleUnauthorized(response)) return;
+    if (!response.ok) throw new Error(data.error || "CRM data could not be saved.");
+    replaceTrainingRequest(data.request);
+  } catch (error) {
+    setError(trainingErrorState, error.message || "CRM data could not be saved.");
+  } finally {
+    setLoading(leadSaveCrmButton, false, "Запази CRM", "Запазване...");
+  }
+};
+
+const addLeadNote = async () => {
+  const lead = selectedLead();
+  const note = leadNewNote?.value?.trim() || "";
+  if (!lead || note.length < 2) return;
+  setLoading(leadAddNoteButton, true, "Добави бележка", "Запазване...");
+  try {
+    const response = await fetch("/api/admin/training-requests", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: lead.id, note }),
+    });
+    const data = await response.json();
+    if (handleUnauthorized(response)) return;
+    if (!response.ok) throw new Error(data.error || "Note could not be saved.");
+    replaceTrainingRequest(data.request);
+  } catch (error) {
+    setError(trainingErrorState, error.message || "Note could not be saved.");
+  } finally {
+    setLoading(leadAddNoteButton, false, "Добави бележка", "Запазване...");
+  }
+};
+
 const updateTrainingRequestStatus = async (select) => {
   const id = select.dataset.requestId;
   const previousStatus = trainingRequests.find((request) => request.id === id)?.status || "new";
@@ -1102,10 +1363,7 @@ const updateTrainingRequestStatus = async (select) => {
     if (handleUnauthorized(response)) return;
     if (!response.ok) throw new Error(data.error || "Статусът не беше запазен.");
 
-    trainingRequests = trainingRequests.map((request) =>
-      request.id === id ? { ...request, status: select.value } : request,
-    );
-    renderTrainingRequests();
+    replaceTrainingRequest(data.request || { id, status: select.value });
   } catch (error) {
     select.value = previousStatus;
     setError(trainingErrorState, error.message || "Статусът не беше запазен.");
@@ -1159,6 +1417,30 @@ trainingSearchInput?.addEventListener("input", (event) => {
   renderTrainingRequests();
 });
 
+crmFiltersForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  trainingSearchTerm = trainingSearchInput?.value?.trim().toLowerCase() || "";
+  renderTrainingRequests();
+});
+
+crmFiltersForm?.addEventListener("input", () => {
+  trainingSearchTerm = trainingSearchInput?.value?.trim().toLowerCase() || "";
+  renderTrainingRequests();
+});
+
+crmFiltersForm?.addEventListener("change", () => {
+  trainingSearchTerm = trainingSearchInput?.value?.trim().toLowerCase() || "";
+  renderTrainingRequests();
+});
+
+crmResetButton?.addEventListener("click", () => {
+  crmFiltersForm?.reset();
+  trainingSearchTerm = "";
+  selectedTrainingStatus = "all";
+  trainingStatusButtons.forEach((item) => item.classList.toggle("is-active", item.dataset.trainingRequestStatusFilter === "all"));
+  renderTrainingRequests();
+});
+
 trainingStatusButtons.forEach((button) => {
   button.addEventListener("click", () => {
     selectedTrainingStatus = button.dataset.trainingRequestStatusFilter || "all";
@@ -1171,6 +1453,14 @@ trainingTableBody?.addEventListener("change", (event) => {
   const select = event.target.closest("[data-training-request-status]");
   if (select) updateTrainingRequestStatus(select);
 });
+
+trainingTableBody?.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-lead-open]");
+  if (button) openLeadModal(button.dataset.leadOpen);
+});
+
+leadSaveCrmButton?.addEventListener("click", saveLeadCrm);
+leadAddNoteButton?.addEventListener("click", addLeadNote);
 
 contactInquirySearchInput?.addEventListener("input", (event) => {
   contactInquirySearchTerm = event.target.value.trim().toLowerCase();
