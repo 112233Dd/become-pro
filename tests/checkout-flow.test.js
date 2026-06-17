@@ -198,7 +198,15 @@ test("fulfillment email includes professional HTML and plain-text access", () =>
   const webhook = read("api/stripe/webhook.js");
 
   assert.match(webhook, /Достъп до твоята Become Pro програма/);
-  assert.match(webhook, /Отвори програмата/);
+  assert.match(webhook, /Поздравления! 🎉/);
+  assert.match(webhook, /Току-що направи първата крачка към по-добра подготовка през лятото/);
+  assert.match(webhook, /Плащането е успешно\. По-долу ще откриеш достъпа до Лятната програма/);
+  assert.match(webhook, /Отвори Лятната програма/);
+  assert.match(webhook, /Какво следва\?/);
+  assert.match(webhook, /Прегледай всички модули/);
+  assert.match(webhook, /Следвай плана стъпка по стъпка/);
+  assert.match(webhook, /Програмата е създадена, за да ти помогне да тренираш с ясна структура/);
+  assert.match(webhook, /Instagram: @become_pro2024/);
   assert.match(webhook, /become\.pro2024@gmail\.com/);
   assert.match(webhook, /escapeHtml/);
   assert.match(webhook, /https:\/\/become-pro-ivory\.vercel\.app\//);
