@@ -95,13 +95,23 @@ test("landing page uses real training media, player proof, FAQ, and compact lega
   const html = read("individual-training.html");
 
   assert.doesNotMatch(html, /assets\/videos\/hero-hat-swap-game\.mp4/);
-  assert.match(html, /assets\/videos\/one-touch-passing-drop\.mp4/);
+  assert.match(html, /training-video-card-grid/);
+  assert.match(html, /assets\/videos\/individual-tech-first-touch\.mp4/);
+  assert.match(html, /assets\/videos\/individual-speed-explosiveness\.mp4/);
+  assert.match(html, /assets\/videos\/individual-decisions-game-situations\.mp4/);
+  assert.match(html, /assets\/videos\/individual-tech-first-touch-poster\.jpg/);
+  assert.match(html, /assets\/videos\/individual-speed-explosiveness-poster\.jpg/);
+  assert.match(html, /assets\/videos\/individual-decisions-game-situations-poster\.jpg/);
   assert.match(html, /coach-yordan-zhelev\.png/);
   assert.match(html, /coach-achievement-list/);
   assert.match(html, /coach-cta-panel/);
-  assert.match(html, /video-cta-panel/);
+  assert.match(html, /training-video-cards-cta/);
   assert.match(html, /faq-cta-panel/);
-  assert.match(html, /Виж как изглежда една индивидуална тренировка/);
+  assert.match(html, /ВИЖ КАК ИЗГЛЕЖДА ЕДНА ИНДИВИДУАЛНА ТРЕНИРОВКА/);
+  assert.match(html, /Реални тренировки\. Реални играчи\. Реална обратна връзка\./);
+  assert.match(html, /Техника и първо докосване/);
+  assert.match(html, /Скорост и експлозивност/);
+  assert.match(html, /Решения и игрови ситуации/);
   assert.match(html, /За каква възраст са тренировките\?/);
   assert.match(html, /Къде се провеждат\?/);
   assert.match(html, /Колко продължава една тренировка\?/);

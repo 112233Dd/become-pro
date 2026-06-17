@@ -238,6 +238,75 @@ img, video { display: block; max-width: 100%; }
 .video-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 50px; align-items: center; }
 .video-grid video { width: 100%; border: 1px solid rgba(245,196,0,.3); border-radius: 28px; background: #111; }
 .video-cta-panel { grid-column: 1 / -1; }
+.training-video-cards-section {
+  background:
+    radial-gradient(circle at 50% 12%, rgba(245,196,0,.13), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
+}
+.training-video-heading {
+  max-width: 900px;
+  margin: 0 auto clamp(28px, 4vw, 46px);
+  text-align: center;
+}
+.training-video-heading h2,
+.training-video-heading p {
+  margin-left: auto;
+  margin-right: auto;
+}
+.training-video-heading p:last-child {
+  max-width: 660px;
+}
+.training-video-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 2vw, 24px);
+}
+.training-video-card {
+  overflow: hidden;
+  border: 1px solid rgba(245,196,0,.25);
+  border-radius: 28px;
+  background:
+    linear-gradient(145deg, rgba(245,196,0,.09), rgba(255,255,255,.035) 34%, rgba(255,255,255,.015)),
+    #11110e;
+  box-shadow: 0 22px 60px rgba(0,0,0,.32);
+  transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+}
+.training-video-card:hover {
+  border-color: rgba(245,196,0,.55);
+  box-shadow: 0 28px 76px rgba(0,0,0,.46), 0 0 34px rgba(245,196,0,.12);
+  transform: translateY(-4px);
+}
+.training-video-card-media {
+  overflow: hidden;
+  aspect-ratio: 9 / 16;
+  background: #050505;
+}
+.training-video-card video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #050505;
+  transition: transform .28s ease;
+}
+.training-video-card h3 {
+  margin: 0;
+  padding: 18px 20px 22px;
+  color: var(--cream);
+  font-size: clamp(18px, 1.7vw, 23px);
+  line-height: 1.15;
+}
+.training-video-cards-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(24px, 4vw, 38px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .training-video-card:hover video {
+    transform: scale(1.035);
+  }
+}
 
 .faq-shell { display: grid; grid-template-columns: .75fr 1.25fr; gap: 56px; }
 .landing-faq { display: grid; gap: 10px; }
@@ -265,6 +334,7 @@ img, video { display: block; max-width: 100%; }
 
 @media (max-width: 900px) {
   .hero-grid, .video-grid, .faq-shell, .form-grid { grid-template-columns: 1fr; }
+  .training-video-card-grid { grid-template-columns: 1fr; max-width: 440px; margin-inline: auto; }
   .coach-proof-grid { grid-template-columns: 1fr; }
   .hero-media, .hero-media video { min-height: 520px; }
   .coach-proof-media img { min-height: 480px; }
