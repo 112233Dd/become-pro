@@ -53,8 +53,63 @@ button, a { transition: 0.2s ease; }
   max-width: 720px; color: var(--summer-muted); font-size: clamp(17px,2vw,21px); line-height: 1.65;
 }
 .summer-price-inline { display: flex; align-items: center; gap: 14px; margin: 28px 0 18px; }
-.summer-price-inline strong { color: var(--summer-gold); font-size: clamp(38px,5vw,60px); }
-.summer-price-inline span, .summer-trust-line, .summer-checkout-status { color: var(--summer-muted); font-size: 13px; font-weight: 700; }
+.summer-price-stack,
+.summer-price-display {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+.summer-price-display {
+  justify-content: center;
+  max-width: 760px;
+  margin-bottom: 18px;
+}
+.summer-price-inline strong,
+.summer-price-display .summer-new-price {
+  color: var(--summer-gold);
+  font-size: clamp(38px,5vw,60px);
+}
+.summer-price-display h2.summer-new-price {
+  margin: 0;
+  line-height: .95;
+}
+.summer-old-price-label,
+.summer-new-price-label {
+  width: 100%;
+  color: var(--summer-muted);
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.summer-old-price {
+  color: rgba(255,255,255,.56);
+  font-size: clamp(22px,2.6vw,34px);
+  font-weight: 900;
+  line-height: 1;
+  text-decoration: line-through;
+  text-decoration-color: rgba(255,67,67,.9);
+  text-decoration-thickness: 3px;
+}
+.summer-save-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 7px 12px;
+  border: 1px solid rgba(245,196,0,.46);
+  border-radius: 999px;
+  color: #050505;
+  background: linear-gradient(135deg, var(--summer-gold), var(--summer-gold-soft));
+  box-shadow: 0 14px 34px rgba(245,196,0,.18);
+  font-size: 13px;
+  font-weight: 1000;
+  letter-spacing: .01em;
+}
+.summer-price-note,
+.summer-trust-line,
+.summer-checkout-status { color: var(--summer-muted); font-size: 13px; font-weight: 700; }
 .summer-primary-cta { min-height: 56px; padding: 15px 24px; font-size: 16px; box-shadow: 0 16px 36px rgba(245,196,0,.16); }
 .summer-primary-cta:hover, .summer-header-cta:hover, .summer-mobile-sticky button:hover { background: var(--summer-gold-soft); transform: translateY(-1px); }
 .summer-primary-cta:focus-visible, .summer-header-cta:focus-visible, .summer-mobile-sticky button:focus-visible, .summer-footer a:focus-visible, .summer-brand:focus-visible {

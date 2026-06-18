@@ -70,7 +70,11 @@ test("main price and trust block is immediately after the contents section", () 
   assert.ok(sectionIndex(html, "summer-training-proof") > sectionIndex(html, "summer-price"));
   assert.match(contents, /data-track-view="view_program_contents"/);
   assert.match(price, /data-track-view="view_price"/);
-  assert.match(price, /Промо цена 0,50 €/);
+  assert.match(price, /Стара цена:/);
+  assert.match(price, /119\.99 лв/);
+  assert.match(price, /Нова цена:/);
+  assert.match(price, /0,50\s*€/);
+  assert.match(price, /Спестяваш 99%/);
   assert.match(price, /data-summer-checkout/);
   assert.match(price, /summer-price-trust-grid/);
   assert.equal((price.match(/<article>/g) || []).length, 3);
@@ -158,7 +162,7 @@ test("strategic purchase CTAs all use the summer checkout handler", () => {
   assert.ok((html.match(/data-primary-cta/g) || []).length >= 8);
   assert.match(html, /data-mobile-sticky-cta[\s\S]*Вземи програмата - 0,50 €/);
   assert.match(sectionHtml(html, "summer-training-proof"), /href="#summer-contents"/);
-  assert.match(sectionHtml(html, "summer-price"), /Купи сега · Промо цена 0,50 €/);
+  assert.match(sectionHtml(html, "summer-price"), /Купи сега за 0,50 €/);
 });
 
 test("summer program landing has isolated premium responsive styling", () => {
