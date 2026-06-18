@@ -18,6 +18,7 @@ const EVENT_NAMES = new Set([
   "view_price",
   "click_primary_cta",
   "click_secondary_cta",
+  "click_sticky_cta",
   "form_start",
   "form_submit_success",
   "form_submit_error",

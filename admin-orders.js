@@ -882,6 +882,7 @@ const renderLandingAnalytics = () => {
       ["Unique Sessions", individualSummary.uniqueSessions || 0],
       ["CTA Clicks", individualSummary.primaryCtaClicks || 0],
       ["Secondary CTA Clicks", individualSummary.secondaryCtaClicks || 0],
+      ["Sticky CTA Clicks", individualSummary.stickyCtaClicks || 0],
       ["Scroll 25%", individualSummary.scroll25 || 0],
       ["Scroll 50%", individualSummary.scroll50 || 0],
       ["Scroll 75%", individualSummary.scroll75 || 0],

@@ -7,6 +7,7 @@
     "scroll_90",
     "click_primary_cta",
     "click_secondary_cta",
+    "click_sticky_cta",
     "form_start",
     "form_submit_success",
     "form_submit_error",
@@ -90,6 +91,33 @@
   document.querySelectorAll("[data-primary-cta]").forEach((button) => {
     button.addEventListener("click", () => track("click_primary_cta"));
   });
+  const stickyCta = document.querySelector("[data-mobile-sticky-cta]");
+  const trainingFormSection = document.getElementById("training-form");
+  let isTrainingFormVisible = false;
+  stickyCta?.addEventListener("click", () => track("click_sticky_cta"));
+
+  const updateStickyCta = () => {
+    if (!stickyCta) return;
+    const isMobile = window.matchMedia("(max-width: 620px)").matches;
+    const hasScrolled = window.scrollY > 180;
+    const formRect = trainingFormSection?.getBoundingClientRect();
+    const isNearForm = !!formRect && formRect.top < window.innerHeight * 0.88 && formRect.bottom > 0;
+    stickyCta.classList.toggle("is-visible", isMobile && hasScrolled && !isNearForm && !isTrainingFormVisible);
+  };
+  if (trainingFormSection && "IntersectionObserver" in window) {
+    const formObserver = new IntersectionObserver(
+      (entries) => {
+        isTrainingFormVisible = entries.some((entry) => entry.isIntersecting);
+        updateStickyCta();
+      },
+      { threshold: 0.05 },
+    );
+    formObserver.observe(trainingFormSection);
+  }
+  updateStickyCta();
+  window.addEventListener("scroll", updateStickyCta, { passive: true });
+  window.addEventListener("resize", updateStickyCta);
+
   document.querySelectorAll("[data-secondary-cta]").forEach((button) => {
     button.addEventListener("click", () => track("click_secondary_cta"));
   });

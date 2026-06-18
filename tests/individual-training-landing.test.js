@@ -55,6 +55,10 @@ test("landing page contains the approved conversion structure", () => {
   );
   assert.match(html, /hero-trust-card/);
   assert.match(html, /Целта не е просто тренировка\. Целта е реален прогрес\./);
+  assert.match(html, /results-trust-bar/);
+  assert.match(html, /40\+ проведени индивидуални тренировки/);
+  assert.match(html, /Играчи от София, Пловдив и Стара Загора/);
+  assert.match(html, /Реален прогрес на терена/);
   assert.match(html, /ЗА ИГРАЧИ С АМБИЦИЯ/);
   assert.match(html, /За кого са тези тренировки\?/);
   assert.match(html, /Искаш повече игрово време/);
@@ -159,6 +163,7 @@ test("landing tracker emits only approved anonymous funnel events", () => {
     "scroll_90",
     "click_primary_cta",
     "click_secondary_cta",
+    "click_sticky_cta",
     "form_start",
     "form_submit_success",
     "form_submit_error",
@@ -198,6 +203,7 @@ test("public landing analytics endpoint validates and stores anonymous events", 
     "scroll_90",
     "click_primary_cta",
     "click_secondary_cta",
+    "click_sticky_cta",
     "form_start",
     "form_submit_success",
     "form_submit_error",
@@ -290,6 +296,7 @@ test("Supabase schema defines anonymous analytics, attribution, indexes, and 12 
   assert.match(schema, /landing_analytics_event_name_time_idx/);
   assert.match(schema, /delete_expired_landing_analytics/);
   assert.match(schema, /interval '12 months'/);
+  assert.match(schema, /click_sticky_cta/);
   assert.doesNotMatch(analyticsBlock, /ip_address|customer_name|phone|email/);
 });
 
@@ -309,6 +316,7 @@ test("protected admin analytics API supports filters and funnel summaries", () =
   assert.match(endpoint, /summerProgram/);
   assert.match(endpoint, /primaryCtaClicks/);
   assert.match(endpoint, /secondaryCtaClicks/);
+  assert.match(endpoint, /stickyCtaClicks/);
   assert.match(endpoint, /scroll25/);
   assert.match(endpoint, /scroll75/);
   assert.match(endpoint, /formSubmitSuccess/);
@@ -360,6 +368,7 @@ test("admin panel shows lead attribution and landing analytics", () => {
   assert.match(script, /landingFunnelTable/);
   assert.match(script, /landingComparison/);
   assert.match(script, /individualDashboardSummary/);
+  assert.match(script, /Sticky CTA Clicks/);
   assert.match(script, /summerDashboardSummary/);
   assert.match(script, /mainWebsiteDashboardSummary/);
   assert.match(script, /individualLeadsTable/);

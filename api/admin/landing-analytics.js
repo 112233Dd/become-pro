@@ -18,6 +18,7 @@ const buildStats = (events) => {
   let pageViews = 0;
   let primaryCtaClicks = 0;
   let secondaryCtaClicks = 0;
+  let stickyCtaClicks = 0;
   let scroll25 = 0;
   let scroll50 = 0;
   let scroll75 = 0;
@@ -42,6 +43,7 @@ const buildStats = (events) => {
       if (sessionId) primaryCtaSessions.add(sessionId);
     }
     if (event.event_name === "click_secondary_cta") secondaryCtaClicks += 1;
+    if (event.event_name === "click_sticky_cta") stickyCtaClicks += 1;
     if (event.event_name === "scroll_25") scroll25 += 1;
     if (event.event_name === "scroll_50") scroll50 += 1;
     if (event.event_name === "scroll_75") scroll75 += 1;
@@ -62,13 +64,14 @@ const buildStats = (events) => {
   });
 
   const uniqueSessions = allSessions.size || pageViewSessions.size;
-  const ctaClicks = primaryCtaClicks + secondaryCtaClicks;
+  const ctaClicks = primaryCtaClicks + secondaryCtaClicks + stickyCtaClicks;
 
   return {
     pageViews,
     uniqueSessions,
     primaryCtaClicks,
     secondaryCtaClicks,
+    stickyCtaClicks,
     ctaClicks,
     scroll25,
     scroll50,
