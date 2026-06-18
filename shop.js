@@ -5,7 +5,7 @@ const shopPrograms = [
   {
     id: "summer-program",
     title: "Лятна програма",
-    price: "€0.50",
+    price: "€34.99",
     image: "assets/program-cover-summer.png",
     badge: "🥇 Най-добрият избор за лятото",
     badgeVariant: "featured",

@@ -258,18 +258,19 @@ test("success and cancel pages exist for Stripe redirects", () => {
   assert.match(cancelPage, /programs\.html#programs/);
 });
 
-test("all programs use the temporary live EUR 0.50 price in storefront and Stripe", () => {
+test("summer program uses the approved promo price while other programs keep the temporary EUR 0.50 price", () => {
   const shop = read("shop.js");
   const shared = read("api/_shared.js");
 
-  assert.equal((shop.match(/price:\s*"€0\.50"/g) || []).length, 6);
-  assert.equal((shared.match(/price:\s*0\.5,/g) || []).length, 6);
-  assert.equal((shared.match(/priceCents:\s*50,/g) || []).length, 6);
-  assert.doesNotMatch(shop, /€49\.99/);
+  assert.equal((shop.match(/price:\s*"€0\.50"/g) || []).length, 5);
+  assert.match(shop, /id:\s*"summer-program"[\s\S]*?price:\s*"€34\.99"/);
+  assert.equal((shared.match(/price:\s*0\.5,/g) || []).length, 5);
+  assert.equal((shared.match(/priceCents:\s*50,/g) || []).length, 5);
+  assert.match(shared, /"summer-program":\s*\{[\s\S]*?price:\s*34\.99,[\s\S]*?priceCents:\s*3499,/);
   assert.doesNotMatch(shared, /priceCents:\s*4999/);
 });
 
-test("all six storefront programs render the visible EUR 0.50 price", () => {
+test("storefront cards render the configured visible program prices", () => {
   const shop = read("shop.js");
   const cardRenderer = extractNamedDeclaration(shop, "renderProgramCard");
 
@@ -286,7 +287,8 @@ test("storefront renders all six shop programs through the shared card renderer"
   const storefrontRenderer = extractNamedDeclaration(shop, "renderProgramStorefront");
 
   assert.equal((catalog.match(/\bid\s*:/g) || []).length, 6, "shopPrograms must contain six programs");
-  assert.equal((catalog.match(/price\s*:\s*["']€0\.50["']/g) || []).length, 6, "Every program must cost €0.50");
+  assert.equal((catalog.match(/price\s*:\s*["']€0\.50["']/g) || []).length, 5, "Only non-summer programs keep the temporary €0.50 price");
+  assert.match(catalog, /id:\s*"summer-program"[\s\S]*?price:\s*"€34\.99"/, "Summer program must render the approved €34.99 promo price");
   assert.match(storefrontRenderer, /\bshopPrograms\b/, "Storefront must use shopPrograms");
   assert.match(storefrontRenderer, /\.map\s*\(/, "Storefront must iterate over all programs");
   assert.match(storefrontRenderer, /\brenderProgramCard\s*\(/, "Storefront must use the shared card renderer");

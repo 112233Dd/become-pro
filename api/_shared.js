@@ -57,8 +57,8 @@ const productCatalog = {
   "summer-program": {
     id: "summer-program",
     name: "Лятна програма",
-    price: 0.5,
-    priceCents: 50,
+    price: 34.99,
+    priceCents: 3499,
     image: "/assets/program-cover-summer.png",
     programLink: PROGRAM_LINKS["summer-program"],
     description:

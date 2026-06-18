@@ -58,17 +58,20 @@ button, a { transition: 0.2s ease; }
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px 14px;
+  gap: 8px 16px;
 }
 .summer-price-display {
   justify-content: center;
+  width: min(100%, 760px);
   max-width: 760px;
-  margin-bottom: 18px;
+  margin-bottom: 22px;
 }
 .summer-price-inline strong,
 .summer-price-display .summer-new-price {
   color: var(--summer-gold);
-  font-size: clamp(38px,5vw,60px);
+  font-size: clamp(48px,6vw,76px);
+  letter-spacing: -.045em;
+  text-shadow: 0 0 34px rgba(245,196,0,.16);
 }
 .summer-price-display h2.summer-new-price {
   margin: 0;
@@ -78,14 +81,18 @@ button, a { transition: 0.2s ease; }
 .summer-new-price-label {
   width: 100%;
   color: var(--summer-muted);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 900;
-  letter-spacing: .08em;
+  letter-spacing: .12em;
   text-transform: uppercase;
+}
+.summer-new-price-label {
+  color: var(--summer-gold);
+  margin-top: 4px;
 }
 .summer-old-price {
   color: rgba(255,255,255,.56);
-  font-size: clamp(22px,2.6vw,34px);
+  font-size: clamp(21px,2.3vw,30px);
   font-weight: 900;
   line-height: 1;
   text-decoration: line-through;
@@ -106,6 +113,30 @@ button, a { transition: 0.2s ease; }
   font-size: 13px;
   font-weight: 1000;
   letter-spacing: .01em;
+}
+.summer-final-price-display {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 4px auto 18px;
+  padding: 12px 18px;
+  border: 1px solid rgba(245,196,0,.34);
+  border-radius: 999px;
+  background: rgba(245,196,0,.08);
+  box-shadow: 0 18px 42px rgba(0,0,0,.24);
+}
+.summer-final-price-display span {
+  color: var(--summer-muted);
+  font-size: 14px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.summer-final-price-display strong {
+  color: var(--summer-gold);
+  font-size: clamp(28px,3.2vw,38px);
+  line-height: 1;
 }
 .summer-price-note,
 .summer-trust-line,
@@ -542,6 +573,8 @@ button, a { transition: 0.2s ease; }
   .summer-coach-media, .summer-coach-media img { min-height: 420px; }
   .summer-coach { gap: 26px; }
   .summer-price-inline { align-items: flex-start; flex-direction: column; }
+  .summer-price-display { align-items: center; flex-direction: column; gap: 10px; }
+  .summer-final-price-display { width: 100%; flex-direction: column; border-radius: 22px; }
   .summer-primary-cta { width: 100%; }
   .summer-footer { align-items: flex-start; flex-direction: column; }
   .summer-footer nav { flex-direction: column; }
