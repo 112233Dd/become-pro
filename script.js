@@ -24,7 +24,7 @@ const renderSiteFooter = () => {
       <nav class="footer-column" aria-label="Бързи връзки">
         <h2>Навигация</h2>
         <a href="/programs">Програми</a>
-        <a href="/training">Индивидуални тренировки</a>
+        <a href="/individual-training">Индивидуални тренировки</a>
         <a href="/players">Играчи</a>
         <a href="/faq">FAQ</a>
         <a href="/contact">Контакти</a>
