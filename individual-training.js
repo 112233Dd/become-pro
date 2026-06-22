@@ -40,6 +40,139 @@
     sessionStorage.getItem(SESSION_KEY) ||
     (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`);
   sessionStorage.setItem(SESSION_KEY, sessionId);
+  let marketingConfig = {};
+  let marketingInitialized = false;
+  let leadTracked = false;
+
+  const isProduction = () => window.location.hostname === "becomeprofootball.com";
+  const hasMarketingConsent = () => {
+    const storedConsent = localStorage.getItem("bp_marketing_consent");
+    if (storedConsent) return storedConsent === "granted";
+    return true;
+  };
+  const loadScript = (src, id) =>
+    new Promise((resolve, reject) => {
+      if (id && document.getElementById(id)) return resolve();
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = src;
+      if (id) script.id = id;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+
+  const initMarketingTracking = async () => {
+    if (marketingInitialized || !isProduction() || !hasMarketingConsent()) return;
+    try {
+      const response = await fetch("/api/landing-analytics", { method: "GET", headers: { Accept: "application/json" } });
+      if (!response.ok) return;
+      marketingConfig = await response.json();
+
+      if (marketingConfig.ga4MeasurementId && !window.gtag) {
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function gtag() {
+          window.dataLayer.push(arguments);
+        };
+        window.gtag("js", new Date());
+        window.gtag("config", marketingConfig.ga4MeasurementId, { send_page_view: true });
+        await loadScript(`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(marketingConfig.ga4MeasurementId)}`, "bp-ga4");
+      }
+
+      if (marketingConfig.metaPixelId && !window.fbq) {
+        window.fbq = function fbq() {
+          window.fbq.callMethod ? window.fbq.callMethod.apply(window.fbq, arguments) : window.fbq.queue.push(arguments);
+        };
+        window.fbq.push = window.fbq;
+        window.fbq.loaded = true;
+        window.fbq.version = "2.0";
+        window.fbq.queue = [];
+        window.fbq("init", marketingConfig.metaPixelId);
+        window.fbq("track", "PageView");
+        await loadScript("https://connect.facebook.net/en_US/fbevents.js", "bp-meta-pixel");
+      }
+
+      if (marketingConfig.tiktokPixelId && !window.ttq) {
+        window.TiktokAnalyticsObject = "ttq";
+        const ttq = (window.ttq = window.ttq || []);
+        ttq.methods = [
+          "page",
+          "track",
+          "identify",
+          "instances",
+          "debug",
+          "on",
+          "off",
+          "once",
+          "ready",
+          "alias",
+          "group",
+          "enableCookie",
+          "disableCookie",
+        ];
+        ttq.setAndDefer = (target, method) => {
+          target[method] = function ttqMethod() {
+            target.push([method].concat(Array.prototype.slice.call(arguments, 0)));
+          };
+        };
+        for (let index = 0; index < ttq.methods.length; index += 1) {
+          ttq.setAndDefer(ttq, ttq.methods[index]);
+        }
+        ttq.instance = (pixelId) => {
+          const instance = ttq._i[pixelId] || [];
+          for (let index = 0; index < ttq.methods.length; index += 1) {
+            ttq.setAndDefer(instance, ttq.methods[index]);
+          }
+          return instance;
+        };
+        ttq.load = (pixelId) => {
+          ttq._i = ttq._i || {};
+          ttq._i[pixelId] = [];
+          ttq._i[pixelId]._u = "https://analytics.tiktok.com/i18n/pixel/events.js";
+          ttq._t = ttq._t || {};
+          ttq._t[pixelId] = Date.now();
+          ttq._o = ttq._o || {};
+          ttq._o[pixelId] = {};
+          loadScript(`https://analytics.tiktok.com/i18n/pixel/events.js?sdkid=${encodeURIComponent(pixelId)}&lib=ttq`, "bp-tiktok-pixel");
+        };
+        ttq.load(marketingConfig.tiktokPixelId);
+        ttq.page();
+      }
+
+      marketingInitialized = true;
+    } catch (error) {
+      console.warn("Marketing tracking was not initialized.");
+    }
+  };
+
+  const sendMarketingEvent = (eventName, params = {}) => {
+    const safeParams = {
+      page_path: window.location.pathname,
+      page_title: document.title,
+      ...params,
+    };
+    if (window.gtag) window.gtag("event", eventName, safeParams);
+    if (window.fbq && eventName === "training_cta_click") {
+      window.fbq("trackCustom", "TrainingCTAClick", {
+        cta_location: safeParams.cta_location,
+        page_path: safeParams.page_path,
+      });
+    }
+    if (window.fbq && eventName === "generate_lead") {
+      window.fbq("track", "Lead", {
+        content_name: "individual_training_request",
+        lead_type: "individual_training",
+      });
+    }
+    if (window.ttq && eventName === "generate_lead") {
+      window.ttq.track("SubmitForm", {
+        form_name: "individual_training_request",
+        lead_type: "individual_training",
+      });
+    }
+  };
+
+  initMarketingTracking();
 
   const onceStorageKey = (eventName) =>
     `bp_landing_once:${sessionId}:${window.location.pathname}:${pageVariant}:${eventName}`;
@@ -88,8 +221,25 @@
   };
   window.addEventListener("scroll", onScroll, { passive: true });
 
+  const scrollToTarget = (href) => {
+    const target = href?.startsWith("#") ? document.querySelector(href) : null;
+    if (!target) return false;
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.history.replaceState(null, "", href);
+    return true;
+  };
+
   document.querySelectorAll("[data-primary-cta]").forEach((button) => {
-    button.addEventListener("click", () => track("click_primary_cta"));
+    button.addEventListener("click", (event) => {
+      track("click_primary_cta");
+      sendMarketingEvent("training_cta_click", {
+        cta_location: button.dataset.ctaLocation || "middle_section",
+      });
+      if (button.getAttribute("href")?.startsWith("#")) {
+        event.preventDefault();
+        scrollToTarget(button.getAttribute("href"));
+      }
+    });
   });
   const stickyCta = document.querySelector("[data-mobile-sticky-cta]");
   const trainingFormSection = document.getElementById("training-form");
@@ -119,7 +269,13 @@
   window.addEventListener("resize", updateStickyCta);
 
   document.querySelectorAll("[data-secondary-cta]").forEach((button) => {
-    button.addEventListener("click", () => track("click_secondary_cta"));
+    button.addEventListener("click", (event) => {
+      track("click_secondary_cta");
+      if (button.getAttribute("href")?.startsWith("#")) {
+        event.preventDefault();
+        scrollToTarget(button.getAttribute("href"));
+      }
+    });
   });
 
   const form = document.querySelector("[data-training-landing-form]");
@@ -129,7 +285,16 @@
   if (cityInput && suggestedCity && !cityInput.value) {
     cityInput.value = suggestedCity;
   }
-  const markFormStart = () => track("form_start", true);
+  let marketingFormStarted = false;
+  const markFormStart = () => {
+    track("form_start", true);
+    if (!marketingFormStarted) {
+      marketingFormStarted = true;
+      sendMarketingEvent("training_form_start", {
+        form_name: "individual_training_request",
+      });
+    }
+  };
   ["focusin", "input", "change"].forEach((eventName) => form?.addEventListener(eventName, markFormStart));
 
   const getFieldValue = (formData, key) => String(formData.get(key) || "").trim();
@@ -138,6 +303,7 @@
     if (getFieldValue(formData, "name").length < 2) return "Моля, въведи име.";
     if (getFieldValue(formData, "city").length < 2) return "Моля, въведи град.";
     if (getFieldValue(formData, "phone").length < 6) return "Моля, въведи валиден телефонен номер.";
+    if (formData.get("consent") !== "yes") return "Моля, потвърди съгласието за връзка.";
     return "";
   };
 
@@ -163,6 +329,7 @@
       name: formData.get("name"),
       city: formData.get("city"),
       phone: formData.get("phone"),
+      consent: formData.get("consent") === "yes",
       attribution: {
         landingPageUrl,
         pageVariant,
@@ -170,6 +337,7 @@
         referrer,
         deviceType,
         browser: navigator.userAgent.slice(0, 300),
+        sessionId,
       },
     };
 
@@ -183,12 +351,22 @@
       if (!response.ok) throw new Error(data.error || "Заявката не беше изпратена.");
 
       track("form_submit_success");
+      if (!leadTracked) {
+        leadTracked = true;
+        sendMarketingEvent("generate_lead", {
+          form_name: "individual_training_request",
+          lead_type: "individual_training",
+        });
+      }
       formStatus.textContent =
         formStatus.dataset.successMessage ||
-        "Благодаря ви! Заявката е изпратена успешно. Ще се свържем с вас възможно най-скоро.";
+        "Благодарим! Получихме заявката ти. Ще се свържем с теб, за да уточним подходящ ден и час.";
       form.reset();
     } catch (error) {
       track("form_submit_error");
+      sendMarketingEvent("training_form_error", {
+        error_type: "submit_failed",
+      });
       formStatus.textContent = error.message || "Заявката не беше изпратена. Моля, опитайте отново.";
     } finally {
       submitButton.disabled = false;

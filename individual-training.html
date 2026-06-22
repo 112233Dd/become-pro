@@ -9,9 +9,30 @@
       content="Индивидуални футболни тренировки за техника, първо докосване, дрибъл, скорост, завършване и увереност с топката."
     />
     <meta name="theme-color" content="#050505" />
+    <link rel="canonical" href="https://becomeprofootball.com/individual-training" />
+    <meta property="og:title" content="Индивидуални футболни тренировки | Become Pro" />
+    <meta property="og:description" content="Персонални футболни тренировки според възрастта, позицията, нивото и целите на футболиста." />
+    <meta property="og:image" content="https://becomeprofootball.com/assets/yordan-training-poster.png" />
+    <meta property="og:url" content="https://becomeprofootball.com/individual-training" />
+    <meta property="og:type" content="website" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preload" href="/assets/yordan-training-poster.png" as="image" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "name": "Индивидуални футболни тренировки",
+        "description": "Персонални футболни тренировки според възрастта, позицията, нивото и целите на футболиста.",
+        "provider": {
+          "@type": "Organization",
+          "name": "Become Pro",
+          "url": "https://becomeprofootball.com"
+        },
+        "areaServed": ["София", "Пловдив", "Стара Загора"],
+        "url": "https://becomeprofootball.com/individual-training"
+      }
+    </script>
     <link rel="stylesheet" href="/individual-training.css?v=trust-sticky-20260619b" />
   </head>
   <body id="top" class="training-landing" data-page-variant="individual-training">
@@ -21,7 +42,7 @@
           <img src="/assets/becomepro-logo.png" alt="" />
           <strong>BECOME PRO</strong>
         </a>
-        <a class="landing-button landing-button-small" href="#training-form" data-primary-cta>Запази тренировка</a>
+        <a class="landing-button landing-button-small" href="#training-form" data-primary-cta data-cta-location="header">Запази тренировка</a>
       </div>
     </header>
 
@@ -29,22 +50,16 @@
       <section class="training-landing-hero">
         <div class="training-landing-shell hero-grid">
           <div class="hero-copy">
-            <p class="landing-eyebrow">ИНДИВИДУАЛНА РАБОТА. РЕАЛЕН ПРОГРЕС.</p>
-            <h1>
-              <span>Не чакай шанса си.</span>
-              <span>Подготви се за него.</span>
-            </h1>
+            <p class="hero-slogan">Не чакай шанса си. Подготви се за него.</p>
+            <p class="landing-eyebrow">ИНДИВИДУАЛНИ ФУТБОЛНИ ТРЕНИРОВКИ</p>
+            <h1>Развий увереността и качествата си на терена</h1>
             <p class="hero-lead">
-              Индивидуални тренировки, създадени специално за твоето ниво, позиция и амбиции.
+              Персонални тренировки според възрастта, позицията, нивото и целите на футболиста.
             </p>
             <div class="landing-actions">
-              <a class="landing-button" href="#training-form" data-primary-cta>Запази тренировка</a>
-              <a class="landing-button landing-button-ghost" href="#how-it-works" data-secondary-cta>Виж как работи</a>
+              <a class="landing-button" href="#training-form" data-primary-cta data-cta-location="hero">Запиши индивидуална тренировка</a>
             </div>
-            <div class="hero-trust-card">
-              <strong>Целта не е просто тренировка. Целта е реален прогрес.</strong>
-              <p>Персонален анализ, работа върху слабостите и ясен план за развитие според нивото на играча.</p>
-            </div>
+            <p class="hero-trust-line">С Йордан Желев - футболен треньор и основател на Become Pro.</p>
           </div>
           <div class="hero-media">
             <video autoplay muted loop playsinline preload="metadata" poster="/assets/yordan-training-poster.png">
@@ -107,7 +122,7 @@
               <h3>ИСКАШ ЛИ ДА БЪДЕШ СЛЕДВАЩИЯТ ИГРАЧ?</h3>
               <p>Остави заявка и ще обсъдим какви са целите ти и как можем да работим върху тях.</p>
             </div>
-            <a class="landing-button" href="#training-form" data-primary-cta>Запази тренировка</a>
+            <a class="landing-button" href="#training-form" data-primary-cta data-cta-location="testimonials">Запази тренировка</a>
           </div>
         </div>
       </section>
@@ -146,7 +161,7 @@
             </article>
           </div>
           <div class="training-video-cards-cta">
-            <a class="landing-button" href="#training-form" data-primary-cta>Запази тренировка</a>
+            <a class="landing-button" href="#training-form" data-primary-cta data-cta-location="middle_section">Запази тренировка</a>
           </div>
         </div>
       </section>
@@ -187,7 +202,7 @@
               <h3>Искаш ли тренировка с ясен фокус?</h3>
               <p>Запази място и ще уточним как да започнем според целите на играча.</p>
             </div>
-            <a class="landing-button" href="#training-form" data-primary-cta>Запази тренировка</a>
+            <a class="landing-button" href="#training-form" data-primary-cta data-cta-location="final_cta">Запази тренировка</a>
           </div>
         </div>
       </section>
@@ -252,10 +267,14 @@
             </label>
             <label>Име<input type="text" name="name" autocomplete="name" minlength="2" required /></label>
             <label>Град<input type="text" name="city" autocomplete="address-level2" minlength="2" required /></label>
-            <label>Телефонен номер<input type="tel" name="phone" autocomplete="tel" minlength="6" required /></label>
+            <label>Телефонен номер<input type="tel" name="phone" autocomplete="tel" inputmode="tel" minlength="6" required /></label>
+            <label class="consent-field">
+              <input type="checkbox" name="consent" value="yes" required />
+              <span>Съгласявам се предоставените от мен данни да бъдат използвани за връзка с мен относно индивидуалните тренировки. <a href="/privacy-policy">Политика за поверителност</a></span>
+            </label>
             <button class="landing-button" type="submit">Запази тренировка</button>
             <p class="form-note">Личните данни се използват само за връзка относно индивидуалната тренировка.</p>
-            <p class="landing-form-status" data-landing-form-status data-success-message="Благодаря ви! Заявката е изпратена успешно. Ще се свържем с вас възможно най-скоро." aria-live="polite"></p>
+            <p class="landing-form-status" data-landing-form-status data-success-message="Благодарим! Получихме заявката ти. Ще се свържем с теб, за да уточним подходящ ден и час." aria-live="polite"></p>
           </form>
         </div>
       </section>
@@ -269,7 +288,7 @@
       </div>
     </footer>
 
-    <a class="training-sticky-cta" href="#training-form" data-primary-cta data-mobile-sticky-cta>Запази тренировка</a>
+    <a class="training-sticky-cta" href="#training-form" data-primary-cta data-mobile-sticky-cta data-cta-location="sticky_mobile">Запази тренировка</a>
     <script src="/individual-training.js?v=trust-sticky-20260619b"></script>
   </body>
 </html>

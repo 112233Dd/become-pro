@@ -89,6 +89,7 @@ module.exports = async (req, res) => {
     const name = cleanText(body.name, 120);
     const city = cleanText(body.city, 120);
     const phone = cleanText(body.phone, 40);
+    const consent = Boolean(body.consent);
     const attribution = body.attribution || {};
     const attributionRow = {
       landing_page_url: cleanText(attribution.landingPageUrl, 500) || null,
@@ -110,6 +111,7 @@ module.exports = async (req, res) => {
     if (name.length < 2) return sendJson(res, 400, { error: "Моля, въведи име." });
     if (city.length < 2) return sendJson(res, 400, { error: "Моля, въведи град." });
     if (phone.length < 6) return sendJson(res, 400, { error: "Моля, въведи валиден телефон." });
+    if (!consent) return sendJson(res, 400, { error: "Моля, потвърди съгласието за връзка." });
 
     let rows;
     try {

@@ -30,8 +30,17 @@ const EVENT_NAMES = new Set([
 const cleanText = (value, maxLength) => String(value || "").trim().slice(0, maxLength);
 
 module.exports = async (req, res) => {
+  if (req.method === "GET") {
+    return sendJson(res, 200, {
+      metaPixelId: cleanText(process.env.META_PIXEL_ID || process.env.NEXT_PUBLIC_META_PIXEL_ID, 80),
+      ga4MeasurementId: cleanText(process.env.GA4_MEASUREMENT_ID || process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID, 80),
+      tiktokPixelId: cleanText(process.env.TIKTOK_PIXEL_ID || process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID, 80),
+      productionOnly: true,
+    });
+  }
+
   if (req.method !== "POST") {
-    res.setHeader("Allow", "POST");
+    res.setHeader("Allow", "GET, POST");
     return sendJson(res, 405, { error: "Method not allowed." });
   }
 

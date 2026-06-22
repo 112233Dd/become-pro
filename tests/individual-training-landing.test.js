@@ -47,14 +47,13 @@ test("individual training campaign route and page exist", () => {
 test("landing page contains the approved conversion structure", () => {
   const html = read("individual-training.html");
 
-  assert.match(html, /<span>Не чакай шанса си\.<\/span>/);
-  assert.match(html, /<span>Подготви се за него\.<\/span>/);
-  assert.match(
-    html,
-    /Индивидуални тренировки, създадени специално за твоето ниво, позиция и амбиции\./,
-  );
-  assert.match(html, /hero-trust-card/);
-  assert.match(html, /Целта не е просто тренировка\. Целта е реален прогрес\./);
+  assert.match(html, /<p class="hero-slogan">Не чакай шанса си\. Подготви се за него\.<\/p>/);
+  assert.match(html, /<p class="landing-eyebrow">ИНДИВИДУАЛНИ ФУТБОЛНИ ТРЕНИРОВКИ<\/p>/);
+  assert.match(html, /<h1>Развий увереността и качествата си на терена<\/h1>/);
+  assert.match(html, /Персонални тренировки според възрастта, позицията, нивото и целите на футболиста\./);
+  assert.match(html, /data-cta-location="hero">Запиши индивидуална тренировка<\/a>/);
+  assert.match(html, /hero-trust-line/);
+  assert.match(html, /С Йордан Желев - футболен треньор и основател на Become Pro\./);
   assert.match(html, /results-trust-bar/);
   assert.match(html, /40\+ проведени индивидуални тренировки/);
   assert.match(html, /Играчи от София, Пловдив и Стара Загора/);
@@ -65,7 +64,6 @@ test("landing page contains the approved conversion structure", () => {
   assert.match(html, /Искаш да изпревариш конкуренцията/);
   assert.match(html, /data-page-variant="individual-training"/);
   assert.match(html, /data-primary-cta/);
-  assert.match(html, /data-secondary-cta/);
   assert.match(html, /id="training-fit"/);
   assert.match(html, /id="player-benefits"/);
   assert.match(html, /training-process-section/);
@@ -106,7 +104,7 @@ test("landing form contains only the compact approved fields and success message
   const html = read("individual-training.html");
   const form = html.match(/<form\b[\s\S]*?<\/form>/i)?.[0] || "";
 
-  ["applicant_type", "name", "city", "phone"].forEach((name) => {
+  ["applicant_type", "name", "city", "phone", "consent"].forEach((name) => {
     assert.match(form, new RegExp(`name="${name}"`));
   });
   assert.match(form, /novalidate/);
@@ -114,9 +112,11 @@ test("landing form contains only the compact approved fields and success message
   assert.match(form, /Моето дете/);
   assert.match(form, /Себе си/);
   assert.match(form, /Запази тренировка/);
+  assert.match(form, /Съгласявам се предоставените от мен данни/);
+  assert.match(form, /\/privacy-policy/);
   assert.match(
     html,
-    /Благодаря ви! Заявката е изпратена успешно\. Ще се свържем с вас възможно най-скоро\./,
+    /Благодарим! Получихме заявката ти\. Ще се свържем с теб, за да уточним подходящ ден и час\./,
   );
 });
 
@@ -184,6 +184,15 @@ test("landing tracker emits only approved anonymous funnel events", () => {
   assert.match(script, /VARIANT_BY_PATH/);
   assert.match(script, /\["\/individual-training", "individual-training"\]/);
   assert.match(script, /validateTrainingForm/);
+  assert.match(script, /formData\.get\("consent"\) !== "yes"/);
+  assert.match(script, /consent:\s*formData\.get\("consent"\) === "yes"/);
+  assert.match(script, /sessionId/);
+  assert.match(script, /sendMarketingEvent\("training_cta_click"/);
+  assert.match(script, /sendMarketingEvent\("training_form_start"/);
+  assert.match(script, /sendMarketingEvent\("generate_lead"/);
+  assert.match(script, /sendMarketingEvent\("training_form_error"/);
+  assert.match(script, /fbq\("track", "Lead"/);
+  assert.match(script, /ttq\.track\("SubmitForm"/);
   assert.match(script, /form_submit_error/);
   assert.match(script, /\/training\/plovdiv/);
   assert.match(script, /CITY_BY_VARIANT/);
@@ -210,6 +219,9 @@ test("public landing analytics endpoint validates and stores anonymous events", 
   ].forEach((eventName) => assert.match(endpoint, new RegExp(eventName)));
 
   assert.match(endpoint, /landing_analytics_events/);
+  assert.match(endpoint, /META_PIXEL_ID/);
+  assert.match(endpoint, /GA4_MEASUREMENT_ID/);
+  assert.match(endpoint, /TIKTOK_PIXEL_ID/);
   assert.match(endpoint, /Personal data is not accepted by analytics/);
   assert.match(endpoint, /\["name", "phone", "email"\]/);
   assert.match(endpoint, /session_id/);
@@ -274,6 +286,8 @@ test("training requests persist optional campaign attribution", () => {
     assert.match(endpoint, new RegExp(field));
     assert.match(adminEndpoint, new RegExp(field));
   });
+  assert.match(endpoint, /const consent = Boolean\(body\.consent\)/);
+  assert.match(endpoint, /if \(!consent\)/);
 });
 
 test("Supabase schema defines anonymous analytics, attribution, indexes, and 12 month retention", () => {
