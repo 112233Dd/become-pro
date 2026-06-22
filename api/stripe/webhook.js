@@ -200,7 +200,7 @@ const buildCustomerEmailHtml = ({ programs, customer }) => {
           <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="width:100%;max-width:620px;">
             <tr>
               <td align="center" style="padding:0 0 20px;">
-                <img src="https://become-pro-ivory.vercel.app/assets/becomepro-logo.png" width="78" height="78" alt="Become Pro" style="display:block;width:78px;height:78px;object-fit:contain;" />
+                <img src="https://becomeprofootball.com/assets/becomepro-logo.png" width="78" height="78" alt="Become Pro" style="display:block;width:78px;height:78px;object-fit:contain;" />
               </td>
             </tr>
             <tr>

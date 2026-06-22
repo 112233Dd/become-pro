@@ -12,6 +12,7 @@ const PROGRAM_LINKS = {
 };
 const ORDER_STATUSES = new Set(["pending", "paid", "failed", "expired", "delivery_failed"]);
 const STRIPE_API_VERSION = "2026-02-25.clover";
+const DEFAULT_SITE_URL = "https://becomeprofootball.com";
 
 const productCatalog = {
   "technical-pack": {
@@ -103,11 +104,13 @@ const readJsonBody = async (req) => {
 };
 
 const getOrigin = (req) => {
-  const configured = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  const configured = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL;
   if (configured) return configured.startsWith("http") ? configured.replace(/\/$/, "") : `https://${configured.replace(/\/$/, "")}`;
   const proto = req.headers["x-forwarded-proto"] || "https";
   const host = req.headers["x-forwarded-host"] || req.headers.host;
-  return `${proto}://${host}`;
+  if (host) return `${proto}://${host}`;
+  const fallback = process.env.VERCEL_PROJECT_PRODUCTION_URL || DEFAULT_SITE_URL;
+  return fallback.startsWith("http") ? fallback.replace(/\/$/, "") : `https://${fallback.replace(/\/$/, "")}`;
 };
 
 const getProgramsByIds = (ids) => {
@@ -395,7 +398,7 @@ const getStripeDiagnostics = async () => {
           : "unknown",
       hasStripeWebhookSecret: Boolean(process.env.STRIPE_WEBHOOK_SECRET),
       hasPublishableKey: Boolean(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || process.env.STRIPE_PUBLISHABLE_KEY),
-      siteUrl: getOrigin({ headers: { host: process.env.VERCEL_PROJECT_PRODUCTION_URL || "" } }),
+      siteUrl: getOrigin({ headers: { host: "" } }),
     },
     account: {
       id: account.id,

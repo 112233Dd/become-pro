@@ -209,7 +209,7 @@ test("fulfillment email includes professional HTML and plain-text access", () =>
   assert.match(webhook, /Instagram: @become_pro2024/);
   assert.match(webhook, /become\.pro2024@gmail\.com/);
   assert.match(webhook, /escapeHtml/);
-  assert.match(webhook, /https:\/\/become-pro-ivory\.vercel\.app\//);
+  assert.match(webhook, /https:\/\/becomeprofootball\.com\//);
   assert.match(webhook, /html:/);
   assert.match(webhook, /program\.name/);
   assert.match(webhook, /program\.programLink/);
