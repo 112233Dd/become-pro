@@ -104,11 +104,12 @@ test("landing form contains only the compact approved fields and success message
   const html = read("individual-training.html");
   const form = html.match(/<form\b[\s\S]*?<\/form>/i)?.[0] || "";
 
-  ["applicant_type", "name", "city", "phone", "consent"].forEach((name) => {
+  ["applicant_type", "name", "player_age", "city", "phone", "consent"].forEach((name) => {
     assert.match(form, new RegExp(`name="${name}"`));
   });
   assert.match(form, /novalidate/);
-  assert.doesNotMatch(form, /name="email"|player_age|position|goal/);
+  assert.match(form, /type="number" name="player_age"/);
+  assert.doesNotMatch(form, /name="email"|position|goal/);
   assert.match(form, /Моето дете/);
   assert.match(form, /Себе си/);
   assert.match(form, /Запази тренировка/);
@@ -184,6 +185,8 @@ test("landing tracker emits only approved anonymous funnel events", () => {
   assert.match(script, /VARIANT_BY_PATH/);
   assert.match(script, /\["\/individual-training", "individual-training"\]/);
   assert.match(script, /validateTrainingForm/);
+  assert.match(script, /formData\.get\("player_age"\)/);
+  assert.match(script, /playerAge:\s*formData\.get\("player_age"\)/);
   assert.match(script, /formData\.get\("consent"\) !== "yes"/);
   assert.match(script, /consent:\s*formData\.get\("consent"\) === "yes"/);
   assert.match(script, /sessionId/);
@@ -287,6 +290,8 @@ test("training requests persist optional campaign attribution", () => {
     assert.match(adminEndpoint, new RegExp(field));
   });
   assert.match(endpoint, /const consent = Boolean\(body\.consent\)/);
+  assert.match(endpoint, /const playerAge = cleanText\(body\.playerAge/);
+  assert.match(endpoint, /player_age:\s*playerAge/);
   assert.match(endpoint, /if \(!consent\)/);
 });
 

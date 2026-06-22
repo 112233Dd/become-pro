@@ -87,6 +87,7 @@ module.exports = async (req, res) => {
 
     const applicantType = cleanText(body.applicantType, 40);
     const name = cleanText(body.name, 120);
+    const playerAge = cleanText(body.playerAge, 40);
     const city = cleanText(body.city, 120);
     const phone = cleanText(body.phone, 40);
     const consent = Boolean(body.consent);
@@ -109,6 +110,7 @@ module.exports = async (req, res) => {
       return sendJson(res, 400, { error: "Моля, избери кого искаш да запишеш." });
     }
     if (name.length < 2) return sendJson(res, 400, { error: "Моля, въведи име." });
+    if (playerAge.length < 1) return sendJson(res, 400, { error: "Моля, въведи възраст." });
     if (city.length < 2) return sendJson(res, 400, { error: "Моля, въведи град." });
     if (phone.length < 6) return sendJson(res, 400, { error: "Моля, въведи валиден телефон." });
     if (!consent) return sendJson(res, 400, { error: "Моля, потвърди съгласието за връзка." });
@@ -123,6 +125,7 @@ module.exports = async (req, res) => {
             applicant_type: applicantType,
             who: applicantType,
             name,
+            player_age: playerAge,
             city,
             phone,
             status: "new",
@@ -140,6 +143,7 @@ module.exports = async (req, res) => {
             request_type: "training",
             who: applicantType,
             name,
+            player_age: playerAge,
             city,
             phone,
           },
@@ -156,6 +160,7 @@ module.exports = async (req, res) => {
           "",
           `Кого искат да запишат: ${applicantType}`,
           `Име: ${name}`,
+          `Възраст: ${playerAge}`,
           `Град: ${city}`,
           `Телефон: ${phone}`,
           `Landing page: ${attributionRow.page_variant || "-"}`,

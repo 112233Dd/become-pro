@@ -301,6 +301,7 @@
   const validateTrainingForm = (formData) => {
     if (!getFieldValue(formData, "applicant_type")) return "Моля, избери кого искаш да запишеш.";
     if (getFieldValue(formData, "name").length < 2) return "Моля, въведи име.";
+    if (getFieldValue(formData, "player_age").length < 1) return "Моля, въведи възраст.";
     if (getFieldValue(formData, "city").length < 2) return "Моля, въведи град.";
     if (getFieldValue(formData, "phone").length < 6) return "Моля, въведи валиден телефонен номер.";
     if (formData.get("consent") !== "yes") return "Моля, потвърди съгласието за връзка.";
@@ -327,6 +328,7 @@
     const payload = {
       applicantType: formData.get("applicant_type"),
       name: formData.get("name"),
+      playerAge: formData.get("player_age"),
       city: formData.get("city"),
       phone: formData.get("phone"),
       consent: formData.get("consent") === "yes",
