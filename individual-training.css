@@ -279,7 +279,8 @@ img, video { display: block; max-width: 100%; }
 .proof-grid article:nth-child(1) img { object-position: center 28%; }
 .proof-grid article:nth-child(2) img { object-position: center 42%; }
 .proof-grid article:nth-child(3) img { object-position: center 30%; }
-.proof-grid article div {
+.proof-grid article div,
+.proof-grid .proof-player-copy {
   display: flex;
   min-height: 210px;
   flex: 1;
@@ -295,6 +296,11 @@ img, video { display: block; max-width: 100%; }
 }
 .proof-grid p {
   margin: 10px 0 14px;
+  color: var(--gold);
+  font-weight: 900;
+}
+.proof-grid .proof-player-city {
+  margin: 14px 0 18px;
   color: var(--gold);
   font-weight: 900;
 }
