@@ -19,6 +19,8 @@
     <meta name="twitter:title" content="Become Pro" />
     <meta name="twitter:description" content="Онлайн футболни програми и индивидуални тренировки за футболисти." />
     <meta name="twitter:image" content="https://becomeprofootball.com/assets/og-image.png" />
+    <link rel="canonical" href="https://becomeprofootball.com/checkout" />
+
 <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -38,7 +40,20 @@
       </nav>
       <div class="header-actions"><a class="header-cta" href="cart.html">Количка <span data-cart-count>0</span></a></div>
     </header>
-    <main id="top" data-checkout-page></main>
+    <div class="mobile-quick-actions" aria-label="Бързи действия">
+      <a href="programs.html#programs">Програми</a>
+      <a href="/individual-training">Тренировка</a>
+    </div>
+
+    <main id="top" data-checkout-page>
+      <section class="checkout-page section-dark static-render-fallback">
+        <div class="section-heading center">
+          <p class="eyebrow">Checkout</p>
+          <h1>Плащане с карта</h1>
+          <p>Сигурно плащане чрез Stripe Checkout.</p>
+        </div>
+      </section>
+    </main>
     <footer class="site-footer" data-site-footer></footer>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>

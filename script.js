@@ -16,7 +16,7 @@ const renderSiteFooter = () => {
     <div class="footer-main">
       <div class="footer-brand">
         <a class="footer-logo" href="/" aria-label="Become Pro начало">
-          <img src="/assets/becomepro-logo.png" alt="" />
+          <img src="/assets/becomepro-logo.png" alt="Become Pro logo" />
           <span>BECOME <strong>PRO</strong></span>
         </a>
         <p>Футболни програми и индивидуални тренировки за целенасочено развитие.</p>

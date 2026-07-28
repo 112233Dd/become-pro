@@ -725,13 +725,37 @@ const renderCartPage = () => {
 
   if (!selected.length) {
     root.innerHTML = `
-      <section class="cart-page section-dark">
-        <div class="section-heading center">
+      <section class="cart-page cart-empty-page section-dark">
+        <div class="section-heading center cart-empty-heading">
           <p class="eyebrow">Количка</p>
           <h1>Количката е празна.</h1>
-          <p>Избери онлайн програма и я добави тук, за да продължиш към сигурно плащане.</p>
-          <a class="btn btn-primary" href="programs.html#programs">Виж програмите</a>
+          <p>Избери онлайн програма и я добави тук. Плащането минава през Stripe, а достъпът се изпраща на имейл след успешна покупка.</p>
+          <div class="cart-empty-actions">
+            <a class="btn btn-primary" href="programs.html#programs">Избери онлайн програма</a>
+            <a class="btn btn-secondary" href="contact.html">Нуждая се от помощ</a>
+          </div>
         </div>
+        <div class="cart-empty-recommendations" aria-label="Препоръчани следващи стъпки">
+          <article>
+            <span>01</span>
+            <h2>Започни с готова структура</h2>
+            <p>Виж всички онлайн програми и избери фокус според нуждите на играча.</p>
+            <a href="programs.html#programs">Към програмите</a>
+          </article>
+          <article>
+            <span>02</span>
+            <h2>Не си сигурен коя програма е правилна?</h2>
+            <p>Изпрати кратко запитване и ще получиш насока според възраст, позиция и цел.</p>
+            <a href="contact.html">Задай въпрос</a>
+          </article>
+          <article>
+            <span>03</span>
+            <h2>Искаш лична корекция?</h2>
+            <p>Запази индивидуална тренировка, ако играчът има нужда от персонален фокус.</p>
+            <a href="/individual-training">Запази тренировка</a>
+          </article>
+        </div>
+        ${renderPurchaseTrustMarkup()}
       </section>
     `;
     return;
