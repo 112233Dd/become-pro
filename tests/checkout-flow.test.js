@@ -270,6 +270,12 @@ test("summer program keeps the promo price while other programs use EUR 24.99", 
   assert.doesNotMatch(shared, /priceCents:\s*50,/);
 });
 
+test("FAQ never advertises the retired EUR 0.50 test price", () => {
+  const faq = read("faq.html");
+  assert.match(faq, /Основните онлайн програми са €24\.99/);
+  assert.doesNotMatch(faq, /€0\.50|0,50 €/);
+});
+
 test("storefront cards render the configured visible program prices", () => {
   const shop = read("shop.js");
   const cardRenderer = extractNamedDeclaration(shop, "renderProgramCard");
