@@ -6181,7 +6181,7 @@ textarea:focus {
 
   .hero-media {
     min-height: 390px;
-    order: -1;
+    order: 1;
   }
 
   .hero-media img {

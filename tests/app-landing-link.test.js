@@ -26,4 +26,5 @@ test("other pages receive the same app link in shared navigation and footer", ()
   assert.match(script, /nav\.querySelector\('a\[href\*=\"app\.becomeprofootball\.com\/start\"\]'\)/);
   assert.match(script, /<a href="\$\{appLandingUrl\}">Приложение \(14–17 г\.\)<\/a>/);
   assert.match(read("styles.css"), /\.hero-app-link/);
+  assert.match(read("styles.css"), /\.hero-media\s*\{\s*min-height: 390px;\s*order: 1;/, "tablet hero copy should precede the large video");
 });
