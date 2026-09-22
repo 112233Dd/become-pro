@@ -5,6 +5,14 @@ const form = document.querySelector("[data-form]");
 const formStatus = document.querySelector("[data-form-status]");
 const contactForm = document.querySelector("[data-contact-form]");
 const contactFormStatus = document.querySelector("[data-contact-form-status]");
+const appLandingUrl = "https://app.becomeprofootball.com/start?utm_source=website&utm_medium=organic&utm_campaign=sept_launch";
+if (nav && !nav.querySelector('a[href*="app.becomeprofootball.com/start"]')) {
+  const appLink = document.createElement("a");
+  appLink.href = appLandingUrl;
+  appLink.textContent = "Приложение";
+  appLink.setAttribute("aria-label", "Приложение Become Pro — пилот за 14–17 години");
+  nav.querySelector("a")?.after(appLink);
+}
 const navLinks = [...document.querySelectorAll(".site-nav a")];
 const faqSearch = document.querySelector("[data-faq-search]");
 const siteFooter = document.querySelector("[data-site-footer]");
@@ -24,6 +32,7 @@ const renderSiteFooter = () => {
       <nav class="footer-column" aria-label="Бързи връзки">
         <h2>Навигация</h2>
         <a href="/programs">Програми</a>
+        <a href="${appLandingUrl}">Приложение (14–17 г.)</a>
         <a href="/individual-training">Индивидуални тренировки</a>
         <a href="/players">Играчи</a>
         <a href="/faq">FAQ</a>
