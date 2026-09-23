@@ -148,40 +148,48 @@ module.exports = async (req, res) => {
     if (phone.length < 6) return sendJson(res, 400, { error: "Моля, въведи валиден телефон." });
     if (!consent) return sendJson(res, 400, { error: "Моля, потвърди съгласието за връзка." });
 
-    let rows;
+    let rows = null;
+    let storageSaved = false;
+    let storageError = "";
     try {
-      rows = await supabaseRequest("training_requests", {
-        method: "POST",
-        headers: { Prefer: "return=representation" },
-        body: JSON.stringify([
-          {
-            applicant_type: applicantType,
-            who: applicantType,
-            name,
-            player_age: playerAge,
-            city,
-            phone,
-            status: "new",
-            ...attributionRow,
-          },
-        ]),
-      });
-    } catch (schemaError) {
-      if (!isLegacyTrainingSchemaError(schemaError)) throw schemaError;
-      rows = await supabaseRequest("training_requests", {
-        method: "POST",
-        headers: { Prefer: "return=representation" },
-        body: JSON.stringify([
-          {
-            request_type: "training",
-            who: applicantType,
-            name,
-            player_age: playerAge,
-            city,
-            phone,
-          },
-        ]),
-      });
+      try {
+        rows = await supabaseRequest("training_requests", {
+          method: "POST",
+          headers: { Prefer: "return=representation" },
+          body: JSON.stringify([
+            {
+              applicant_type: applicantType,
+              who: applicantType,
+              name,
+              player_age: playerAge,
+              city,
+              phone,
+              status: "new",
+              ...attributionRow,
+            },
+          ]),
+        });
+      } catch (schemaError) {
+        if (!isLegacyTrainingSchemaError(schemaError)) throw schemaError;
+        rows = await supabaseRequest("training_requests", {
+          method: "POST",
+          headers: { Prefer: "return=representation" },
+          body: JSON.stringify([
+            {
+              request_type: "training",
+              who: applicantType,
+              name,
+              player_age: playerAge,
+              city,
+              phone,
+            },
+          ]),
+        });
+      }
+      storageSaved = true;
+    } catch (requestStorageError) {
+      storageError = requestStorageError.message || "Unknown storage error";
+      console.error("Training request storage failed; continuing with admin email:", requestStorageError);
     }
 
     let notificationSent = false;
@@ -189,9 +197,14 @@ module.exports = async (req, res) => {
     try {
       await sendEmail({
         to: getAdminNotificationEmail(),
-        subject: "Нова заявка за индивидуална тренировка",
+        subject: storageSaved
+          ? "Нова заявка за индивидуална тренировка"
+          : "ВАЖНО: Нова заявка за тренировка (не е записана в админ панела)",
         text: [
           "Получена е нова заявка за индивидуална тренировка.",
+          storageSaved
+            ? "Заявката е записана в админ панела."
+            : "ВНИМАНИЕ: базата е недостъпна и заявката не е записана в админ панела. Свържи се с играча по телефона по-долу.",
           "",
           `Кого искат да запишат: ${applicantType}`,
           `Име: ${name}`,
@@ -200,12 +213,13 @@ module.exports = async (req, res) => {
           `Телефон: ${phone}`,
           `Landing page: ${attributionRow.page_variant || "-"}`,
           `Кампания: ${attributionRow.utm_campaign || "-"}`,
-          "",
-          "Заявката е записана в админ панела.",
         ].join("\n"),
         html: notificationHtml({
-          title: "Нова заявка за индивидуална тренировка",
+          title: storageSaved
+            ? "Нова заявка за индивидуална тренировка"
+            : "Нова заявка — не е записана в админ панела",
           rows: [
+            ["Статус", storageSaved ? "Записана в админ панела" : "Само email — базата е недостъпна"],
             ["Кого записват", applicantType],
             ["Име", name],
             ["Възраст", playerAge],
@@ -230,11 +244,22 @@ module.exports = async (req, res) => {
         : "A training request was saved, but the admin email could not be sent.",
       metadata: {
         requestId: rows?.[0]?.id || null,
+        storageSaved,
+        storageError: storageError || null,
         notificationError: notificationError || null,
       },
     });
 
-    return sendJson(res, 201, { ok: true, request: rows?.[0] || null, notificationSent });
+    if (!storageSaved && !notificationSent) {
+      return sendJson(res, 500, { error: "Възникна проблем при изпращане на заявката." });
+    }
+
+    return sendJson(res, 201, {
+      ok: true,
+      request: rows?.[0] || null,
+      notificationSent,
+      storageSaved,
+    });
   } catch (error) {
     console.error("Training request failed:", error);
     return sendJson(res, 500, { error: "Възникна проблем при изпращане на заявката." });

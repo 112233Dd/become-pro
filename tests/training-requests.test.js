@@ -77,6 +77,9 @@ test("training request API remains dedicated to individual training signups", ()
   assert.match(endpoint, /training_request_notification_sent/);
   assert.match(endpoint, /training_request_notification_failed/);
   assert.match(endpoint, /notificationSent/);
+  assert.match(endpoint, /storageSaved/);
+  assert.match(endpoint, /continuing with admin email/);
+  assert.match(endpoint, /не е записана в админ панела/);
 });
 
 test("admin contact inquiry API is protected and supports status updates", () => {
