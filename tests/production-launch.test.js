@@ -124,13 +124,13 @@ test("cart exposes quantity, remove, total, and Stripe checkout controls", () =>
   assert.match(shop, /\/api\/create-checkout-session/);
 });
 
-test("checkout can be disabled while payment configuration is under review", () => {
+test("checkout is not blocked by a retired feature flag", () => {
   const endpoint = read("api/create-checkout-session.js");
   const shared = read("api/_shared.js");
 
-  assert.match(shared, /isCheckoutEnabled/);
-  assert.match(endpoint, /isCheckoutEnabled/);
-  assert.match(endpoint, /return sendJson\(res,\s*503/);
+  assert.doesNotMatch(shared, /CHECKOUT_ENABLED|isCheckoutEnabled/);
+  assert.doesNotMatch(endpoint, /Плащанията са временно спрени|return sendJson\(res,\s*503/);
+  assert.match(endpoint, /createStripeCheckoutSession/);
 });
 
 test("checkout still tolerates pending-order persistence failures when enabled", () => {

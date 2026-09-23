@@ -73,6 +73,10 @@ test("training request API remains dedicated to individual training signups", ()
   assert.match(endpoint, /training_requests/);
   assert.match(endpoint, /status:\s*"new"/);
   assert.match(endpoint, /sendEmail/);
+  assert.match(endpoint, /ADMIN_NOTIFICATION_EMAIL/);
+  assert.match(endpoint, /training_request_notification_sent/);
+  assert.match(endpoint, /training_request_notification_failed/);
+  assert.match(endpoint, /notificationSent/);
 });
 
 test("admin contact inquiry API is protected and supports status updates", () => {
@@ -135,6 +139,8 @@ test("admin panel exposes Leads & CRM metrics, filters, detail modal, and follow
   assert.match(script, /addLeadNote/);
   assert.match(script, /data-lead-open/);
   assert.match(script, /crmFilterValue/);
+  assert.match(html, /data-training-notification-health/);
+  assert.match(script, /training_request_notification_failed/);
 });
 
 test("admin panel includes a separate contact inquiries dashboard", () => {

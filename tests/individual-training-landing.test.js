@@ -47,6 +47,12 @@ test("individual training campaign route and page exist", () => {
 test("landing page contains the approved conversion structure", () => {
   const html = read("individual-training.html");
 
+  assert.match(html, /<header class="site-header" data-header>/);
+  assert.match(html, /<nav class="site-nav" data-nav>/);
+  assert.match(html, /class="is-active" href="\/individual-training"/);
+  assert.match(html, /data-nav-toggle/);
+  assert.doesNotMatch(html, /mobile-quick-actions/);
+
   assert.match(html, /<p class="hero-slogan">Не чакай шанса си\. Подготви се за него\.<\/p>/);
   assert.match(html, /<p class="landing-eyebrow">ИНДИВИДУАЛНИ ФУТБОЛНИ ТРЕНИРОВКИ<\/p>/);
   assert.match(html, /<h1>Развий увереността и качествата си на терена<\/h1>/);

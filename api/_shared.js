@@ -269,7 +269,6 @@ const supabaseRequest = async (path, options = {}) => {
 };
 
 const hasSupabaseAdmin = () => Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
-const isCheckoutEnabled = () => process.env.CHECKOUT_ENABLED === "true";
 
 const orderRowsFromPrograms = ({ programs, customer, status, sessionId, paymentIntentId, attribution = {} }) =>
   programs.map((program) => ({
@@ -389,7 +388,7 @@ const getStripeDiagnostics = async () => {
   ]);
 
   return {
-    checkoutEnabled: isCheckoutEnabled(),
+    checkoutEnabled: Boolean(process.env.STRIPE_SECRET_KEY),
     environment: {
       stripeSecretKeyMode: String(process.env.STRIPE_SECRET_KEY || "").startsWith("sk_live_")
         ? "live"
@@ -492,6 +491,7 @@ const sendSmtpEmail = async ({ to, subject, text, html }) => {
     let buffer = "";
     const socket = tls.connect(port, host, { servername: host });
     socket.setMaxListeners(30);
+    socket.setTimeout(15000);
 
     const fail = (error) => {
       socket.destroy();
@@ -533,6 +533,7 @@ const sendSmtpEmail = async ({ to, subject, text, html }) => {
     };
 
     socket.once("error", fail);
+    socket.once("timeout", () => fail(new Error("SMTP connection timed out.")));
     socket.once("secureConnect", async () => {
       try {
         await expect(220);
@@ -574,8 +575,11 @@ const sendResendEmail = async ({ to, subject, text, html }) => {
 };
 
 const sendEmail = async ({ to, subject, text, html }) => {
-  if (process.env.RESEND_API_KEY) return sendResendEmail({ to, subject, text, html });
-  return sendSmtpEmail({ to, subject, text, html });
+  const result = process.env.RESEND_API_KEY
+    ? await sendResendEmail({ to, subject, text, html })
+    : await sendSmtpEmail({ to, subject, text, html });
+  if (result?.skipped) throw new Error("Email delivery is not configured.");
+  return result;
 };
 
 const verifyStripeSignature = (rawBody, signatureHeader) => {
@@ -641,7 +645,6 @@ module.exports = {
   getOrigin,
   getProgramsByIds,
   hasSupabaseAdmin,
-  isCheckoutEnabled,
   listCheckoutSessionLineItems,
   listStripeOrders,
   getStripeDiagnostics,

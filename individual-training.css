@@ -10,6 +10,7 @@
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { margin: 0; font-family: Inter, Arial, sans-serif; }
+body.nav-open { overflow: hidden; }
 a { color: inherit; }
 img, video { display: block; max-width: 100%; }
 
@@ -24,23 +25,72 @@ img, video { display: block; max-width: 100%; }
   margin-inline: auto;
 }
 
-.training-landing-header {
+.site-header {
   position: sticky;
   top: 0;
   z-index: 40;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 22px;
+  padding: 16px clamp(18px, 4vw, 56px);
   border-bottom: 1px solid var(--line);
-  background: rgba(5, 5, 5, 0.9);
+  background: rgba(3, 3, 3, 0.82);
   backdrop-filter: blur(16px);
 }
 
-.header-inner, .landing-brand, .landing-actions, .training-landing-footer div, .training-landing-footer nav {
+.brand,
+.landing-actions,
+.header-actions,
+.training-landing-footer div,
+.training-landing-footer nav {
   display: flex;
   align-items: center;
 }
 
-.header-inner { min-height: 76px; justify-content: space-between; gap: 20px; }
-.landing-brand { gap: 10px; text-decoration: none; letter-spacing: .08em; }
-.landing-brand img { width: 40px; height: 40px; object-fit: contain; }
+.brand {
+  gap: 10px;
+  width: fit-content;
+  color: var(--cream);
+  font-weight: 900;
+  text-decoration: none;
+}
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  overflow: hidden;
+  border: 1px solid rgba(245,196,0,.65);
+  border-radius: 8px;
+  background: rgba(255,255,255,.05);
+}
+.brand-mark img { width: 31px; height: 31px; object-fit: contain; }
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 7px;
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: 999px;
+  background: rgba(5,7,9,.54);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+  color: #d8d3c7;
+  font-size: 12.5px;
+  font-weight: 800;
+}
+.site-nav a {
+  padding: 10px 12px;
+  border-radius: 999px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color .2s ease, background .2s ease;
+}
+.site-nav a:hover,
+.site-nav a.is-active { color: var(--gold); }
+.site-nav a.is-active { background: rgba(245,196,0,.14); }
+.header-actions { justify-self: end; gap: 10px; }
+.nav-toggle { display: none; }
 
 .landing-button {
   display: inline-flex;
@@ -58,6 +108,7 @@ img, video { display: block; max-width: 100%; }
 }
 
 .landing-button-small { min-height: 44px; padding-inline: 18px; }
+.header-cta { white-space: nowrap; }
 .landing-button-ghost { color: var(--cream); background: transparent; border-color: rgba(255,255,255,.25); }
 .landing-cta-panel {
   display: flex;
@@ -529,11 +580,38 @@ img, video { display: block; max-width: 100%; }
   .training-landing-footer .training-landing-shell { grid-template-columns: 1fr; }
 }
 
+@media (max-width: 1480px) {
+  .site-header { grid-template-columns: 1fr auto auto; }
+  .site-nav {
+    position: fixed;
+    inset: 77px 16px auto;
+    display: none;
+    padding: 18px;
+    border-radius: 8px;
+    background: rgba(3,3,3,.98);
+  }
+  .site-nav.is-open { display: grid; }
+  .nav-toggle {
+    display: grid;
+    gap: 6px;
+    width: 44px;
+    height: 44px;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+  }
+  .nav-toggle span { display: block; height: 2px; background: var(--cream); }
+}
+
 @media (max-width: 620px) {
-  .header-inner { min-height: 66px; }
-  .landing-brand strong { font-size: 14px; }
-  .landing-brand img { width: 34px; height: 34px; }
-  .landing-button-small { min-height: 40px; padding-inline: 13px; font-size: 13px; }
+  .site-header { gap: 8px; padding: 12px 14px; }
+  .brand { font-size: 14px; }
+  .brand-mark { width: 34px; height: 34px; }
+  .brand-mark img { width: 28px; height: 28px; }
+  .site-nav { inset: 69px 14px auto; }
+  .landing-button-small { min-height: 40px; padding-inline: 10px; font-size: 12px; }
   .hero-grid { min-height: auto; padding-block: 36px 28px; }
   .hero-copy h1 { max-width: 13ch; font-size: clamp(34px, 9.2vw, 42px); line-height: 1.08; }
   .hero-lead { margin-top: 18px; font-size: 18px; }

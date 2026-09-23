@@ -1,4 +1,4 @@
-const { readJsonBody, sendEmail, sendJson, supabaseRequest } = require("./_shared");
+const { logAdminEvent, readJsonBody, sendEmail, sendJson, supabaseRequest } = require("./_shared");
 
 const APPLICANT_TYPES = new Set(["Моето дете", "Себе си"]);
 
@@ -10,6 +10,30 @@ const isLegacyTrainingSchemaError = (error) =>
   );
 const isContactSchemaError = (error) =>
   /contact_inquiries|PGRST205|PGRST204|schema cache/i.test(String(error?.message || error || ""));
+const getAdminNotificationEmail = () =>
+  process.env.ADMIN_NOTIFICATION_EMAIL || process.env.ADMIN_EMAIL || "become.pro2024@gmail.com";
+const escapeHtml = (value) =>
+  String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+const notificationHtml = ({ title, rows }) => `
+  <div style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto;padding:28px;background:#0b0b0a;color:#f8f4e8;border-radius:18px;">
+    <p style="margin:0 0 8px;color:#f5c400;font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;">Become Pro</p>
+    <h1 style="margin:0 0 22px;font-size:26px;line-height:1.2;">${escapeHtml(title)}</h1>
+    <table style="width:100%;border-collapse:collapse;">
+      ${rows
+        .map(
+          ([label, value]) => `
+            <tr>
+              <td style="padding:10px 12px;border-bottom:1px solid #2d2a21;color:#bdb7aa;">${escapeHtml(label)}</td>
+              <td style="padding:10px 12px;border-bottom:1px solid #2d2a21;font-weight:700;">${escapeHtml(value || "-")}</td>
+            </tr>`,
+        )
+        .join("")}
+    </table>
+    <p style="margin:22px 0 0;"><a href="https://becomeprofootball.com/admin-orders" style="color:#f5c400;font-weight:800;">Отвори админ панела →</a></p>
+  </div>`;
 
 const createContactInquiry = async (body) => {
   const name = cleanText(body.name, 120);
@@ -49,7 +73,7 @@ const createContactInquiry = async (body) => {
 
   try {
     await sendEmail({
-      to: process.env.ADMIN_EMAIL,
+      to: getAdminNotificationEmail(),
       subject: "Ново контактно запитване",
       text: [
         "Получено е ново контактно запитване.",
@@ -63,6 +87,15 @@ const createContactInquiry = async (body) => {
         "",
         "Запитването е записано в админ панела.",
       ].join("\n"),
+      html: notificationHtml({
+        title: "Ново контактно запитване",
+        rows: [
+          ["Име", name],
+          ["Телефон", phone],
+          ["Имейл", email],
+          ["Съобщение", message],
+        ],
+      }),
     });
   } catch (emailError) {
     console.error("Contact inquiry admin email failed:", emailError);
@@ -151,9 +184,11 @@ module.exports = async (req, res) => {
       });
     }
 
+    let notificationSent = false;
+    let notificationError = "";
     try {
       await sendEmail({
-        to: process.env.ADMIN_EMAIL,
+        to: getAdminNotificationEmail(),
         subject: "Нова заявка за индивидуална тренировка",
         text: [
           "Получена е нова заявка за индивидуална тренировка.",
@@ -168,12 +203,38 @@ module.exports = async (req, res) => {
           "",
           "Заявката е записана в админ панела.",
         ].join("\n"),
+        html: notificationHtml({
+          title: "Нова заявка за индивидуална тренировка",
+          rows: [
+            ["Кого записват", applicantType],
+            ["Име", name],
+            ["Възраст", playerAge],
+            ["Град", city],
+            ["Телефон", phone],
+            ["Landing page", attributionRow.page_variant],
+            ["Кампания", attributionRow.utm_campaign],
+          ],
+        }),
       });
+      notificationSent = true;
     } catch (emailError) {
+      notificationError = emailError.message || "Unknown email error";
       console.error("Training request admin email failed:", emailError);
     }
 
-    return sendJson(res, 201, { ok: true, request: rows?.[0] || null });
+    await logAdminEvent({
+      level: notificationSent ? "info" : "error",
+      event: notificationSent ? "training_request_notification_sent" : "training_request_notification_failed",
+      message: notificationSent
+        ? "Admin email sent for a new individual training request."
+        : "A training request was saved, but the admin email could not be sent.",
+      metadata: {
+        requestId: rows?.[0]?.id || null,
+        notificationError: notificationError || null,
+      },
+    });
+
+    return sendJson(res, 201, { ok: true, request: rows?.[0] || null, notificationSent });
   } catch (error) {
     console.error("Training request failed:", error);
     return sendJson(res, 500, { error: "Възникна проблем при изпращане на заявката." });

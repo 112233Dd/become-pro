@@ -99,8 +99,7 @@ test("checkout endpoint accepts cart items and creates a Stripe Checkout Session
   const shared = read("api/_shared.js");
 
   assert.match(endpoint, /Array\.isArray\(body\.items\)/);
-  assert.match(endpoint, /isCheckoutEnabled/);
-  assert.match(endpoint, /Плащанията са временно спрени/);
+  assert.doesNotMatch(endpoint, /isCheckoutEnabled|Плащанията са временно спрени/);
   assert.match(endpoint, /createStripeCheckoutSession/);
   assert.match(endpoint, /status:\s*"pending"/);
   assert.match(endpoint, /url:\s*session\.url/);
@@ -114,13 +113,13 @@ test("checkout endpoint accepts cart items and creates a Stripe Checkout Session
   assert.match(shared, /Stripe-Version/);
 });
 
-test("checkout is disabled by default until payment configuration is verified", () => {
+test("checkout is available whenever the Stripe secret key is configured", () => {
   const endpoint = read("api/create-checkout-session.js");
   const shared = read("api/_shared.js");
 
-  assert.match(shared, /const isCheckoutEnabled = \(\) => process\.env\.CHECKOUT_ENABLED === "true"/);
-  assert.match(endpoint, /return sendJson\(res,\s*503/);
-  assert.match(endpoint, /isCheckoutEnabled\(\)/);
+  assert.doesNotMatch(shared, /CHECKOUT_ENABLED|isCheckoutEnabled/);
+  assert.doesNotMatch(endpoint, /return sendJson\(res,\s*503/);
+  assert.match(endpoint, /Missing environment variable/);
 });
 
 test("webhook is the only place that fulfills successful payments", () => {
@@ -219,6 +218,8 @@ test("SMTP email sends multipart UTF-8 base64 and Resend receives HTML", () => {
   const shared = read("api/_shared.js");
 
   assert.match(shared, /sendEmail = async \(\{ to, subject, text, html \}\)/);
+  assert.match(shared, /Email delivery is not configured/);
+  assert.match(shared, /socket\.setTimeout\(15000\)/);
   assert.match(shared, /multipart\/alternative/);
   assert.match(shared, /Content-Type: text\/plain; charset=UTF-8/);
   assert.match(shared, /Content-Type: text\/html; charset=UTF-8/);

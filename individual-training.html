@@ -33,24 +33,30 @@
         "url": "https://becomeprofootball.com/individual-training"
       }
     </script>
-    <link rel="stylesheet" href="/individual-training.css?v=trust-sticky-20260619b" />
+    <link rel="stylesheet" href="/individual-training.css?v=shared-header-20260923" />
   </head>
   <body id="top" class="training-landing" data-page-variant="individual-training">
-    <header class="training-landing-header">
-      <div class="training-landing-shell header-inner">
-        <a class="landing-brand" href="#top" aria-label="Become Pro">
-          <img src="/assets/becomepro-logo.png" alt="Become Pro logo" />
-          <strong>BECOME PRO</strong>
-        </a>
-        <a class="landing-button landing-button-small" href="#training-form" data-primary-cta data-cta-location="header">Запази тренировка</a>
+    <header class="site-header" data-header>
+      <a class="brand" href="/" aria-label="Become Pro начало">
+        <span class="brand-mark"><img src="/assets/becomepro-logo.png" alt="Become Pro logo" /></span>
+        <span>BECOME PRO</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-label="Отвори меню" aria-expanded="false" data-nav-toggle>
+        <span></span>
+        <span></span>
+      </button>
+      <nav class="site-nav" data-nav>
+        <a href="/programs">Програми</a>
+        <a class="is-active" href="/individual-training">Индивидуални тренировки</a>
+        <a href="/coach">За треньора</a>
+        <a href="/players">Играчи</a>
+        <a href="/faq">Често задавани въпроси</a>
+        <a href="/contact">Контакти</a>
+      </nav>
+      <div class="header-actions">
+        <a class="landing-button landing-button-small header-cta" href="#training-form" data-primary-cta data-cta-location="header">Запази тренировка</a>
       </div>
     </header>
-    <div class="mobile-quick-actions" aria-label="Бързи действия">
-      <a href="programs.html#programs">Програми</a>
-      <a href="/individual-training">Тренировка</a>
-    </div>
-
-
     <main>
       <section class="training-landing-hero">
         <div class="training-landing-shell hero-grid">
@@ -295,6 +301,6 @@
     </footer>
 
     <a class="training-sticky-cta" href="#training-form" data-primary-cta data-mobile-sticky-cta data-cta-location="sticky_mobile">Запази тренировка</a>
-    <script src="/individual-training.js?v=trust-sticky-20260619b"></script>
+    <script src="/individual-training.js?v=shared-header-20260923"></script>
   </body>
 </html>

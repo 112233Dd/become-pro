@@ -14,6 +14,7 @@ const trainingStatusButtons = [...document.querySelectorAll("[data-training-requ
 const trainingRefreshButton = document.querySelector("[data-training-request-refresh]");
 const trainingEmptyState = document.querySelector("[data-training-request-empty]");
 const trainingErrorState = document.querySelector("[data-training-request-error]");
+const trainingNotificationHealth = document.querySelector("[data-training-notification-health]");
 const crmMetrics = document.querySelector("[data-crm-metrics]");
 const crmFunnel = document.querySelector("[data-crm-funnel]");
 const crmFollowups = document.querySelector("[data-crm-followups]");
@@ -1013,6 +1014,21 @@ const renderAdminLogs = () => {
       `,
     )
     .join("");
+
+  if (trainingNotificationHealth) {
+    const latestNotification = adminLogs.find((log) =>
+      ["training_request_notification_sent", "training_request_notification_failed"].includes(log.event),
+    );
+    trainingNotificationHealth.classList.toggle(
+      "admin-error",
+      latestNotification?.event === "training_request_notification_failed",
+    );
+    trainingNotificationHealth.textContent = !latestNotification
+      ? "Все още няма отчетено известие за заявка за тренировка."
+      : latestNotification.event === "training_request_notification_sent"
+        ? `Последното известие е изпратено успешно: ${formatDate(latestNotification.created_at)}`
+        : `Внимание: последното email известие е неуспешно (${formatDate(latestNotification.created_at)}). Заявката е запазена в таблицата.`;
+  }
 };
 
 const renderStripeDiagnostics = () => {
