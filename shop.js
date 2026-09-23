@@ -6,7 +6,7 @@ const shopPrograms = [
     id: "summer-program",
     title: "Лятна програма",
     price: "€34.99",
-    image: "assets/program-cover-summer.png",
+    image: "assets/program-cover-summer.webp",
     badge: "🥇 Най-добрият избор за лятото",
     badgeVariant: "featured",
     description:
@@ -66,7 +66,7 @@ const shopPrograms = [
     id: "technical-pack",
     title: "Технически пакет",
     price: "€24.99",
-    image: "assets/program-cover-technical-pack.png",
+    image: "assets/program-cover-technical-pack.webp",
     description:
       "Пълна техническа система за футболисти, които искат по-добър контрол, по-уверени действия с топката и повече качество в игра.",
     suitable: "Играчи, които искат цялостно техническо развитие.",
@@ -120,7 +120,7 @@ const shopPrograms = [
     id: "strength-level-1",
     title: "Силова програма — Ниво 1",
     price: "€24.99",
-    image: "assets/program-cover-strength-level-1.jfif",
+    image: "assets/program-cover-strength-level-1.webp",
     description:
       "Начална силова програма за футболисти, които искат да изградят стабилна основа, правилна техника и по-добър контрол на тялото.",
     suitable: "Играчи, които започват със силова подготовка.",
@@ -162,7 +162,7 @@ const shopPrograms = [
     id: "strength-level-2",
     title: "Силова програма — Ниво 2",
     price: "€24.99",
-    image: "assets/program-cover-strength-level-2.jfif",
+    image: "assets/program-cover-strength-level-2.webp",
     description:
       "Следващо ниво за футболисти, които вече имат основа и искат повече сила, експлозивност и устойчивост.",
     suitable: "Играчи със средно ниво на подготовка.",
@@ -204,7 +204,7 @@ const shopPrograms = [
     id: "strength-level-3",
     title: "Силова програма — Ниво 3",
     price: "€24.99",
-    image: "assets/program-cover-strength-level-3.jfif",
+    image: "assets/program-cover-strength-level-3.webp",
     description:
       "Напреднала програма за футболисти, които искат по-висока физическа готовност, повече мощност и по-добро представяне на терена.",
     suitable: "Напреднали играчи.",
@@ -246,7 +246,7 @@ const shopPrograms = [
     id: "matchday-pack",
     title: "Мачов пакет",
     price: "€24.99",
-    image: "assets/program-cover-matchday.png",
+    image: "assets/program-cover-matchday.webp",
     description:
       "Пакет за играчи, които искат да се подготвят по-добре преди мач и да изградят по-добра рутина около представянето си.",
     suitable: "Футболисти, които искат по-добра мачова готовност.",
@@ -512,7 +512,7 @@ const getProgramBonusItems = (program) => {
 const renderProgramCard = (program, compact = false) => `
   <article class="program-card product-related-card">
     <a class="program-image" href="${getProgramUrl(program)}">
-      <img src="${getAssetPath(program)}" alt="Корица на ${program.title}" />
+      <img src="${getAssetPath(program)}" alt="Корица на ${program.title}" width="800" height="1132" loading="lazy" decoding="async" />
     </a>
     <span class="program-label">${compact ? "Онлайн програма" : "Become Pro"}</span>
     <a class="program-title" href="${getProgramUrl(program)}">${program.title}</a>
@@ -618,7 +618,7 @@ const renderProductDetail = () => {
   root.innerHTML = `
     <section class="product-detail-hero section-dark">
       <div class="product-detail-media reveal">
-        <img src="${getAssetPath(program)}" alt="Корица на ${program.title}" />
+        <img src="${getAssetPath(program)}" alt="Корица на ${program.title}" width="800" height="1132" fetchpriority="high" decoding="async" />
       </div>
       <div class="product-detail-copy reveal">
         <p class="eyebrow">Онлайн програма</p>
@@ -773,7 +773,7 @@ const renderCartPage = () => {
             .map(
               (program) => `
                 <article class="cart-item">
-                  <img src="${getAssetPath(program)}" alt="Корица на ${program.title}" />
+                  <img src="${getAssetPath(program)}" alt="Корица на ${program.title}" width="800" height="1132" loading="lazy" decoding="async" />
                   <div>
                     <h3>${program.title}</h3>
                     <p>${program.description}</p>
@@ -836,7 +836,7 @@ const renderCheckoutPage = () => {
             .map(
               (program) => `
                 <article>
-                  <img src="${getAssetPath(program)}" alt="Корица на ${program.title}" />
+                  <img src="${getAssetPath(program)}" alt="Корица на ${program.title}" width="800" height="1132" loading="lazy" decoding="async" />
                   <div>
                     <strong>${program.title}</strong>
                     <p>${program.price}</p>

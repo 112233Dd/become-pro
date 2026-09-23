@@ -81,8 +81,8 @@ test("landing page contains the approved conversion structure", () => {
   assert.match(html, /id="training-faq"/);
   assert.match(html, /id="training-form"/);
   assert.match(html, /data-mobile-sticky-cta/);
-  assert.match(html, /individual-training\.css/);
-  assert.match(html, /individual-training\.js/);
+  assert.match(html, /individual-training\.min\.css/);
+  assert.match(html, /individual-training\.min\.js/);
 
   const order = [
     'id="training-fit"',
@@ -138,7 +138,11 @@ test("landing page uses real training media, player proof, FAQ, and compact lega
   assert.match(html, /assets\/videos\/individual-tech-first-touch-poster\.jpg/);
   assert.match(html, /assets\/videos\/individual-speed-explosiveness-poster\.jpg/);
   assert.match(html, /assets\/videos\/individual-decisions-game-situations-poster\.jpg/);
-  assert.equal((html.match(/<video controls muted playsinline preload="metadata"/g) || []).length, 3);
+  assert.equal((html.match(/<video controls muted playsinline preload="none" data-poster=/g) || []).length, 3);
+  assert.match(html, /data-deferred-video-src/);
+  assert.match(html, /data-video-play/);
+  assert.match(html, /yordan-training-poster\.webp/);
+  assert.match(html, /yordan-training-poster-480\.webp/);
   assert.match(html, /coach-yordan-zhelev\.png/);
   assert.match(html, /coach-achievement-list/);
   assert.match(html, /coach-cta-panel/);

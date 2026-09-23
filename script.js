@@ -1,4 +1,4 @@
-﻿const header = document.querySelector("[data-header]");
+const header = document.querySelector("[data-header]");
 const nav = document.querySelector("[data-nav]");
 const navToggle = document.querySelector("[data-nav-toggle]");
 const form = document.querySelector("[data-form]");
@@ -16,7 +16,7 @@ const renderSiteFooter = () => {
     <div class="footer-main">
       <div class="footer-brand">
         <a class="footer-logo" href="/" aria-label="Become Pro начало">
-          <img src="/assets/becomepro-logo.png" alt="Become Pro logo" />
+          <img src="/assets/becomepro-logo-compact.webp" alt="Become Pro logo" />
           <span>BECOME <strong>PRO</strong></span>
         </a>
         <p>Футболни програми и индивидуални тренировки за целенасочено развитие.</p>
@@ -51,6 +51,31 @@ const renderSiteFooter = () => {
 };
 
 renderSiteFooter();
+
+const startDeferredVideo = (button) => {
+  const shell = button.closest(".deferred-video-shell");
+  const poster = shell?.querySelector("[data-video-poster]");
+  const videoSrc = shell?.dataset.deferredVideoSrc;
+  if (!shell || !poster || !videoSrc) return;
+
+  const video = document.createElement("video");
+  video.src = videoSrc;
+  video.poster = poster.currentSrc || poster.src;
+  video.className = "deferred-video-player";
+  video.setAttribute("aria-label", shell.dataset.videoLabel || poster.alt || "Become Pro video");
+  video.muted = true;
+  video.loop = true;
+  video.playsInline = true;
+  video.controls = true;
+  poster.replaceWith(video);
+
+  shell.classList.add("is-playing");
+  video.play().catch(() => shell.classList.remove("is-playing"));
+};
+
+document.querySelectorAll("[data-video-play]").forEach((button) => {
+  button.addEventListener("click", () => startDeferredVideo(button));
+});
 
 document.body.dataset.theme = "dark";
 localStorage.removeItem("becomeProTheme");

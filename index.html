@@ -21,12 +21,12 @@
     <meta name="twitter:image" content="https://becomeprofootball.com/assets/og-image.png" />
     <link rel="canonical" href="https://becomeprofootball.com/" />
 
-<link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.home.min.css" />
   </head>
   <body>
     <header class="site-header" data-header>
       <a class="brand" href="index.html" aria-label="Become Pro начало">
-        <span class="brand-mark"><img src="assets/becomepro-logo.png" alt="Become Pro logo" /></span>
+        <span class="brand-mark"><img src="assets/becomepro-logo-compact.webp" alt="Become Pro logo" /></span>
         <span>BECOME PRO</span>
       </a>
       <button class="nav-toggle" aria-label="Отвори меню" aria-expanded="false" data-nav-toggle>
@@ -78,18 +78,18 @@
             <div><strong>10–24</strong><span>години подходяща възраст</span></div>
           </div>
         </div>
-        <div class="hero-media hero-training-video reveal">
-          <video autoplay muted loop playsinline preload="metadata" aria-label="Индивидуална тренировка Become Pro">
-            <source src="assets/videos/hero-hat-swap-game.mp4" type="video/mp4" />
-          </video>
+        <div class="hero-media hero-training-video reveal deferred-video-shell" data-deferred-video-src="assets/videos/hero-hat-swap-game.mp4" data-video-label="Индивидуална тренировка Become Pro">
+          <img class="deferred-video-poster" src="assets/home-start-online-programs.webp" alt="Индивидуална тренировка Become Pro" width="800" height="450" fetchpriority="high" decoding="async" data-video-poster />
+          <button class="video-play-button" type="button" data-video-play aria-label="Пусни видеото от индивидуална тренировка">▶ Пусни видеото</button>
         </div>
       </section>
       <section class="home-products section-dark reveal" id="home-products">
         <div class="home-products-grid">
           <article class="brand-face-card">
             <div class="brand-face-gallery">
-              <div class="brand-face-image main">
-                <video src="assets/videos/home-brand-training-drill.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Индивидуална тренировка Become Pro на терен"></video>
+              <div class="brand-face-image main deferred-video-shell" data-deferred-video-src="assets/videos/home-brand-training-drill.mp4" data-video-label="Индивидуална тренировка Become Pro на терен">
+                <img class="deferred-video-poster" src="assets/home-start-online-programs.webp" alt="Индивидуална тренировка Become Pro на терен" width="800" height="450" loading="lazy" decoding="async" data-video-poster />
+                <button class="video-play-button" type="button" data-video-play aria-label="Пусни видеото с тренировка на терен">▶ Пусни видеото</button>
               </div>
             </div>
             <div class="brand-face-copy">
@@ -114,7 +114,7 @@
             <div class="product-showcase-grid start-path-grid" aria-label="Начини да започнеш с Become Pro">
               <a class="start-path-card featured" href="programs.html">
                 <span class="path-card-media">
-                  <img src="assets/home-start-online-programs.jfif" alt="Онлайн програми Become Pro" />
+                  <img src="assets/home-start-live-training.webp" alt="Онлайн програми Become Pro" width="800" height="450" loading="lazy" decoding="async" />
                 </span>
                 <span class="path-card-copy">
                   <span class="path-label">Онлайн програми</span>
@@ -123,7 +123,7 @@
               </a>
               <a class="start-path-card field" href="/individual-training">
                 <span class="path-card-media">
-                  <img src="assets/home-start-live-training.jfif" alt="Индивидуални тренировки Become Pro" />
+                  <img src="assets/home-start-online-programs.webp" alt="Индивидуални тренировки Become Pro" width="800" height="450" loading="lazy" decoding="async" />
                 </span>
                 <span class="path-card-copy">
                   <span class="path-label">1:1 тренировки</span>
@@ -221,7 +221,7 @@
       </section>    </main>
     <footer class="site-footer" data-site-footer></footer>
 
-    <script src="script.js"></script>
+    <script src="script.min.js"></script>
   </body>
 </html>
 

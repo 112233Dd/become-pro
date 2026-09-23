@@ -20,7 +20,7 @@ const productCatalog = {
     name: "Технически пакет",
     price: 24.99,
     priceCents: 2499,
-    image: "/assets/program-cover-technical-pack.png",
+    image: "/assets/program-cover-technical-pack.webp",
     programLink: PROGRAM_LINKS["technical-pack"],
     description:
       "Пълна техническа система за футболисти, които искат по-добър контрол, по-уверени действия с топката и повече качество в игра.",
@@ -30,7 +30,7 @@ const productCatalog = {
     name: "Силова програма — Ниво 1",
     price: 24.99,
     priceCents: 2499,
-    image: "/assets/program-cover-strength-level-1.jfif",
+    image: "/assets/program-cover-strength-level-1.webp",
     programLink: PROGRAM_LINKS["strength-level-1"],
     description:
       "Начална силова програма за футболисти, които искат стабилна основа, правилна техника и по-добър контрол на тялото.",
@@ -40,7 +40,7 @@ const productCatalog = {
     name: "Силова програма — Ниво 2",
     price: 24.99,
     priceCents: 2499,
-    image: "/assets/program-cover-strength-level-2.jfif",
+    image: "/assets/program-cover-strength-level-2.webp",
     programLink: PROGRAM_LINKS["strength-level-2"],
     description:
       "Следващо ниво за футболисти, които вече имат основа и искат повече сила, експлозивност и устойчивост.",
@@ -50,7 +50,7 @@ const productCatalog = {
     name: "Силова програма — Ниво 3",
     price: 24.99,
     priceCents: 2499,
-    image: "/assets/program-cover-strength-level-3.jfif",
+    image: "/assets/program-cover-strength-level-3.webp",
     programLink: PROGRAM_LINKS["strength-level-3"],
     description:
       "Напреднала програма за футболисти, които искат по-висока физическа готовност, мощност и атлетизъм.",
@@ -60,7 +60,7 @@ const productCatalog = {
     name: "Лятна програма",
     price: 34.99,
     priceCents: 3499,
-    image: "/assets/program-cover-summer.png",
+    image: "/assets/program-cover-summer.webp",
     programLink: PROGRAM_LINKS["summer-program"],
     description:
       "Структурирана програма за футболисти, които искат да използват лятото правилно и да се върнат по-подготвени.",
@@ -70,7 +70,7 @@ const productCatalog = {
     name: "Мачов пакет",
     price: 24.99,
     priceCents: 2499,
-    image: "/assets/program-cover-matchday.png",
+    image: "/assets/program-cover-matchday.webp",
     programLink: PROGRAM_LINKS["matchday-pack"],
     description:
       "Пакет за играчи, които искат по-добра рутина преди мач, повече спокойствие и по-добра мачова готовност.",

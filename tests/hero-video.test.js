@@ -10,6 +10,9 @@ test("home hero uses only the requested training video", () => {
   const hero = html.match(/<section class="hero section-dark">([\s\S]*?)<\/section>/)?.[1] || "";
 
   assert.match(hero, /assets\/videos\/hero-hat-swap-game\.mp4/);
+  assert.match(hero, /data-deferred-video-src="assets\/videos\/hero-hat-swap-game\.mp4"/);
+  assert.match(hero, /home-start-online-programs\.webp/);
+  assert.doesNotMatch(hero, /<video[^>]*autoplay/);
   assert.doesNotMatch(hero, /coach-yordan-zhelev\.png/);
   assert.doesNotMatch(hero, /media-badge/);
   assert.ok(fs.existsSync(path.join(root, "assets", "videos", "hero-hat-swap-game.mp4")));

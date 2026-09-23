@@ -21,12 +21,12 @@
     <meta name="twitter:image" content="https://becomeprofootball.com/assets/og-image.png" />
     <link rel="canonical" href="https://becomeprofootball.com/programs" />
 
-<link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.programs.min.css" />
   </head>
   <body>
     <header class="site-header" data-header>
       <a class="brand" href="index.html" aria-label="Become Pro начало">
-        <span class="brand-mark"><img src="assets/becomepro-logo.png" alt="Become Pro logo" /></span>
+        <span class="brand-mark"><img src="assets/becomepro-logo-compact.webp" alt="Become Pro logo" /></span>
         <span>BECOME PRO</span>
       </a>
       <button class="nav-toggle" aria-label="Отвори меню" aria-expanded="false" data-nav-toggle>
@@ -77,22 +77,19 @@
         </div>
 
         <div class="training-dashboard training-video-showcase reveal" aria-label="Реални видеа от тренировки Become Pro">
-          <article class="training-video-card featured-video">
-            <video autoplay muted loop playsinline preload="metadata">
-              <source src="assets/videos/field-drill-side-forward-back.mp4" type="video/mp4" />
-            </video>
+          <article class="training-video-card featured-video deferred-video-shell" data-deferred-video-src="assets/videos/field-drill-side-forward-back.mp4" data-video-label="Работа с движение">
+            <img class="deferred-video-poster" src="assets/videos/field-drill-side-forward-back-poster.jpg" alt="Работа с движение" loading="lazy" decoding="async" data-video-poster />
+            <button class="video-play-button" type="button" data-video-play aria-label="Пусни видеото Работа с движение">▶ Пусни</button>
             <span>Работа с движение</span>
           </article>
-          <article class="training-video-card">
-            <video autoplay muted loop playsinline preload="metadata">
-              <source src="assets/videos/overlap-passing-cones.mp4" type="video/mp4" />
-            </video>
+          <article class="training-video-card deferred-video-shell" data-deferred-video-src="assets/videos/overlap-passing-cones.mp4" data-video-label="Подаване и заставане">
+            <img class="deferred-video-poster" src="assets/videos/overlap-passing-cones-poster.jpg" alt="Подаване и заставане" loading="lazy" decoding="async" data-video-poster />
+            <button class="video-play-button" type="button" data-video-play aria-label="Пусни видеото Подаване и заставане">▶ Пусни</button>
             <span>Подаване и заставане</span>
           </article>
-          <article class="training-video-card">
-            <video autoplay muted loop playsinline preload="metadata">
-              <source src="assets/videos/change-direction-back.mp4" type="video/mp4" />
-            </video>
+          <article class="training-video-card deferred-video-shell" data-deferred-video-src="assets/videos/change-direction-back.mp4" data-video-label="Смяна на посока">
+            <img class="deferred-video-poster" src="assets/videos/change-direction-back-poster.jpg" alt="Смяна на посока" loading="lazy" decoding="async" data-video-poster />
+            <button class="video-play-button" type="button" data-video-play aria-label="Пусни видеото Смяна на посока">▶ Пусни</button>
             <span>Смяна на посока</span>
           </article>
           <p>Реални упражнения, конкретен фокус и работа, която се пренася на терена.</p>
@@ -322,8 +319,8 @@
     </main>
     <footer class="site-footer" data-site-footer></footer>
 
-    <script src="shop.js"></script>
-    <script src="script.js"></script>
+    <script src="shop.min.js"></script>
+    <script src="script.min.js"></script>
   </body>
 </html>
 

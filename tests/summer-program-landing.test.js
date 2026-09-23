@@ -170,7 +170,7 @@ test("summer program landing has isolated premium responsive styling", () => {
   const html = read("summer-program.html");
   const css = read("summer-program.css");
 
-  assert.match(html, /summer-program\.css\?v=price-20260618/);
+  assert.match(html, /summer-program\.min\.css\?v=price-20260618/);
   assert.match(css, /#050505/);
   assert.match(css, /#f5c400|245,\s*196,\s*0/);
   assert.match(css, /\.summer-price-trust-section/);

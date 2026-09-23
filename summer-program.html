@@ -12,26 +12,21 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Лятна футболна програма | Become Pro" />
     <meta property="og:description" content="Използвай лятото, за да се върнеш по-подготвен за новия сезон." />
-    <meta property="og:image" content="https://becomeprofootball.com/assets/program-cover-summer.png" />
+    <meta property="og:image" content="https://becomeprofootball.com/assets/program-cover-summer.webp" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="canonical" href="https://becomeprofootball.com/summer-program" />
+    <link rel="preload" href="/assets/program-cover-summer-480.webp" as="image" type="image/webp" fetchpriority="high" />
 
-    <link rel="stylesheet" href="/summer-program.css?v=price-20260618" />
+    <link rel="stylesheet" href="/summer-program.min.css?v=price-20260618" />
   </head>
   <body class="summer-sales-page" data-page-variant="summer-program">
     <header class="summer-header">
       <a class="summer-brand" href="#summer-hero" aria-label="Become Pro Лятна програма">
-        <img src="/assets/becomepro-logo.png" alt="Become Pro" />
+        <img src="/assets/becomepro-logo-compact.webp" alt="Become Pro" />
         <span>BECOME PRO</span>
       </a>
       <button class="summer-header-cta" type="button" data-summer-checkout>Вземи програмата</button>
     </header>
-    <div class="mobile-quick-actions" aria-label="Бързи действия">
-      <a href="programs.html#programs">Програми</a>
-      <a href="/individual-training">Тренировка</a>
-    </div>
-
-
     <main>
 <section id="summer-hero" class="summer-hero">
         <div class="summer-hero-copy">
@@ -54,7 +49,7 @@
           <p class="summer-trust-line">Сигурно плащане чрез Stripe · Моментален достъп по имейл</p>
         </div>
         <div class="summer-hero-media">
-          <img src="/assets/program-cover-summer.png" alt="Become Pro Лятна програма" />
+          <img src="/assets/program-cover-summer-480.webp" alt="Become Pro Лятна програма" width="480" height="679" fetchpriority="high" />
         </div>
       </section>
 
@@ -67,7 +62,7 @@
           <video
             controls
             playsinline
-            preload="metadata"
+            preload="none"
             poster="/assets/videos/summer-official-explainer-poster.jpg?v=official-20260618"
             data-explainer-video
           >
@@ -452,6 +447,6 @@
       <button type="button" data-summer-checkout data-primary-cta>Вземи програмата - 34.99 €</button>
     </div>
 
-    <script src="/summer-program.js?v=reorder-20260616"></script>
+    <script src="/summer-program.min.js?v=reorder-20260616"></script>
   </body>
 </html>

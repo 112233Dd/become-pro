@@ -1,6 +1,53 @@
 (() => {
   const nav = document.querySelector("[data-nav]");
   const navToggle = document.querySelector("[data-nav-toggle]");
+
+  document.querySelectorAll("[data-video-play]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const shell = button.closest(".deferred-video-shell");
+      const poster = shell?.querySelector("[data-video-poster]");
+      const videoSrc = shell?.dataset.deferredVideoSrc;
+      if (!shell || !poster || !videoSrc) return;
+
+      const video = document.createElement("video");
+      video.src = videoSrc;
+      video.poster = poster.currentSrc || poster.src;
+      video.className = "deferred-video-player";
+      video.setAttribute("aria-label", shell.dataset.videoLabel || poster.alt || "Become Pro video");
+      video.muted = true;
+      video.loop = true;
+      video.playsInline = true;
+      video.controls = true;
+      poster.replaceWith(video);
+
+      shell.classList.add("is-playing");
+      video.play().catch(() => shell.classList.remove("is-playing"));
+    });
+  });
+
+  const deferredPosters = [...document.querySelectorAll("video[data-poster]")];
+  const loadPoster = (video) => {
+    if (!video.dataset.poster) return;
+    video.poster = video.dataset.poster;
+    delete video.dataset.poster;
+  };
+
+  if ("IntersectionObserver" in window) {
+    const posterObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          loadPoster(entry.target);
+          posterObserver.unobserve(entry.target);
+        });
+      },
+      { rootMargin: "600px 0px" },
+    );
+    deferredPosters.forEach((video) => posterObserver.observe(video));
+  } else {
+    deferredPosters.forEach(loadPoster);
+  }
+
   const closeNav = () => {
     nav?.classList.remove("is-open");
     document.body.classList.remove("nav-open");

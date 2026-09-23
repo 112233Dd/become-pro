@@ -12,12 +12,12 @@
     <link rel="canonical" href="https://becomeprofootball.com/individual-training" />
     <meta property="og:title" content="Индивидуални футболни тренировки | Become Pro" />
     <meta property="og:description" content="Персонални футболни тренировки според възрастта, позицията, нивото и целите на футболиста." />
-    <meta property="og:image" content="https://becomeprofootball.com/assets/yordan-training-poster.png" />
+    <meta property="og:image" content="https://becomeprofootball.com/assets/yordan-training-poster.webp" />
     <meta property="og:url" content="https://becomeprofootball.com/individual-training" />
     <meta property="og:type" content="website" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="preload" href="/assets/yordan-training-poster.png" as="image" />
+    <link rel="preload" href="/assets/yordan-training-poster-480.webp" as="image" type="image/webp" imagesrcset="/assets/yordan-training-poster-480.webp 480w, /assets/yordan-training-poster.webp 800w" imagesizes="(max-width: 720px) calc(100vw - 38px), 420px" fetchpriority="high" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -33,12 +33,12 @@
         "url": "https://becomeprofootball.com/individual-training"
       }
     </script>
-    <link rel="stylesheet" href="/individual-training.css?v=shared-header-20260923" />
+    <link rel="stylesheet" href="/individual-training.min.css?v=shared-header-20260923" />
   </head>
   <body id="top" class="training-landing" data-page-variant="individual-training">
     <header class="site-header" data-header>
       <a class="brand" href="/" aria-label="Become Pro начало">
-        <span class="brand-mark"><img src="/assets/becomepro-logo.png" alt="Become Pro logo" /></span>
+        <span class="brand-mark"><img src="/assets/becomepro-logo-compact.webp" alt="Become Pro logo" /></span>
         <span>BECOME PRO</span>
       </a>
       <button class="nav-toggle" type="button" aria-label="Отвори меню" aria-expanded="false" data-nav-toggle>
@@ -72,10 +72,9 @@
             </div>
             <p class="hero-trust-line">С Йордан Желев - футболен треньор и основател на Become Pro.</p>
           </div>
-          <div class="hero-media">
-            <video autoplay muted loop playsinline preload="metadata" poster="/assets/yordan-training-poster.png">
-              <source src="/assets/videos/one-touch-passing-drop.mp4" type="video/mp4" />
-            </video>
+          <div class="hero-media deferred-video-shell" data-deferred-video-src="/assets/videos/one-touch-passing-drop.mp4" data-video-label="Реална индивидуална тренировка">
+            <img class="deferred-video-poster" src="/assets/yordan-training-poster-480.webp" srcset="/assets/yordan-training-poster-480.webp 480w, /assets/yordan-training-poster.webp 800w" sizes="(max-width: 720px) calc(100vw - 38px), 420px" alt="Реална индивидуална тренировка" width="800" height="800" fetchpriority="high" data-video-poster />
+            <button class="video-play-button" type="button" data-video-play aria-label="Пусни видеото от реална индивидуална тренировка">▶ Пусни видеото</button>
             <div class="media-caption">
               <strong>Реална тренировка</strong>
               <span>Техника, реакция и увереност с топката</span>
@@ -148,7 +147,7 @@
           <div class="training-video-card-grid" aria-label="Видео примери от индивидуални тренировки">
             <article class="training-video-card">
               <div class="training-video-card-media">
-                <video controls muted playsinline preload="metadata" poster="/assets/videos/individual-tech-first-touch-poster.jpg?v=training-video-20260618">
+                <video controls muted playsinline preload="none" data-poster="/assets/videos/individual-tech-first-touch-poster.jpg?v=training-video-20260618">
                   <source src="/assets/videos/individual-tech-first-touch.mp4?v=training-video-20260618" type="video/mp4" />
                 </video>
               </div>
@@ -156,7 +155,7 @@
             </article>
             <article class="training-video-card">
               <div class="training-video-card-media">
-                <video controls muted playsinline preload="metadata" poster="/assets/videos/individual-speed-explosiveness-poster.jpg?v=training-video-20260618">
+                <video controls muted playsinline preload="none" data-poster="/assets/videos/individual-speed-explosiveness-poster.jpg?v=training-video-20260618">
                   <source src="/assets/videos/individual-speed-explosiveness.mp4?v=training-video-20260618" type="video/mp4" />
                 </video>
               </div>
@@ -164,7 +163,7 @@
             </article>
             <article class="training-video-card">
               <div class="training-video-card-media">
-                <video controls muted playsinline preload="metadata" poster="/assets/videos/individual-decisions-game-situations-poster.jpg?v=training-video-20260618">
+                <video controls muted playsinline preload="none" data-poster="/assets/videos/individual-decisions-game-situations-poster.jpg?v=training-video-20260618">
                   <source src="/assets/videos/individual-decisions-game-situations.mp4?v=training-video-20260618" type="video/mp4" />
                 </video>
               </div>
@@ -301,6 +300,6 @@
     </footer>
 
     <a class="training-sticky-cta" href="#training-form" data-primary-cta data-mobile-sticky-cta data-cta-location="sticky_mobile">Запази тренировка</a>
-    <script src="/individual-training.js?v=shared-header-20260923"></script>
+    <script src="/individual-training.min.js?v=shared-header-20260923"></script>
   </body>
 </html>

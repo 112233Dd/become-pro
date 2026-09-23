@@ -20,8 +20,8 @@ test("all product pages mount the shared detail content and required scripts", (
     const html = read(`programs/${folder}/index.html`);
 
     assert.match(html, new RegExp(`data-product-detail[^>]*data-program-id="${programId}"`));
-    assert.match(html, /<script src="\.\.\/\.\.\/shop\.js"><\/script>/);
-    assert.match(html, /<link rel="stylesheet" href="\.\.\/\.\.\/styles\.css"\s*\/>/);
+    assert.match(html, /<script src="\.\.\/\.\.\/shop\.min\.js"><\/script>/);
+    assert.match(html, /<link rel="stylesheet" href="\.\.\/\.\.\/styles\.min\.css"\s*\/>/);
     assert.match(html, /data-cart-count/);
   });
 });
@@ -67,7 +67,7 @@ test("every public page uses the shared footer", () => {
   pages.forEach((page) => {
     const html = read(page);
     assert.equal((html.match(/data-site-footer/g) || []).length, 1, `${page} needs one footer mount`);
-    assert.match(html, /script\.js/);
+    assert.match(html, /script\.min\.js/);
   });
 
   const script = read("script.js");
