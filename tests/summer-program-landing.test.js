@@ -102,9 +102,9 @@ test("training videos stay after price and describe the online program proof", (
     "field-drill-side-forward-back.mp4",
     "overlap-passing-cones.mp4",
     "change-direction-back.mp4",
-    "field-drill-side-forward-back-poster.jpg",
-    "overlap-passing-cones-poster.jpg",
-    "change-direction-back-poster.jpg",
+    "field-drill-side-forward-back-poster.webp",
+    "overlap-passing-cones-poster.webp",
+    "change-direction-back-poster.webp",
   ].forEach((asset) => assert.match(training, new RegExp(asset)));
 
   assert.doesNotMatch(training, /Виж как работим на терена|Реални тренировки/);

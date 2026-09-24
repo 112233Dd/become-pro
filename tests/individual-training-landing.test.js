@@ -135,14 +135,13 @@ test("landing page uses real training media, player proof, FAQ, and compact lega
   assert.match(html, /assets\/videos\/individual-tech-first-touch\.mp4/);
   assert.match(html, /assets\/videos\/individual-speed-explosiveness\.mp4/);
   assert.match(html, /assets\/videos\/individual-decisions-game-situations\.mp4/);
-  assert.match(html, /assets\/videos\/individual-tech-first-touch-poster\.jpg/);
-  assert.match(html, /assets\/videos\/individual-speed-explosiveness-poster\.jpg/);
-  assert.match(html, /assets\/videos\/individual-decisions-game-situations-poster\.jpg/);
+  assert.match(html, /assets\/videos\/individual-tech-first-touch-poster\.webp/);
+  assert.match(html, /assets\/videos\/individual-speed-explosiveness-poster\.webp/);
+  assert.match(html, /assets\/videos\/individual-decisions-game-situations-poster\.webp/);
   assert.equal((html.match(/<video controls muted playsinline preload="none" data-poster=/g) || []).length, 3);
   assert.match(html, /data-deferred-video-src/);
   assert.match(html, /data-video-play/);
-  assert.match(html, /yordan-training-poster\.webp/);
-  assert.match(html, /yordan-training-poster-480\.webp/);
+  assert.match(html, /one-touch-passing-drop-poster\.webp/);
   assert.match(html, /coach-yordan-zhelev\.png/);
   assert.match(html, /coach-achievement-list/);
   assert.match(html, /coach-cta-panel/);

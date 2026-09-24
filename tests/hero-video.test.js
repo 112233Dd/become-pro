@@ -11,7 +11,7 @@ test("home hero uses only the requested training video", () => {
 
   assert.match(hero, /assets\/videos\/hero-hat-swap-game\.mp4/);
   assert.match(hero, /data-deferred-video-src="assets\/videos\/hero-hat-swap-game\.mp4"/);
-  assert.match(hero, /home-start-online-programs\.webp/);
+  assert.match(hero, /hero-hat-swap-game-poster\.webp/);
   assert.doesNotMatch(hero, /<video[^>]*autoplay/);
   assert.doesNotMatch(hero, /coach-yordan-zhelev\.png/);
   assert.doesNotMatch(hero, /media-badge/);
