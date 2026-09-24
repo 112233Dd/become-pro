@@ -154,10 +154,11 @@ sectionNavLinks.forEach((link) => {
   if (section) sectionObserver.observe(section);
 });
 
-document.querySelectorAll(".faq details").forEach((item) => {
+document.querySelectorAll(".faq details, .faq-category-card details").forEach((item) => {
   item.addEventListener("toggle", () => {
     if (!item.open) return;
-    document.querySelectorAll(".faq details").forEach((otherItem) => {
+    const accordion = item.closest(".faq-category-card, .faq");
+    accordion?.querySelectorAll("details").forEach((otherItem) => {
       if (otherItem !== item) otherItem.removeAttribute("open");
     });
   });

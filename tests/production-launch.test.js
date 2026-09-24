@@ -217,6 +217,20 @@ test("online-program FAQ describes automatic access after successful payment", (
   assert.doesNotMatch(onlineProgramFaq, /изпрати запитване/i);
 });
 
+test("FAQ categories continue the premium accordion design below the hero", () => {
+  const html = read("faq.html");
+  const css = read("styles.css");
+  const script = read("script.js");
+
+  assert.equal((html.match(/class="faq-category-header"/g) || []).length, 6);
+  assert.equal((html.match(/class="faq-category-intro"/g) || []).length, 6);
+  assert.equal((html.match(/class="faq-category-mark"/g) || []).length, 6);
+  assert.equal((html.match(/Кога получавам достъп до програмата\?/g) || []).length, 0);
+  assert.match(css, /\.faq-category-card summary::after\s*{[^}]*content:\s*"\+"/s);
+  assert.match(css, /\.faq-category-card details\[open\]/);
+  assert.match(script, /\.faq details, \.faq-category-card details/);
+});
+
 test("homepage has no Program plus 1:1 primary option and players have no placeholders", () => {
   assert.doesNotMatch(read("index.html"), /Програма\s*\+\s*1:1/i);
   assert.doesNotMatch(
