@@ -20,11 +20,25 @@
   </head>
   <body class="matchday-page">
     <header class="matchday-header">
-      <a class="matchday-brand" href="#matchday-hero" aria-label="Become Pro Мачов пакет">
+      <a class="matchday-brand" href="/" aria-label="Become Pro начало">
         <img src="/assets/becomepro-logo-compact.webp" alt="Become Pro" width="42" height="42" />
         <span>BECOME PRO</span>
       </a>
-      <button class="matchday-header-cta" type="button" data-matchday-checkout>Вземи пакета</button>
+      <button class="matchday-nav-toggle" type="button" aria-label="Отвори меню" aria-expanded="false" data-matchday-nav-toggle>
+        <span></span>
+        <span></span>
+      </button>
+      <nav class="matchday-nav" aria-label="Основна навигация" data-matchday-nav>
+        <a href="/programs">Програми</a>
+        <a href="/individual-training">Индивидуални тренировки</a>
+        <a href="/coach">За треньора</a>
+        <a href="/players">Играчи</a>
+        <a href="/faq">Често задавани въпроси</a>
+        <a href="/contact">Контакти</a>
+      </nav>
+      <div class="matchday-header-actions">
+        <button class="matchday-header-cta" type="button" data-matchday-checkout>Вземи пакета</button>
+      </div>
     </header>
 
     <main>

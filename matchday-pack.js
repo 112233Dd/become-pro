@@ -1,4 +1,21 @@
 (() => {
+  const nav = document.querySelector("[data-matchday-nav]");
+  const navToggle = document.querySelector("[data-matchday-nav-toggle]");
+  const closeNav = () => {
+    nav?.classList.remove("is-open");
+    document.body.classList.remove("nav-open");
+    navToggle?.setAttribute("aria-expanded", "false");
+  };
+  navToggle?.addEventListener("click", () => {
+    const isOpen = nav?.classList.toggle("is-open");
+    document.body.classList.toggle("nav-open", Boolean(isOpen));
+    navToggle.setAttribute("aria-expanded", String(Boolean(isOpen)));
+  });
+  nav?.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeNav));
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeNav();
+  });
+
   const EVENT_NAMES = new Set([
     "page_view", "scroll_25", "scroll_50", "scroll_75", "scroll_90",
     "view_problem", "view_solution", "view_program_contents", "view_coach",

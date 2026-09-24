@@ -39,6 +39,10 @@ test("matchday landing follows the complete conversion flow", () => {
   assert.ok((html.match(/data-matchday-checkout/g) || []).length >= 5);
   assert.match(html, /data-mobile-sticky-cta/);
   assert.match(html, /program-cover-matchday\.webp/);
+  assert.match(html, /data-matchday-nav-toggle/);
+  ["/programs", "/individual-training", "/coach", "/players", "/faq", "/contact"].forEach((href) => {
+    assert.match(html, new RegExp(`href="${href}"`));
+  });
 });
 
 test("matchday checkout purchases only the real matchday product", () => {
@@ -50,6 +54,8 @@ test("matchday checkout purchases only the real matchday product", () => {
   assert.match(script, /checkout_started/);
   assert.match(script, /checkout_created/);
   assert.match(script, /checkout_error/);
+  assert.match(script, /data-matchday-nav-toggle/);
+  assert.match(script, /aria-expanded/);
 });
 
 test("matchday landing uses isolated responsive styling", () => {
