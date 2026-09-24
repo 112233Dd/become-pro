@@ -307,6 +307,7 @@
     });
   });
   const stickyCta = document.querySelector("[data-mobile-sticky-cta]");
+  const stickyDock = document.querySelector("[data-mobile-sticky-dock]");
   const trainingFormSection = document.getElementById("training-form");
   let isTrainingFormVisible = false;
   stickyCta?.addEventListener("click", () => track("click_sticky_cta"));
@@ -317,7 +318,9 @@
     const hasScrolled = window.scrollY > 180;
     const formRect = trainingFormSection?.getBoundingClientRect();
     const isNearForm = !!formRect && formRect.top < window.innerHeight * 0.88 && formRect.bottom > 0;
-    stickyCta.classList.toggle("is-visible", isMobile && hasScrolled && !isNearForm && !isTrainingFormVisible);
+    const shouldShow = isMobile && hasScrolled && !isNearForm && !isTrainingFormVisible;
+    stickyCta.classList.toggle("is-visible", shouldShow);
+    stickyDock?.classList.toggle("is-visible", shouldShow);
   };
   if (trainingFormSection && "IntersectionObserver" in window) {
     const formObserver = new IntersectionObserver(

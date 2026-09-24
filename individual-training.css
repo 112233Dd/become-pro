@@ -8,13 +8,25 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body { margin: 0; font-family: Inter, Arial, sans-serif; }
+html {
+  min-height: 100%;
+  scroll-behavior: smooth;
+  color-scheme: dark;
+  background-color: #050505;
+}
+body {
+  min-height: 100%;
+  margin: 0;
+  background-color: #050505;
+  font-family: Inter, Arial, sans-serif;
+}
 body.nav-open { overflow: hidden; }
 a { color: inherit; }
 img, video { display: block; max-width: 100%; }
 
 .training-landing {
+  min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
   background: var(--ink);
   color: var(--cream);
@@ -581,14 +593,14 @@ img, video { display: block; max-width: 100%; }
 .training-landing-footer .training-landing-shell { display: grid; grid-template-columns: 1fr auto auto; gap: 28px; align-items: center; }
 .training-landing-footer div, .training-landing-footer nav { flex-wrap: wrap; gap: 16px; }
 .training-landing-footer a { text-decoration: none; }
-.training-sticky-cta {
+.training-sticky-dock {
   display: none;
   opacity: 0;
   pointer-events: none;
   transform: translateY(18px);
   transition: opacity .18s ease, transform .18s ease;
 }
-.training-sticky-cta.is-visible {
+.training-sticky-dock.is-visible {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
@@ -671,13 +683,20 @@ img, video { display: block; max-width: 100%; }
   .benefit-grid p { margin-top: 46px; }
   .landing-section { padding-block: 72px; }
   .coach-proof-media img { min-height: 420px; }
-  .training-sticky-cta {
+  .training-sticky-dock {
     position: fixed;
-    display: flex;
-    left: 16px;
-    right: 16px;
-    bottom: calc(12px + env(safe-area-inset-bottom));
+    display: block;
+    left: 0;
+    right: 0;
+    bottom: 0;
     z-index: 50;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    background: #050505;
+    box-shadow: 0 -12px 34px rgba(0,0,0,.38);
+  }
+  .training-sticky-cta {
+    display: flex;
+    width: 100%;
     min-height: 54px;
     align-items: center;
     justify-content: center;
@@ -688,11 +707,6 @@ img, video { display: block; max-width: 100%; }
     box-shadow: 0 16px 40px rgba(0,0,0,.55);
     font-weight: 950;
     text-decoration: none;
-  }
-  .training-sticky-cta.is-visible {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
   }
   .training-landing-footer { padding-bottom: 108px; }
 }

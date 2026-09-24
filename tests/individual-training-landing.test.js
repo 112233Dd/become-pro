@@ -46,6 +46,8 @@ test("individual training campaign route and page exist", () => {
 
 test("landing page contains the approved conversion structure", () => {
   const html = read("individual-training.html");
+  const css = read("individual-training.css");
+  const script = read("individual-training.js");
 
   assert.match(html, /<header class="site-header" data-header>/);
   assert.match(html, /<nav class="site-nav" data-nav>/);
@@ -81,8 +83,13 @@ test("landing page contains the approved conversion structure", () => {
   assert.match(html, /id="training-faq"/);
   assert.match(html, /id="training-form"/);
   assert.match(html, /data-mobile-sticky-cta/);
+  assert.match(html, /data-mobile-sticky-dock/);
   assert.match(html, /individual-training\.min\.css/);
   assert.match(html, /individual-training\.min\.js/);
+  assert.match(css, /html\s*\{[\s\S]*?background-color:\s*#050505/);
+  assert.match(css, /\.training-sticky-dock\s*\{[\s\S]*?background:\s*#050505/);
+  assert.match(css, /padding:\s*12px 16px calc\(12px \+ env\(safe-area-inset-bottom\)\)/);
+  assert.match(script, /stickyDock\?\.classList\.toggle\("is-visible", shouldShow\)/);
 
   const order = [
     'id="training-fit"',
