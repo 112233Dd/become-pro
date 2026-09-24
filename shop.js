@@ -529,23 +529,52 @@ const renderProgramCard = (program, compact = false) => `
 `;
 
 const purchaseTrustItems = [
-  ["secure", "Сигурно плащане чрез Stripe"],
-  ["instant", "Моментален достъп след успешна покупка"],
-  ["email", "Получаваш програмата директно на имейл"],
-  ["support", "Поддръжка при проблем с достъпа"],
+  {
+    icon: "secure",
+    title: "Сигурно плащане",
+    text: "Плащаш безопасно чрез Stripe",
+    svg: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 19 6v5c0 4.6-2.8 8-7 10-4.2-2-7-5.4-7-10V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg>',
+  },
+  {
+    icon: "instant",
+    title: "Моментален достъп",
+    text: "Започваш веднага след покупка",
+    svg: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m13 2-8 12h7l-1 8 8-12h-7l1-8Z"/></svg>',
+  },
+  {
+    icon: "email",
+    title: "Изпращане на имейл",
+    text: "Получаваш програмата директно в пощата си",
+    svg: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>',
+  },
+  {
+    icon: "support",
+    title: "Бърза помощ",
+    text: "Съдействие при проблем с достъпа",
+    svg: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><path d="M6 18H5a2 2 0 0 1-2-2v-1a2 2 0 0 1 2-2h1v5Zm12 0h1a2 2 0 0 0 2-2v-1a2 2 0 0 0-2-2h-1v5Z"/><path d="M18 18c-1 2-3 3-6 3"/></svg>',
+  },
 ];
 
 const renderPurchaseTrustMarkup = () => `
   <section class="purchase-trust" aria-label="Сигурност и достъп">
-    ${purchaseTrustItems
-      .map(
-        ([icon, text]) => `
-          <div class="purchase-trust-item">
-            <span class="purchase-trust-icon purchase-trust-icon-${icon}" aria-hidden="true"></span>
-            <span>${text}</span>
-          </div>`,
-      )
-      .join("")}
+    <div class="purchase-trust-heading">
+      <p class="eyebrow">Бързо, лесно и сигурно</p>
+      <h2>Какво получаваш след покупка?</h2>
+    </div>
+    <div class="purchase-trust-grid">
+      ${purchaseTrustItems
+        .map(
+          ({ icon, title, text, svg }) => `
+            <article class="purchase-trust-item">
+              <span class="purchase-trust-icon purchase-trust-icon-${icon}" aria-hidden="true">${svg}</span>
+              <div>
+                <strong>${title}</strong>
+                <p>${text}</p>
+              </div>
+            </article>`,
+        )
+        .join("")}
+    </div>
   </section>
 `;
 

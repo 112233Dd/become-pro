@@ -40,10 +40,14 @@ test("program storefront and product details include purchase trust", () => {
   const shop = read("shop.js");
 
   assert.match(programs, /data-program-storefront[\s\S]*data-purchase-trust/);
-  assert.match(shop, /Сигурно плащане чрез Stripe/);
-  assert.match(shop, /Моментален достъп след успешна покупка/);
-  assert.match(shop, /Получаваш програмата директно на имейл/);
-  assert.match(shop, /Поддръжка при проблем с достъпа/);
+  assert.match(shop, /Какво получаваш след покупка\?/);
+  assert.match(shop, /Сигурно плащане/);
+  assert.match(shop, /Плащаш безопасно чрез Stripe/);
+  assert.match(shop, /Моментален достъп/);
+  assert.match(shop, /Започваш веднага след покупка/);
+  assert.match(shop, /Изпращане на имейл/);
+  assert.match(shop, /Бърза помощ/);
+  assert.match(shop, /<svg viewBox=/);
   assert.match(shop, /renderPurchaseTrust/);
 });
 
@@ -110,8 +114,10 @@ test("legal pages and clean routes expose the required policies", () => {
 test("mobile layout keeps stats compact and stacks footer and trust content", () => {
   const styles = read("styles.css");
 
-  assert.match(styles, /@media \(max-width: 1060px\)[\s\S]*?\.hero-stats,[\s\S]*?\.purchase-trust[\s\S]*?grid-template-columns: repeat\(2,/);
-  assert.match(styles, /@media \(max-width: 620px\)[\s\S]*?\.footer-main,[\s\S]*?\.purchase-trust[\s\S]*?grid-template-columns: 1fr/);
+  assert.match(styles, /@media \(max-width: 1060px\)[\s\S]*?\.hero-stats,[\s\S]*?\.purchase-trust-grid[\s\S]*?grid-template-columns: repeat\(2,/);
+  assert.match(styles, /@media \(max-width: 620px\)[\s\S]*?\.footer-main,[\s\S]*?\.purchase-trust-grid[\s\S]*?grid-template-columns: 1fr/);
+  assert.match(styles, /@media \(max-width: 720px\)[\s\S]*?\.player-grid,[\s\S]*?\.online-player-grid[\s\S]*?grid-template-columns: minmax\(0, 1fr\)/);
+  assert.match(styles, /\.coach-intro,[\s\S]*?padding-top: 112px/);
 });
 
 test("cart exposes quantity, remove, total, and Stripe checkout controls", () => {

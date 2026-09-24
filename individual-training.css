@@ -643,7 +643,16 @@ img, video { display: block; max-width: 100%; }
   .hero-copy h1 { max-width: 13ch; font-size: clamp(34px, 9.2vw, 42px); line-height: 1.08; }
   .hero-lead { margin-top: 18px; font-size: 18px; }
   .hero-trust-line { font-size: 14px; }
-  .hero-media, .hero-media video { min-height: 430px; }
+  .hero-media {
+    height: 360px;
+    min-height: 0;
+  }
+  .hero-media video,
+  .hero-media .deferred-video-poster {
+    height: 100%;
+    min-height: 0;
+    object-position: center 72%;
+  }
   .results-trust-section { padding-block: 18px; }
   .results-trust-bar { gap: 8px; padding: 10px; border-radius: 20px; }
   .results-trust-bar article { min-height: 58px; padding: 12px 14px; border-radius: 16px; }
