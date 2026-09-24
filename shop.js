@@ -287,7 +287,10 @@ const shopPrograms = [
 ];
 
 const getAssetPath = (program) => `${window.location.pathname.includes("/programs/") ? "../../" : ""}${program.image}`;
-const getProgramUrl = (program) => `${window.location.pathname.includes("/programs/") ? "../" : "programs/"}${program.id}/index.html`;
+const getProgramUrl = (program) => {
+  if (program.id === "matchday-pack") return "/matchday-pack";
+  return `${window.location.pathname.includes("/programs/") ? "../" : "programs/"}${program.id}/index.html`;
+};
 const getCartUrl = () => `${window.location.pathname.includes("/programs/") ? "../../" : ""}cart.html`;
 const parseProgramPrice = (program) => Number(String(program.price).replace(/[^\d.]/g, "")) || 0;
 const formatProgramPrice = (value) => `€${value.toFixed(2)}`;

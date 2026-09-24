@@ -8,6 +8,7 @@ const root = path.resolve(__dirname, "..");
 const htmlFiles = [
   "index.html",
   "individual-training.html",
+  "matchday-pack.html",
   "programs.html",
   "summer-program.html",
   "training.html",

@@ -96,6 +96,10 @@
       "destination": "/summer-program.html"
     },
     {
+      "source": "/matchday-pack",
+      "destination": "/matchday-pack.html"
+    },
+    {
       "source": "/programs/technical-pack",
       "destination": "/programs/technical-pack/index.html"
     },
