@@ -514,6 +514,159 @@ p {
   margin-bottom: 28px;
 }
 
+.matchday-preview {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(97, 198, 223, 0.1), transparent 30%),
+    #050505;
+}
+
+.matchday-preview-facts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.matchday-preview-facts span {
+  padding: 15px 12px;
+  border: 1px solid rgba(97, 198, 223, 0.2);
+  border-radius: 13px;
+  color: var(--match-muted);
+  background: rgba(97, 198, 223, 0.045);
+  font-size: 13px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.matchday-preview-facts strong {
+  color: var(--match-blue);
+  font-size: 15px;
+}
+
+.matchday-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.matchday-preview-card {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(245, 196, 0, 0.2);
+  border-radius: 22px;
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.025));
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.matchday-preview-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(245, 196, 0, 0.48);
+}
+
+.matchday-preview-image {
+  overflow: hidden;
+  aspect-ratio: 595 / 842;
+  background: #0b0c0d;
+}
+
+.matchday-preview-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.matchday-preview-card figcaption {
+  padding: 20px;
+}
+
+.matchday-preview-card figcaption span {
+  color: var(--match-blue);
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: 0.1em;
+}
+
+.matchday-preview-card h3 {
+  margin: 7px 0 8px;
+  font-size: 22px;
+}
+
+.matchday-preview-card p,
+.matchday-preview-note {
+  margin: 0;
+  color: var(--match-muted);
+  font-size: 14px;
+}
+
+.matchday-preview-note {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.matchday-testimonials {
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(160deg, #11120f, #080909 60%);
+  background-size: 72px 72px, 72px 72px, auto;
+}
+
+.matchday-testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.matchday-testimonial-grid blockquote {
+  position: relative;
+  display: grid;
+  align-content: space-between;
+  min-height: 250px;
+  margin: 0;
+  padding: 28px;
+  border: 1px solid rgba(245, 196, 0, 0.18);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.matchday-testimonial-grid blockquote::before {
+  content: "“";
+  position: absolute;
+  top: 12px;
+  right: 22px;
+  color: rgba(245, 196, 0, 0.22);
+  font-size: 72px;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.matchday-testimonial-grid blockquote > p {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 28px;
+  color: #f2eee5;
+  font-size: 18px;
+  font-weight: 750;
+  line-height: 1.55;
+}
+
+.matchday-testimonial-grid footer {
+  display: grid;
+  gap: 3px;
+}
+
+.matchday-testimonial-grid strong {
+  color: var(--match-yellow);
+  font-size: 14px;
+}
+
+.matchday-testimonial-grid span {
+  color: var(--match-muted);
+  font-size: 12px;
+}
+
 .matchday-price-section {
   padding: clamp(68px, 8vw, 108px) max(18px, calc((100vw - var(--match-max)) / 2));
   background: #050505;
@@ -910,6 +1063,15 @@ p {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .matchday-preview-facts,
+  .matchday-testimonial-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .matchday-testimonial-grid blockquote:last-child {
+    grid-column: 1 / -1;
+  }
+
   .matchday-timeline::before {
     display: none;
   }
@@ -1027,8 +1189,40 @@ p {
   .matchday-timeline,
   .matchday-content-grid,
   .matchday-video-grid,
-  .matchday-trust-grid {
+  .matchday-trust-grid,
+  .matchday-preview-facts,
+  .matchday-testimonial-grid {
     grid-template-columns: 1fr;
+  }
+
+  .matchday-preview-grid {
+    display: flex;
+    gap: 14px;
+    margin-right: -18px;
+    padding-right: 18px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: inline mandatory;
+    scrollbar-width: none;
+  }
+
+  .matchday-preview-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .matchday-preview-card {
+    flex: 0 0 min(82vw, 340px);
+    scroll-snap-align: start;
+  }
+
+  .matchday-preview-note {
+    text-align: left;
+  }
+
+  .matchday-testimonial-grid blockquote {
+    grid-column: auto;
+    min-height: 0;
+    padding: 22px;
   }
 
   .matchday-problem-grid article {

@@ -21,6 +21,8 @@ test("matchday landing follows the complete conversion flow", () => {
     "matchday-problem",
     "matchday-timeline",
     "matchday-contents",
+    "matchday-preview",
+    "matchday-testimonials",
     "matchday-price",
     "matchday-field-proof",
     "matchday-coach",
@@ -45,6 +47,24 @@ test("matchday landing follows the complete conversion flow", () => {
   });
 });
 
+test("matchday landing shows real product previews and honest social proof before price", () => {
+  const html = read("matchday-pack.html");
+  const previewIndex = html.indexOf('id="matchday-preview"');
+  const testimonialsIndex = html.indexOf('id="matchday-testimonials"');
+  const priceIndex = html.indexOf('id="matchday-price"');
+
+  assert.ok(previewIndex > html.indexOf('id="matchday-contents"'));
+  assert.ok(testimonialsIndex > previewIndex);
+  assert.ok(priceIndex > testimonialsIndex);
+  assert.match(html, /assets\/matchday-pack-preview\/pre-match-routine\.webp/);
+  assert.match(html, /assets\/matchday-pack-preview\/hydration-plan\.webp/);
+  assert.match(html, /assets\/matchday-pack-preview\/post-match-recovery\.webp/);
+  assert.equal((html.match(/class="matchday-preview-card"/g) || []).length, 3);
+  assert.match(html, /27 страници/);
+  assert.match(html, /Отзиви от работата с Become Pro/);
+  assert.doesNotMatch(html, /Вземи системата на Йордан/);
+});
+
 test("matchday checkout purchases only the real matchday product", () => {
   const script = read("matchday-pack.js");
 
@@ -65,6 +85,10 @@ test("matchday landing uses isolated responsive styling", () => {
   assert.match(html, /matchday-pack\.min\.css/);
   assert.match(css, /\.matchday-timeline/);
   assert.match(css, /\.matchday-mobile-sticky/);
+  assert.match(css, /\.matchday-preview-grid/);
+  assert.match(css, /\.matchday-testimonial-grid/);
+  assert.match(css, /@media \(max-width: 720px\)[\s\S]*\.matchday-preview-grid[\s\S]*overflow-x: auto/);
+  assert.match(css, /@media \(max-width: 720px\)[\s\S]*\.matchday-testimonial-grid[\s\S]*grid-template-columns: 1fr/);
   assert.match(css, /@media \(max-width: 720px\)/);
   assert.match(css, /prefers-reduced-motion/);
 });
