@@ -14,11 +14,13 @@ const sectionHtml = (html, id) => {
   return html.slice(start, next > start ? next : undefined);
 };
 
-test("summer program advertising route is separate from the product detail route", () => {
+test("archived summer program route leads to its archived product detail", () => {
   const config = JSON.parse(read("vercel.json"));
   const rewrites = new Map(config.rewrites.map(({ source, destination }) => [source, destination]));
+  const redirects = new Map(config.redirects.map(({ source, destination }) => [source, destination]));
 
-  assert.equal(rewrites.get("/summer-program"), "/summer-program.html");
+  assert.equal(redirects.get("/summer-program"), "/programs/summer-program");
+  assert.equal(rewrites.has("/summer-program"), false);
   assert.equal(rewrites.get("/programs/summer-program"), "/programs/summer-program/index.html");
   assert.ok(fs.existsSync(path.join(root, "summer-program.html")));
 });

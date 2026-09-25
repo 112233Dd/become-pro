@@ -16,6 +16,11 @@
       "source": "/admin/orders",
       "destination": "/admin-orders",
       "permanent": false
+    },
+    {
+      "source": "/summer-program",
+      "destination": "/programs/summer-program",
+      "permanent": false
     }
   ],
   "rewrites": [
@@ -90,10 +95,6 @@
     {
       "source": "/admin/orders",
       "destination": "/admin-orders.html"
-    },
-    {
-      "source": "/summer-program",
-      "destination": "/summer-program.html"
     },
     {
       "source": "/matchday-pack",

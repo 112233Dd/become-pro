@@ -57,6 +57,7 @@ const productCatalog = {
   },
   "summer-program": {
     id: "summer-program",
+    archived: true,
     name: "Лятна програма",
     price: 34.99,
     priceCents: 3499,
@@ -118,6 +119,9 @@ const getProgramsByIds = (ids) => {
   const programs = uniqueIds.map((id) => productCatalog[id]).filter(Boolean);
   if (!programs.length || programs.length !== uniqueIds.length) {
     throw new Error("Invalid or missing program selection.");
+  }
+  if (programs.some((program) => program.archived === true)) {
+    throw new Error("This program is archived and no longer available for purchase.");
   }
   return programs;
 };

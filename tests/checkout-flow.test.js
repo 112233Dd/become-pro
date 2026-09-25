@@ -288,7 +288,7 @@ test("storefront cards render the configured visible program prices", () => {
   );
 });
 
-test("storefront renders all six shop programs through the shared card renderer", () => {
+test("storefront renders only active shop programs through the shared card renderer", () => {
   const shop = read("shop.js");
   const catalog = extractNamedDeclaration(shop, "shopPrograms");
   const storefrontRenderer = extractNamedDeclaration(shop, "renderProgramStorefront");
@@ -296,7 +296,7 @@ test("storefront renders all six shop programs through the shared card renderer"
   assert.equal((catalog.match(/\bid\s*:/g) || []).length, 6, "shopPrograms must contain six programs");
   assert.equal((catalog.match(/price\s*:\s*["']€24\.99["']/g) || []).length, 5, "Only non-summer programs use the €24.99 price");
   assert.match(catalog, /id:\s*"summer-program"[\s\S]*?price:\s*"€34\.99"/, "Summer program must render the approved €34.99 promo price");
-  assert.match(storefrontRenderer, /\bshopPrograms\b/, "Storefront must use shopPrograms");
+  assert.match(storefrontRenderer, /\bactiveShopPrograms\b/, "Storefront must use activeShopPrograms");
   assert.match(storefrontRenderer, /\.map\s*\(/, "Storefront must iterate over all programs");
   assert.match(storefrontRenderer, /\brenderProgramCard\s*\(/, "Storefront must use the shared card renderer");
 });

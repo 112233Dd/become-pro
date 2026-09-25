@@ -4,6 +4,7 @@ const LEGACY_SHOP_CART_KEYS = ["becomepro-cart", "becomepro_cart"];
 const shopPrograms = [
   {
     id: "summer-program",
+    archived: true,
     title: "Лятна програма",
     price: "€34.99",
     image: "assets/program-cover-summer.webp",
@@ -286,6 +287,9 @@ const shopPrograms = [
   },
 ];
 
+const isActiveProgram = (program) => program && program.archived !== true;
+const activeShopPrograms = shopPrograms.filter(isActiveProgram);
+
 const getAssetPath = (program) => `${window.location.pathname.includes("/programs/") ? "../../" : ""}${program.image}`;
 const getProgramUrl = (program) => {
   if (program.id === "matchday-pack") return "/matchday-pack";
@@ -296,7 +300,7 @@ const parseProgramPrice = (program) => Number(String(program.price).replace(/[^\
 const formatProgramPrice = (value) => `€${value.toFixed(2)}`;
 const normalizeCartItems = (items) =>
   [...new Set(Array.isArray(items) ? items : [])].filter(
-    (id) => typeof id === "string" && shopPrograms.some((program) => program.id === id),
+    (id) => typeof id === "string" && activeShopPrograms.some((program) => program.id === id),
   );
 
 const writeCart = (items) => {
@@ -322,12 +326,12 @@ const readCart = () => {
 
 const getCartPrograms = () =>
   readCart()
-    .map((id) => shopPrograms.find((program) => program.id === id))
+    .map((id) => activeShopPrograms.find((program) => program.id === id))
     .filter(Boolean);
 
 const getCheckoutPrograms = () => {
   const params = new URLSearchParams(window.location.search);
-  const directProgram = shopPrograms.find((program) => program.id === params.get("program"));
+  const directProgram = activeShopPrograms.find((program) => program.id === params.get("program"));
   return directProgram ? [directProgram] : getCartPrograms();
 };
 
@@ -347,7 +351,7 @@ const markAddedButton = (button) => {
 };
 
 const addToCart = (programId, trigger) => {
-  if (!shopPrograms.some((program) => program.id === programId)) return;
+  if (!activeShopPrograms.some((program) => program.id === programId)) return;
   const cart = readCart();
   if (!cart.includes(programId) && !writeCart([...cart, programId])) {
     showShopToast("Количката не можа да бъде запазена. Моля, опитайте отново.");
@@ -383,6 +387,11 @@ const startStripeCheckout = async (programIds, trigger) => {
   const items = [...new Set((programIds || []).filter(Boolean))];
   if (!items.length) {
     showShopToast("Няма избрана програма.");
+    return;
+  }
+
+  if (items.some((id) => !activeShopPrograms.some((program) => program.id === id))) {
+    showShopToast("Тази програма вече не се предлага.");
     return;
   }
 
@@ -591,7 +600,7 @@ const renderProgramStorefront = () => {
   const root = document.querySelector("[data-program-storefront]");
   if (!root) return;
 
-  root.innerHTML = shopPrograms.map((program) => renderProgramCard(program)).join("");
+  root.innerHTML = activeShopPrograms.map((program) => renderProgramCard(program)).join("");
 };
 
 const renderProductDetail = () => {
@@ -599,7 +608,24 @@ const renderProductDetail = () => {
   if (!root) return;
 
   const program = shopPrograms.find((item) => item.id === root.dataset.programId) || shopPrograms[0];
-  const related = shopPrograms.filter((item) => item.id !== program.id).slice(0, 5);
+  if (!isActiveProgram(program)) {
+    document.title = `${program.title} — архивирана | Become Pro`;
+    root.innerHTML = `
+      <section class="product-archive section-dark">
+        <div class="product-detail-copy reveal">
+          <p class="eyebrow">Архивирана програма</p>
+          <h1>${program.title}</h1>
+          <p class="product-lead">Тази програма вече не се предлага за нови покупки.</p>
+          <div class="product-actions">
+            <a class="btn btn-primary" href="/programs#programs">Виж активните програми</a>
+            <a class="btn btn-secondary" href="/contact">Свържи се с нас</a>
+          </div>
+        </div>
+      </section>
+    `;
+    return;
+  }
+  const related = activeShopPrograms.filter((item) => item.id !== program.id).slice(0, 5);
   const bonusItems = getProgramBonusItems(program);
   const includedSection = program.includedSection
     ? `
