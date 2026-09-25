@@ -29,7 +29,8 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-body.nav-open {
+body.nav-open,
+body.lightbox-open {
   overflow: hidden;
 }
 
@@ -484,7 +485,8 @@ p {
 .matchday-content-grid p {
   margin: 0;
   color: var(--match-muted);
-  font-size: 15px;
+  font-size: 16px;
+  line-height: 1.6;
 }
 
 .matchday-contents {
@@ -533,7 +535,7 @@ p {
   border-radius: 13px;
   color: var(--match-muted);
   background: rgba(97, 198, 223, 0.045);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 800;
   text-align: center;
 }
@@ -566,15 +568,43 @@ p {
 }
 
 .matchday-preview-image {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
   overflow: hidden;
   aspect-ratio: 595 / 842;
   background: #0b0c0d;
+  cursor: zoom-in;
 }
 
 .matchday-preview-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.28s ease;
+}
+
+.matchday-preview-image > span {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 8px 11px;
+  border: 1px solid rgba(245, 196, 0, 0.5);
+  border-radius: 999px;
+  color: var(--match-white);
+  background: rgba(5, 5, 5, 0.82);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.matchday-preview-card:hover .matchday-preview-image img {
+  transform: scale(1.025);
+}
+
+.matchday-preview-image:focus-visible {
+  outline: 3px solid var(--match-blue);
+  outline-offset: -5px;
 }
 
 .matchday-preview-card figcaption {
@@ -597,12 +627,120 @@ p {
 .matchday-preview-note {
   margin: 0;
   color: var(--match-muted);
-  font-size: 14px;
+  font-size: 15px;
+  line-height: 1.55;
 }
 
 .matchday-preview-note {
   margin-top: 20px;
   text-align: center;
+}
+
+.matchday-lightbox {
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 18px;
+  border: 0;
+  color: var(--match-white);
+  background: rgba(3, 4, 5, 0.9);
+}
+
+.matchday-lightbox::backdrop {
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(8px);
+}
+
+.matchday-lightbox[open] {
+  display: grid;
+  place-items: center;
+}
+
+.matchday-lightbox-panel {
+  position: relative;
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr) 54px;
+  align-items: center;
+  gap: 18px;
+  width: min(100%, 980px);
+  height: min(calc(100dvh - 36px), 920px);
+}
+
+.matchday-lightbox figure {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 12px;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  margin: 0;
+}
+
+.matchday-lightbox figure img {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: contain;
+  border: 1px solid rgba(245, 196, 0, 0.26);
+  border-radius: 18px;
+  background: #050505;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.62);
+}
+
+.matchday-lightbox figcaption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 28px;
+}
+
+.matchday-lightbox figcaption strong {
+  font-size: 16px;
+}
+
+.matchday-lightbox figcaption span {
+  color: var(--match-muted);
+  font-size: 14px;
+  font-weight: 850;
+}
+
+.matchday-lightbox-close,
+.matchday-lightbox-nav {
+  display: inline-grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 50%;
+  color: var(--match-white);
+  background: rgba(17, 19, 21, 0.94);
+  cursor: pointer;
+}
+
+.matchday-lightbox-close:hover,
+.matchday-lightbox-nav:hover,
+.matchday-lightbox-close:focus-visible,
+.matchday-lightbox-nav:focus-visible {
+  border-color: var(--match-yellow);
+  color: var(--match-yellow);
+  outline: none;
+}
+
+.matchday-lightbox-close {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  font-size: 32px;
+  line-height: 1;
+}
+
+.matchday-lightbox-nav {
+  font-size: 38px;
+  line-height: 1;
 }
 
 .matchday-testimonials {
@@ -664,7 +802,7 @@ p {
 
 .matchday-testimonial-grid span {
   color: var(--match-muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .matchday-price-section {
@@ -732,7 +870,8 @@ p {
   border-radius: 12px;
   color: #e4dfd2;
   background: rgba(5, 5, 5, 0.25);
-  font-size: 13px;
+  font-size: 14px;
+  line-height: 1.4;
   font-weight: 850;
   text-align: center;
 }
@@ -788,7 +927,8 @@ p {
 .matchday-video-grid p {
   margin: 0;
   color: var(--match-muted);
-  font-size: 14px;
+  font-size: 15px;
+  line-height: 1.55;
 }
 
 .matchday-coach {
@@ -872,7 +1012,7 @@ p {
   align-items: center;
   padding: 17px 58px 17px 20px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 900;
   line-height: 1.4;
   list-style: none;
@@ -902,6 +1042,8 @@ p {
   padding: 16px 58px 20px 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   color: var(--match-muted);
+  font-size: 16px;
+  line-height: 1.65;
 }
 
 .matchday-final {
@@ -1118,7 +1260,7 @@ p {
   .matchday-header-cta {
     min-height: 40px;
     padding: 9px 12px;
-    font-size: 12px;
+    font-size: 13px;
   }
 
   .matchday-nav {
@@ -1219,6 +1361,43 @@ p {
     text-align: left;
   }
 
+  .matchday-lightbox {
+    padding: 12px;
+  }
+
+  .matchday-lightbox-panel {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: minmax(0, 1fr) 48px;
+    gap: 10px 12px;
+    height: calc(100dvh - 24px);
+    padding-top: 52px;
+  }
+
+  .matchday-lightbox figure {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .matchday-lightbox-prev {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .matchday-lightbox-next {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .matchday-lightbox-prev,
+  .matchday-lightbox-next {
+    width: 100%;
+    border-radius: 12px;
+  }
+
+  .matchday-lightbox-close {
+    top: 0;
+  }
+
   .matchday-testimonial-grid blockquote {
     grid-column: auto;
     min-height: 0;
@@ -1298,7 +1477,7 @@ p {
   .matchday-faq summary {
     min-height: 58px;
     padding: 15px 48px 15px 16px;
-    font-size: 15px;
+    font-size: 16px;
   }
 
   .matchday-faq summary::after {
@@ -1307,7 +1486,7 @@ p {
 
   .matchday-faq details p {
     padding: 14px 16px 18px;
-    font-size: 14px;
+    font-size: 15px;
   }
 
   .matchday-final {

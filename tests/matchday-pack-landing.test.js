@@ -60,13 +60,52 @@ test("matchday landing shows real product previews and honest social proof befor
   assert.match(html, /assets\/matchday-pack-preview\/hydration-plan\.webp/);
   assert.match(html, /assets\/matchday-pack-preview\/post-match-recovery\.webp/);
   assert.equal((html.match(/class="matchday-preview-card"/g) || []).length, 3);
+  assert.equal((html.match(/data-matchday-preview-index=/g) || []).length, 3);
   assert.match(html, /27 страници/);
+  assert.match(html, /3<\/strong> основни етапа/);
   assert.match(html, /Отзиви от работата с Become Pro/);
   assert.doesNotMatch(html, /Вземи системата на Йордан/);
 });
 
+test("matchday content matches the real PDF structure", () => {
+  const html = read("matchday-pack.html");
+
+  assert.match(html, /Практична система, която подрежда всичко важно около мача — от деня преди него до възстановяването след последния съдийски сигнал\./);
+  assert.doesNotMatch(html, /преди, по време и след мач/);
+  assert.match(html, /Трите основни етапа в материала са разгърнати в четири практични момента/);
+  assert.match(html, /МАЧОВИЯТ ДЕН/);
+  assert.doesNotMatch(html, />СУТРИНТА</);
+});
+
+test("matchday product previews open in an accessible lightbox", () => {
+  const html = read("matchday-pack.html");
+  const script = read("matchday-pack.js");
+  const css = read("matchday-pack.css");
+
+  assert.match(html, /<dialog class="matchday-lightbox"[^>]+data-matchday-lightbox/);
+  assert.match(html, /data-matchday-lightbox-close[^>]+aria-label="Затвори прегледа"/);
+  assert.match(html, /data-matchday-lightbox-prev[^>]+aria-label="Предишна страница"/);
+  assert.match(html, /data-matchday-lightbox-next[^>]+aria-label="Следваща страница"/);
+  assert.match(script, /showModal\(\)/);
+  assert.match(script, /event\.key === "ArrowLeft"/);
+  assert.match(script, /event\.key === "ArrowRight"/);
+  assert.match(script, /addEventListener\("cancel"/);
+  assert.match(css, /\.matchday-lightbox::backdrop/);
+  assert.match(css, /height:\s*100dvh/);
+});
+
+test("matchday field proof uses a clean real training clip", () => {
+  const html = read("matchday-pack.html");
+
+  assert.match(html, /individual-tech-first-touch-poster\.webp/);
+  assert.match(html, /individual-tech-first-touch\.mp4/);
+  assert.doesNotMatch(html, /individual-decisions-game-situations/);
+});
+
 test("matchday checkout purchases only the real matchday product", () => {
   const script = read("matchday-pack.js");
+  const shared = read("api/_shared.js");
+  const webhook = read("api/stripe/webhook.js");
 
   assert.match(script, /\/api\/create-checkout-session/);
   assert.match(script, /items:\s*\["matchday-pack"\]/);
@@ -76,6 +115,10 @@ test("matchday checkout purchases only the real matchday product", () => {
   assert.match(script, /checkout_error/);
   assert.match(script, /data-matchday-nav-toggle/);
   assert.match(script, /aria-expanded/);
+  assert.match(shared, /"matchday-pack":\s*"https:\/\/drive\.google\.com\/file\/d\/[^\"]+\/view\?usp=sharing"/);
+  assert.match(shared, /programLink:\s*PROGRAM_LINKS\["matchday-pack"\]/);
+  assert.match(webhook, /sendFulfillmentEmails/);
+  assert.match(webhook, /program\.programLink/);
 });
 
 test("matchday landing uses isolated responsive styling", () => {
@@ -87,6 +130,8 @@ test("matchday landing uses isolated responsive styling", () => {
   assert.match(css, /\.matchday-mobile-sticky/);
   assert.match(css, /\.matchday-preview-grid/);
   assert.match(css, /\.matchday-testimonial-grid/);
+  assert.match(css, /\.matchday-faq summary[\s\S]*font-size:\s*17px/);
+  assert.match(css, /\.matchday-video-grid p[\s\S]*font-size:\s*15px/);
   assert.match(css, /@media \(max-width: 720px\)[\s\S]*\.matchday-preview-grid[\s\S]*overflow-x: auto/);
   assert.match(css, /@media \(max-width: 720px\)[\s\S]*\.matchday-testimonial-grid[\s\S]*grid-template-columns: 1fr/);
   assert.match(css, /@media \(max-width: 720px\)/);

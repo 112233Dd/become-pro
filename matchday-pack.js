@@ -101,6 +101,62 @@
     lazyVideos.forEach(loadLazyVideo);
   }
 
+  const previewTriggers = [...document.querySelectorAll("[data-matchday-preview-index]")];
+  const lightbox = document.querySelector("[data-matchday-lightbox]");
+  const lightboxImage = lightbox?.querySelector("[data-matchday-lightbox-image]");
+  const lightboxTitle = lightbox?.querySelector("[data-matchday-lightbox-title]");
+  const lightboxCount = lightbox?.querySelector("[data-matchday-lightbox-count]");
+  const lightboxClose = lightbox?.querySelector("[data-matchday-lightbox-close]");
+  let activePreviewIndex = 0;
+  let lastPreviewTrigger = null;
+
+  const updateLightbox = (index) => {
+    if (!previewTriggers.length || !lightboxImage || !lightboxTitle || !lightboxCount) return;
+    activePreviewIndex = (index + previewTriggers.length) % previewTriggers.length;
+    const trigger = previewTriggers[activePreviewIndex];
+    const sourceImage = trigger.querySelector("img");
+    const previewTitle = trigger.closest("figure")?.querySelector("figcaption h3")?.textContent || sourceImage?.alt || "Преглед";
+    lightboxImage.src = sourceImage?.currentSrc || sourceImage?.src || "";
+    lightboxImage.alt = sourceImage?.alt || previewTitle;
+    lightboxTitle.textContent = previewTitle;
+    lightboxCount.textContent = `${activePreviewIndex + 1} / ${previewTriggers.length}`;
+  };
+
+  const closeLightbox = () => {
+    if (!lightbox?.open) return;
+    lightbox.close();
+    document.body.classList.remove("lightbox-open");
+    lastPreviewTrigger?.focus();
+  };
+
+  const openLightbox = (index, trigger) => {
+    if (!lightbox || typeof lightbox.showModal !== "function") return;
+    lastPreviewTrigger = trigger;
+    updateLightbox(index);
+    document.body.classList.add("lightbox-open");
+    lightbox.showModal();
+    lightboxClose?.focus();
+  };
+
+  previewTriggers.forEach((trigger, index) => {
+    trigger.addEventListener("click", () => openLightbox(index, trigger));
+  });
+  lightboxClose?.addEventListener("click", closeLightbox);
+  lightbox?.querySelector("[data-matchday-lightbox-prev]")?.addEventListener("click", () => updateLightbox(activePreviewIndex - 1));
+  lightbox?.querySelector("[data-matchday-lightbox-next]")?.addEventListener("click", () => updateLightbox(activePreviewIndex + 1));
+  lightbox?.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeLightbox();
+  });
+  lightbox?.addEventListener("click", (event) => {
+    if (event.target === lightbox) closeLightbox();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (!lightbox?.open) return;
+    if (event.key === "ArrowLeft") updateLightbox(activePreviewIndex - 1);
+    if (event.key === "ArrowRight") updateLightbox(activePreviewIndex + 1);
+  });
+
   document.querySelectorAll(".matchday-faq details").forEach((item) => {
     item.addEventListener("toggle", () => {
       if (!item.open) return;

@@ -16,7 +16,7 @@
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="canonical" href="https://becomeprofootball.com/matchday-pack" />
     <link rel="preload" href="/assets/program-cover-matchday.webp" as="image" type="image/webp" fetchpriority="high" />
-    <link rel="stylesheet" href="/matchday-pack.min.css?v=20260925-preview" />
+    <link rel="stylesheet" href="/matchday-pack.min.css?v=20260925-lightbox" />
   </head>
   <body class="matchday-page">
     <header class="matchday-header">
@@ -47,7 +47,7 @@
           <p class="matchday-eyebrow">MATCHDAY PACK · ОНЛАЙН ПРОГРАМА</p>
           <h1>Влез в мача с ясен план, не с хаос.</h1>
           <p class="matchday-lead">
-            Практична система за футболисти, които искат да знаят какво да направят преди, по време и след мач — за повече спокойствие, увереност и готовност.
+            Практична система, която подрежда всичко важно около мача — от деня преди него до възстановяването след последния съдийски сигнал.
           </p>
           <div class="matchday-hero-points" aria-label="Основни ползи">
             <span>Подготовка</span>
@@ -99,7 +99,7 @@
         <div class="matchday-heading matchday-heading-center">
           <p class="matchday-eyebrow">ТВОЯТ МАЧОВ ДЕН — ПОДРЕДЕН</p>
           <h2>Една система. Четири ключови момента.</h2>
-          <p>Пакетът ти помага да превърнеш подготовката в процес, който можеш да повториш преди всеки мач.</p>
+          <p>Трите основни етапа в материала са разгърнати в четири практични момента, които можеш да следваш преди и след всеки мач.</p>
         </div>
         <div class="matchday-timeline">
           <article>
@@ -109,7 +109,7 @@
             <p>Организираш храненето, екипировката, почивката и подходящата активация.</p>
           </article>
           <article>
-            <span class="matchday-time">СУТРИНТА</span>
+            <span class="matchday-time">МАЧОВИЯТ ДЕН</span>
             <div class="matchday-timeline-dot"></div>
             <h3>Подготвяш тялото</h3>
             <p>Следваш ясни насоки за храна, хидратация и движение без излишно натоварване.</p>
@@ -154,26 +154,29 @@
         <div class="matchday-preview-facts" aria-label="Формат на Мачов пакет">
           <span><strong>27</strong> страници</span>
           <span><strong>PDF</strong> формат</span>
-          <span><strong>3</strong> етапа около мача</span>
+          <span><strong>3</strong> основни етапа</span>
           <span><strong>Телефон</strong> и компютър</span>
         </div>
         <div class="matchday-preview-grid">
           <figure class="matchday-preview-card">
-            <div class="matchday-preview-image">
+            <button class="matchday-preview-image" type="button" data-matchday-preview-index="0" aria-label="Увеличи страницата Предмачова рутина">
               <img src="/assets/matchday-pack-preview/pre-match-routine.webp" alt="Реална страница от Мачов пакет с рутина за визуализация в деня преди мача" loading="lazy" width="900" height="1273" />
-            </div>
+              <span aria-hidden="true">Увеличи</span>
+            </button>
             <figcaption><span>ПРЕДИ МАЧА</span><h3>Предмачова рутина</h3><p>Практични стъпки за спокойствие, яснота и увереност.</p></figcaption>
           </figure>
           <figure class="matchday-preview-card">
-            <div class="matchday-preview-image">
+            <button class="matchday-preview-image" type="button" data-matchday-preview-index="1" aria-label="Увеличи страницата Хранене и хидратация">
               <img src="/assets/matchday-pack-preview/hydration-plan.webp" alt="Реална страница от Мачов пакет с напомняне и план за хидратация" loading="lazy" width="900" height="1273" />
-            </div>
+              <span aria-hidden="true">Увеличи</span>
+            </button>
             <figcaption><span>ХРАНЕНЕ И ХИДРАТАЦИЯ</span><h3>Конкретен план</h3><p>Ясни примери как да заредиш тялото си около мача.</p></figcaption>
           </figure>
           <figure class="matchday-preview-card">
-            <div class="matchday-preview-image">
+            <button class="matchday-preview-image" type="button" data-matchday-preview-index="2" aria-label="Увеличи страницата Възстановяване след мача">
               <img src="/assets/matchday-pack-preview/post-match-recovery.webp" alt="Реална страница от Мачов пакет със структура за възстановяване след мача" loading="lazy" width="900" height="1273" />
-            </div>
+              <span aria-hidden="true">Увеличи</span>
+            </button>
             <figcaption><span>СЛЕД МАЧА</span><h3>Възстановяване</h3><p>Структура за активна почивка, мобилност и по-добро връщане в ритъм.</p></figcaption>
           </figure>
         </div>
@@ -238,8 +241,8 @@
             <div><span>ТЯЛО</span><h3>Готово тяло.</h3><p>Влизаш активен още от първата минута.</p></div>
           </article>
           <article>
-            <video autoplay muted loop playsinline preload="none" poster="/assets/videos/individual-decisions-game-situations-poster.webp" data-lazy-video>
-              <source data-src="/assets/videos/individual-decisions-game-situations.mp4" type="video/mp4" />
+            <video autoplay muted loop playsinline preload="none" poster="/assets/videos/individual-tech-first-touch-poster.webp" data-lazy-video>
+              <source data-src="/assets/videos/individual-tech-first-touch.mp4" type="video/mp4" />
             </video>
             <div><span>ФОКУС</span><h3>Ясен фокус.</h3><p>Вниманието остава върху играта, не върху напрежението.</p></div>
           </article>
@@ -315,6 +318,21 @@
       <button type="button" data-matchday-checkout data-primary-cta>Вземи пакета · 24.99 €</button>
     </div>
 
-    <script src="/matchday-pack.min.js?v=20260925-preview"></script>
+    <dialog class="matchday-lightbox" data-matchday-lightbox aria-label="Увеличен преглед на Мачов пакет">
+      <div class="matchday-lightbox-panel">
+        <button class="matchday-lightbox-close" type="button" data-matchday-lightbox-close aria-label="Затвори прегледа">×</button>
+        <button class="matchday-lightbox-nav matchday-lightbox-prev" type="button" data-matchday-lightbox-prev aria-label="Предишна страница">‹</button>
+        <figure>
+          <img data-matchday-lightbox-image alt="" />
+          <figcaption aria-live="polite">
+            <strong data-matchday-lightbox-title></strong>
+            <span data-matchday-lightbox-count></span>
+          </figcaption>
+        </figure>
+        <button class="matchday-lightbox-nav matchday-lightbox-next" type="button" data-matchday-lightbox-next aria-label="Следваща страница">›</button>
+      </div>
+    </dialog>
+
+    <script src="/matchday-pack.min.js?v=20260925-lightbox"></script>
   </body>
 </html>
