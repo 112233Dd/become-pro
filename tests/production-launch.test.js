@@ -26,13 +26,13 @@ test("all product pages mount the shared detail content and required scripts", (
   });
 });
 
-test("homepage hero shows the four approved launch statistics", () => {
+test("homepage hero shows the three approved proof statistics", () => {
   const html = read("index.html");
 
   assert.match(html, /<strong>50\+<\/strong><span>футболисти<\/span>/);
   assert.match(html, /<strong>100\+<\/strong><span>проведени тренировки<\/span>/);
   assert.match(html, /<strong>4\+<\/strong><span>футболни програми<\/span>/);
-  assert.match(html, /<strong>10[–-]24<\/strong><span>години подходяща възраст<\/span>/);
+  assert.doesNotMatch(html, /<strong>10[–-]24<\/strong><span>години подходяща възраст<\/span>/);
 });
 
 test("program storefront and product details include purchase trust", () => {
