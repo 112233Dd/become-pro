@@ -155,7 +155,7 @@ test("paid-order persistence failure does not block fulfillment email", () => {
 
   assert.match(completedBlock, /catch\s*\(persistenceError\)/);
   assert.match(completedBlock, /console\.error\(\s*"Paid order persistence failed:"/);
-  assert.match(completedBlock, /markDeliveryFailed/);
+  assert.match(completedBlock, /paid_order_persistence_failed/);
   assert.match(completedBlock, /await sendFulfillmentEmails/);
 });
 

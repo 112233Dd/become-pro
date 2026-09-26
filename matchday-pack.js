@@ -85,20 +85,44 @@
     });
     video.dataset.videoLoaded = "true";
     video.load();
-    if (video.autoplay) video.play().catch(() => {});
   };
   const lazyVideos = [...document.querySelectorAll("video[data-lazy-video]")];
-  if ("IntersectionObserver" in window) {
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const constrainedConnection = Boolean(navigator.connection?.saveData);
+  const desktopVideo = window.matchMedia("(min-width: 769px)").matches;
+  const shouldAutoplayVideo = desktopVideo && !prefersReducedMotion && !constrainedConnection;
+  lazyVideos.forEach((video) => {
+    const playButton = video.parentElement?.querySelector("[data-video-play]");
+    video.controls = false;
+    video.autoplay = shouldAutoplayVideo && video.hasAttribute("data-desktop-autoplay");
+    if (!shouldAutoplayVideo) {
+      video.parentElement?.classList.add("requires-video-play");
+      playButton?.addEventListener("click", () => {
+        loadLazyVideo(video);
+        video.controls = true;
+        video.play().catch(() => {});
+        video.parentElement?.classList.remove("requires-video-play");
+      });
+    }
+  });
+  if (shouldAutoplayVideo && "IntersectionObserver" in window) {
     const videoObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        loadLazyVideo(entry.target);
-        videoObserver.unobserve(entry.target);
+        const video = entry.target;
+        if (entry.isIntersecting) {
+          loadLazyVideo(video);
+          if (video.autoplay) video.play().catch(() => {});
+        } else if (!video.paused) {
+          video.pause();
+        }
       });
-    }, { rootMargin: "700px 0px", threshold: 0.01 });
+    }, { rootMargin: "80px 0px", threshold: 0.35 });
     lazyVideos.forEach((video) => videoObserver.observe(video));
-  } else {
-    lazyVideos.forEach(loadLazyVideo);
+  } else if (shouldAutoplayVideo) {
+    lazyVideos.forEach((video) => {
+      loadLazyVideo(video);
+      if (video.autoplay) video.play().catch(() => {});
+    });
   }
 
   const previewTriggers = [...document.querySelectorAll("[data-matchday-preview-index]")];
@@ -127,6 +151,7 @@
     lightbox.close();
     document.body.classList.remove("lightbox-open");
     lastPreviewTrigger?.focus();
+    updateMobileStickyCta();
   };
 
   const openLightbox = (index, trigger) => {
@@ -136,6 +161,7 @@
     document.body.classList.add("lightbox-open");
     lightbox.showModal();
     lightboxClose?.focus();
+    updateMobileStickyCta();
   };
 
   previewTriggers.forEach((trigger, index) => {
@@ -159,17 +185,27 @@
 
   document.querySelectorAll(".matchday-faq details").forEach((item) => {
     item.addEventListener("toggle", () => {
-      if (!item.open) return;
-      document.querySelectorAll(".matchday-faq details").forEach((otherItem) => {
-        if (otherItem !== item) otherItem.removeAttribute("open");
-      });
+      if (item.open) {
+        document.querySelectorAll(".matchday-faq details").forEach((otherItem) => {
+          if (otherItem !== item) otherItem.removeAttribute("open");
+        });
+      }
+      document.body.classList.toggle("faq-open", Boolean(document.querySelector(".matchday-faq details[open]")));
+      updateMobileStickyCta();
     });
   });
 
   const mobileStickyCta = document.querySelector("[data-mobile-sticky-cta]");
+  const visiblePurchaseCtas = new Set();
+  let footerVisible = false;
   const updateMobileStickyCta = () => {
     if (!mobileStickyCta) return;
-    const visible = window.scrollY > 120;
+    const visible =
+      window.scrollY > 120 &&
+      visiblePurchaseCtas.size === 0 &&
+      !footerVisible &&
+      !lightbox?.open &&
+      !document.querySelector(".matchday-faq details[open]");
     mobileStickyCta.classList.toggle("is-visible", visible);
     mobileStickyCta.style.opacity = visible ? "1" : "0";
     mobileStickyCta.style.pointerEvents = visible ? "auto" : "none";
@@ -177,11 +213,41 @@
   };
   updateMobileStickyCta();
   window.addEventListener("scroll", updateMobileStickyCta, { passive: true });
+  if ("IntersectionObserver" in window) {
+    const stickyGuardObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.target.matches(".matchday-footer")) {
+          footerVisible = entry.isIntersecting;
+        } else if (entry.isIntersecting) {
+          visiblePurchaseCtas.add(entry.target);
+        } else {
+          visiblePurchaseCtas.delete(entry.target);
+        }
+      });
+      updateMobileStickyCta();
+    }, { threshold: 0.2 });
+    document
+      .querySelectorAll("[data-primary-cta]:not(.matchday-mobile-sticky [data-primary-cta]), .matchday-footer")
+      .forEach((element) => stickyGuardObserver.observe(element));
+  }
 
   window.matchdayPackAnalytics = { sessionId, landingPageUrl, pageVariant, campaign, referrer, deviceType, track };
 
   const checkoutButtons = [...document.querySelectorAll("[data-matchday-checkout]")];
   const checkoutStatus = document.querySelector("[data-matchday-checkout-status]");
+  const checkoutToast = document.querySelector("[data-matchday-checkout-toast]");
+  let checkoutToastTimer = null;
+  const showCheckoutError = (message) => {
+    if (!checkoutToast) return;
+    window.clearTimeout(checkoutToastTimer);
+    checkoutToast.textContent = message;
+    checkoutToast.hidden = false;
+    requestAnimationFrame(() => checkoutToast.classList.add("is-visible"));
+    checkoutToastTimer = window.setTimeout(() => {
+      checkoutToast.classList.remove("is-visible");
+      window.setTimeout(() => { checkoutToast.hidden = true; }, 220);
+    }, 8000);
+  };
   let checkoutPending = false;
   const setCheckoutPending = (pending) => {
     checkoutPending = pending;
@@ -218,7 +284,9 @@
       window.location.href = data.url;
     } catch (error) {
       track("checkout_error");
-      if (checkoutStatus) checkoutStatus.textContent = error.message || "Плащането не се отвори. Моля, опитай отново.";
+      const message = error.message || "Плащането не се отвори. Моля, опитай отново.";
+      if (checkoutStatus) checkoutStatus.textContent = message;
+      showCheckoutError(message);
       setCheckoutPending(false);
     }
   };

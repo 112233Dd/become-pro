@@ -137,14 +137,15 @@ test("webhook is the only place that fulfills successful payments", () => {
   assert.doesNotMatch(successPage, /upsertOrders|sendFulfillmentEmails|programLink/i);
 });
 
-test("paid orders fall back to delivery_failed when save or email delivery fails", () => {
+test("only customer delivery failures mark paid orders as delivery_failed", () => {
   const shared = read("api/_shared.js");
   const webhook = read("api/stripe/webhook.js");
   const schema = read("supabase/schema.sql");
   const adminHtml = read("admin-orders.html");
 
   assert.match(shared, /"delivery_failed"/);
-  assert.match(webhook, /reason:\s*"paid_order_save_failed"/);
+  assert.match(webhook, /paid_order_persistence_failed/);
+  assert.doesNotMatch(webhook, /reason:\s*"paid_order_save_failed"/);
   assert.match(webhook, /reason:\s*"email_delivery_failed"/);
   assert.match(webhook, /fulfillment_delivery_failed/);
   assert.match(schema, /delivery_failed/);
@@ -193,18 +194,45 @@ test("fulfillment email contains no separate Viber section", () => {
   assert.doesNotMatch(webhook, /Viber група|Viber бонус/);
 });
 
+test("fulfillment deliveries are idempotent and customer/admin channels are independent", () => {
+  const webhook = read("api/stripe/webhook.js");
+  const schema = read("supabase/schema.sql");
+
+  assert.match(schema, /create table if not exists public\.fulfillment_deliveries/);
+  assert.match(schema, /primary key \(stripe_checkout_session_id, channel\)/);
+  assert.match(webhook, /resolution=ignore-duplicates/);
+  assert.match(webhook, /Promise\.allSettled\(\[customerDelivery, adminDelivery\]\)/);
+  assert.match(webhook, /admin_order_notification_failed/);
+  assert.match(webhook, /Stripe will retry the webhook/);
+});
+
+test("customer fulfillment email uses the purchased product instead of summer-only copy", () => {
+  const webhook = require(path.join(root, "api/stripe/webhook.js"));
+  const programs = [{ id: "matchday-pack", name: "Мачов пакет", programLink: "https://drive.google.com/file/d/test/view" }];
+  const customer = { customerName: "Иван" };
+  const text = webhook._test.buildCustomerEmailText({ programs, customer });
+  const html = webhook._test.buildCustomerEmailHtml({ programs, customer });
+
+  assert.match(text, /достъпа до Мачов пакет/);
+  assert.match(text, /рутина около мача/);
+  assert.doesNotMatch(text, /лятото|Лятната програма|лятната пауза/i);
+  assert.match(html, />Отвори Мачов пакет</);
+  assert.doesNotMatch(html, /подготовка през лятото|достъпа до Лятната програма|лятната пауза/i);
+});
+
 test("fulfillment email includes professional HTML and plain-text access", () => {
   const webhook = read("api/stripe/webhook.js");
 
   assert.match(webhook, /Достъп до твоята Become Pro програма/);
   assert.match(webhook, /Поздравления! 🎉/);
-  assert.match(webhook, /Току-що направи първата крачка към по-добра подготовка през лятото/);
-  assert.match(webhook, /Плащането е успешно\. По-долу ще откриеш достъпа до Лятната програма/);
-  assert.match(webhook, /Отвори Лятната програма/);
+  assert.match(webhook, /getEmailContent/);
+  assert.match(webhook, /Твоята ясна рутина около мача вече е готова/);
+  assert.match(webhook, /Плащането е успешно\. По-долу ще откриеш достъпа до Мачов пакет/);
+  assert.match(webhook, /Отвори \$\{escapeHtml\(program\.name\)\}/);
   assert.match(webhook, /Какво следва\?/);
-  assert.match(webhook, /Прегледай всички модули/);
+  assert.match(webhook, /Прегледай съдържанието/);
   assert.match(webhook, /Следвай плана стъпка по стъпка/);
-  assert.match(webhook, /Програмата е създадена, за да ти помогне да тренираш с ясна структура/);
+  assert.match(webhook, /Следвай програмата стъпка по стъпка/);
   assert.match(webhook, /Instagram: @become_pro2024/);
   assert.match(webhook, /become\.pro2024@gmail\.com/);
   assert.match(webhook, /escapeHtml/);
@@ -252,11 +280,16 @@ test("program catalog uses the real access link for each program", () => {
 test("success and cancel pages exist for Stripe redirects", () => {
   const successPage = read("checkout/success/index.html");
   const cancelPage = read("checkout/cancel/index.html");
+  const checkoutSession = read("api/checkout-session.js");
 
-  assert.match(successPage, /data-success-program/);
+  assert.match(successPage, /data-payment-title/);
+  assert.match(successPage, /data-program-access/);
+  assert.match(successPage, /paymentStatus !== "paid"/);
   assert.match(successPage, /api\/checkout-session/);
-  assert.match(cancelPage, /cart\.html/);
+  assert.match(cancelPage, /data-checkout-retry/);
+  assert.match(cancelPage, /"matchday-pack": "\/matchday-pack#matchday-price"/);
   assert.match(cancelPage, /programs\.html#programs/);
+  assert.match(checkoutSession, /accessUrl:\s*paymentStatus === "paid"/);
 });
 
 test("summer program keeps the promo price while other programs use EUR 24.99", () => {

@@ -48,13 +48,28 @@
     <section class="payment-card reveal">
       <p class="eyebrow">Плащане</p>
       <h1>Плащането не беше завършено.</h1>
-      <p>Не е начислена сума. Можеш да опиташ отново от количката или да се върнеш към програмите.</p>
+      <p>Не е начислена сума. Можеш да опиташ отново от страницата на програмата или да разгледаш останалите програми.</p>
       <div class="payment-actions">
-        <a class="btn btn-primary" href="../../cart.html">Опитай отново</a>
+        <a class="btn btn-primary" href="../../programs.html#programs" data-checkout-retry>Опитай отново</a>
         <a class="btn btn-secondary" href="../../programs.html#programs">Върни се към програмите</a>
       </div>
     </section>
   </main>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get("session_id");
+    const retryLink = document.querySelector("[data-checkout-retry]");
+    const productRoutes = { "matchday-pack": "/matchday-pack#matchday-price" };
+    if (sessionId && retryLink) {
+      fetch(`/api/checkout-session?session_id=${encodeURIComponent(sessionId)}`)
+        .then((response) => response.ok ? response.json() : null)
+        .then((data) => {
+          const route = productRoutes[data?.programId];
+          if (route) retryLink.href = route;
+        })
+        .catch(() => {});
+    }
+  </script>
   <script src="../../shop.min.js"></script>
 </body>
 </html>

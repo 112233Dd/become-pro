@@ -1,4 +1,4 @@
-const { STRIPE_API_VERSION, sendJson } = require("./_shared");
+const { STRIPE_API_VERSION, getProgramsByIds, sendJson } = require("./_shared");
 
 module.exports = async (req, res) => {
   if (req.method !== "GET") {
@@ -20,10 +20,24 @@ module.exports = async (req, res) => {
     const session = await response.json();
     if (!response.ok) throw new Error(session.error?.message || "Session could not be loaded.");
 
+    const paymentStatus = session.payment_status;
+    let program = null;
+    try {
+      const programIds = String(session.metadata?.programId || "")
+        .split(",")
+        .map((id) => id.trim())
+        .filter(Boolean);
+      if (programIds.length === 1) [program] = getProgramsByIds(programIds);
+    } catch (_) {
+      program = null;
+    }
+
     return sendJson(res, 200, {
       id: session.id,
-      paymentStatus: session.payment_status,
+      paymentStatus,
+      programId: program?.id || session.metadata?.programId || "",
       programName: session.metadata?.programName || "",
+      accessUrl: paymentStatus === "paid" ? program?.programLink || "" : "",
     });
   } catch (error) {
     return sendJson(res, 400, { error: error.message || "Session could not be loaded." });

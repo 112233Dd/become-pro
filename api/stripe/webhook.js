@@ -17,8 +17,8 @@ const {
 const trackCompletedPurchase = async ({ session, programs, origin }) => {
   if (!hasSupabaseAdmin()) return;
   const metadata = session.metadata || {};
-  const summerProgram = programs.find((program) => program.id === "summer-program");
-  if (!summerProgram || metadata.pageVariant !== "summer-program") return;
+  const landingProgram = programs.find((program) => program.id === metadata.pageVariant);
+  if (!landingProgram) return;
 
   await supabaseRequest("landing_analytics_events?on_conflict=stripe_checkout_session_id,program_id,event_name", {
     method: "POST",
@@ -26,8 +26,8 @@ const trackCompletedPurchase = async ({ session, programs, origin }) => {
     body: JSON.stringify([
       {
         session_id: metadata.landingSessionId || `stripe-${session.id}`,
-        landing_page_url: metadata.landingPageUrl || `${origin}/summer-program`,
-        page_variant: "summer-program",
+        landing_page_url: metadata.landingPageUrl || `${origin}/${landingProgram.id}`,
+        page_variant: metadata.pageVariant,
         event_name: "purchase_completed",
         utm_source: metadata.utm_source || null,
         utm_medium: metadata.utm_medium || null,
@@ -37,7 +37,7 @@ const trackCompletedPurchase = async ({ session, programs, origin }) => {
         referrer: metadata.referrer || null,
         device_type: metadata.deviceType || "unknown",
         stripe_checkout_session_id: session.id,
-        program_id: summerProgram.id,
+        program_id: landingProgram.id,
       },
     ]),
   });
@@ -116,28 +116,62 @@ const getCustomerGreeting = (customerName) => {
   return name && name !== "Become Pro клиент" ? `Здравей, ${name},` : "Здравей,";
 };
 
-const buildCustomerEmailText = ({ programs, customer }) => `${getCustomerGreeting(customer.customerName)}
+const getEmailContent = (programs) => {
+  if (programs.length !== 1) {
+    return {
+      intro: "Твоите Become Pro програми вече са готови.",
+      access: "Плащането е успешно. По-долу ще откриеш достъпа до закупените програми.",
+      closing: "Следвай материалите стъпка по стъпка и се връщай към тях винаги когато имаш нужда.",
+    };
+  }
+
+  if (programs[0].id === "matchday-pack") {
+    return {
+      intro: "Твоята ясна рутина около мача вече е готова.",
+      access: "Плащането е успешно. По-долу ще откриеш достъпа до Мачов пакет.",
+      closing: "Използвай Мачов пакет преди всеки важен мач, за да подредиш подготовката, фокуса и възстановяването си.",
+    };
+  }
+
+  if (programs[0].id === "summer-program") {
+    return {
+      intro: "Твоята структурирана подготовка за лятната пауза вече е готова.",
+      access: "Плащането е успешно. По-долу ще откриеш достъпа до Лятната програма.",
+      closing: "Следвай програмата стъпка по стъпка, за да тренираш с ясна структура и конкретна цел през лятната пауза.",
+    };
+  }
+
+  return {
+    intro: "Твоята Become Pro програма вече е готова.",
+    access: `Плащането е успешно. По-долу ще откриеш достъпа до ${programs[0].name}.`,
+    closing: "Следвай програмата стъпка по стъпка и се връщай към нея винаги когато имаш нужда.",
+  };
+};
+
+const buildCustomerEmailText = ({ programs, customer }) => {
+  const content = getEmailContent(programs);
+  return `${getCustomerGreeting(customer.customerName)}
 
 Поздравления! 🎉
-Току-що направи първата крачка към по-добра подготовка през лятото.
+${content.intro}
 
 Благодарим ти, че избра Become Pro.
 
-Плащането е успешно. По-долу ще откриеш достъпа до Лятната програма.
+${content.access}
 
 Закупена програма:
 ${programs.map((program) => program.name).join(", ")}
 
-Отвори Лятната програма от съответния линк:
+Отвори закупената програма от съответния линк:
 ${formatProgramsForEmail(programs)}
 
 Какво следва?
 - Отвори програмата
-- Прегледай всички модули
-- Избери с коя част започваш
+- Прегледай съдържанието
+- Избери откъде започваш
 - Следвай плана стъпка по стъпка
 
-Програмата е създадена, за да ти помогне да тренираш с ясна структура, конкретна цел и повече увереност през лятната пауза.
+${content.closing}
 
 Ако имаш въпроси или проблем с достъпа, пиши ни на become.pro2024@gmail.com.
 
@@ -146,8 +180,10 @@ Instagram: @become_pro2024
 
 Поздрави,
 Become Pro`;
+};
 
 const buildCustomerEmailHtml = ({ programs, customer }) => {
+  const content = getEmailContent(programs);
   const programBlocks = programs
     .map(
       (program) => `
@@ -160,7 +196,7 @@ const buildCustomerEmailHtml = ({ programs, customer }) => {
                   <table role="presentation" cellspacing="0" cellpadding="0">
                     <tr>
                       <td style="border-radius:9px;background:#f5c400;">
-                        <a class="program-button" href="${escapeHtml(program.programLink)}" style="display:inline-block;padding:13px 22px;color:#11100c;font-size:15px;font-weight:800;text-decoration:none;" target="_blank">Отвори Лятната програма</a>
+                        <a class="program-button" href="${escapeHtml(program.programLink)}" style="display:inline-block;padding:13px 22px;color:#11100c;font-size:15px;font-weight:800;text-decoration:none;" target="_blank">Отвори ${escapeHtml(program.name)}</a>
                       </td>
                     </tr>
                   </table>
@@ -209,8 +245,8 @@ const buildCustomerEmailHtml = ({ programs, customer }) => {
                 <h1 class="email-title" style="margin:0 0 22px;color:#ffffff;font-size:28px;line-height:1.2;">Достъп до твоята Become Pro програма</h1>
                 <p style="margin:0 0 12px;color:#f4f0e6;font-size:16px;line-height:1.65;">${escapeHtml(getCustomerGreeting(customer.customerName))}</p>
                 <p style="margin:0 0 8px;color:#ffffff;font-size:18px;line-height:1.5;font-weight:800;">Поздравления! 🎉</p>
-                <p style="margin:0 0 18px;color:#f4f0e6;font-size:16px;line-height:1.65;">Току-що направи първата крачка към по-добра подготовка през лятото.</p>
-                <p style="margin:0 0 26px;color:#c9c3b5;font-size:15px;line-height:1.65;">Плащането е успешно. По-долу ще откриеш достъпа до Лятната програма.</p>
+                <p style="margin:0 0 18px;color:#f4f0e6;font-size:16px;line-height:1.65;">${escapeHtml(content.intro)}</p>
+                <p style="margin:0 0 26px;color:#c9c3b5;font-size:15px;line-height:1.65;">${escapeHtml(content.access)}</p>
                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                   ${programBlocks}
                 </table>
@@ -219,13 +255,13 @@ const buildCustomerEmailHtml = ({ programs, customer }) => {
                     <td style="padding:22px;">
                       <p style="margin:0 0 14px;color:#f5c400;font-size:16px;font-weight:800;">Какво следва?</p>
                       <p style="margin:0 0 8px;color:#f4f0e6;font-size:14px;line-height:1.55;">✓ Отвори програмата</p>
-                      <p style="margin:0 0 8px;color:#f4f0e6;font-size:14px;line-height:1.55;">✓ Прегледай всички модули</p>
-                      <p style="margin:0 0 8px;color:#f4f0e6;font-size:14px;line-height:1.55;">✓ Избери с коя част започваш</p>
+                      <p style="margin:0 0 8px;color:#f4f0e6;font-size:14px;line-height:1.55;">✓ Прегледай съдържанието</p>
+                      <p style="margin:0 0 8px;color:#f4f0e6;font-size:14px;line-height:1.55;">✓ Избери откъде започваш</p>
                       <p style="margin:0;color:#f4f0e6;font-size:14px;line-height:1.55;">✓ Следвай плана стъпка по стъпка</p>
                     </td>
                   </tr>
                 </table>
-                <p style="margin:0 0 18px;color:#c9c3b5;font-size:14px;line-height:1.65;">Програмата е създадена, за да ти помогне да тренираш с ясна структура, конкретна цел и повече увереност през лятната пауза.</p>
+                <p style="margin:0 0 18px;color:#c9c3b5;font-size:14px;line-height:1.65;">${escapeHtml(content.closing)}</p>
                 <p style="margin:8px 0 0;color:#c9c3b5;font-size:14px;line-height:1.65;">При проблем с достъпа пиши на <a href="mailto:become.pro2024@gmail.com" style="color:#f5c400;">become.pro2024@gmail.com</a>.</p>
                 <p style="margin:22px 0 0;color:#c9c3b5;font-size:14px;line-height:1.65;">Последвай Become Pro за още футболно съдържание:<br /><strong style="color:#ffffff;">Instagram: @become_pro2024</strong></p>
                 <p style="margin:26px 0 0;color:#ffffff;font-size:14px;line-height:1.6;">Поздрави,<br /><strong>Become Pro</strong></p>
@@ -305,18 +341,97 @@ const markDeliveryFailed = async ({ programs, customer, session, reason, error }
   }
 };
 
-const sendFulfillmentEmails = async ({ programs, customer, session }) => {
-  await sendEmail({
-    to: customer.customerEmail,
-    subject: "Достъп до твоята Become Pro програма",
-    text: buildCustomerEmailText({ programs, customer }),
-    html: buildCustomerEmailHtml({ programs, customer }),
-  });
+const deliveryPath = (sessionId, channel) =>
+  `fulfillment_deliveries?stripe_checkout_session_id=eq.${encodeURIComponent(sessionId)}&channel=eq.${encodeURIComponent(channel)}`;
 
-  await sendEmail({
-    to: process.env.ADMIN_EMAIL,
-    subject: "Нова поръчка в Become Pro",
-    text: `Име на клиента:
+const beginDelivery = async ({ sessionId, channel }) => {
+  if (!hasSupabaseAdmin()) return { shouldSend: true, tracked: false };
+
+  try {
+    const inserted = await supabaseRequest("fulfillment_deliveries?on_conflict=stripe_checkout_session_id,channel", {
+      method: "POST",
+      headers: { Prefer: "resolution=ignore-duplicates,return=representation" },
+      body: JSON.stringify([
+        {
+          stripe_checkout_session_id: sessionId,
+          channel,
+          status: "sending",
+          attempts: 1,
+          updated_at: new Date().toISOString(),
+        },
+      ]),
+    });
+    if (Array.isArray(inserted) && inserted.length) return { shouldSend: true, tracked: true };
+
+    const existing = await supabaseRequest(`${deliveryPath(sessionId, channel)}&select=status,attempts,updated_at`);
+    const delivery = existing?.[0];
+    if (delivery?.status === "delivered") return { shouldSend: false, tracked: true };
+
+    const updatedAt = delivery?.updated_at ? new Date(delivery.updated_at).getTime() : 0;
+    const activeClaim = delivery?.status === "sending" && Date.now() - updatedAt < 15 * 60 * 1000;
+    if (activeClaim) return { shouldSend: false, tracked: true };
+
+    await supabaseRequest(deliveryPath(sessionId, channel), {
+      method: "PATCH",
+      headers: { Prefer: "return=minimal" },
+      body: JSON.stringify({
+        status: "sending",
+        attempts: Number(delivery?.attempts || 0) + 1,
+        last_error: null,
+        updated_at: new Date().toISOString(),
+      }),
+    });
+    return { shouldSend: true, tracked: true };
+  } catch (error) {
+    await logAdminEvent({
+      level: "error",
+      event: "fulfillment_idempotency_unavailable",
+      message: "Fulfillment delivery tracking was unavailable; delivery continued in fail-open mode.",
+      stripeSessionId: sessionId,
+      metadata: { channel, error: error.message },
+    });
+    return { shouldSend: true, tracked: false };
+  }
+};
+
+const finishDelivery = async ({ sessionId, channel, tracked, error }) => {
+  if (!tracked || !hasSupabaseAdmin()) return;
+  await supabaseRequest(deliveryPath(sessionId, channel), {
+    method: "PATCH",
+    headers: { Prefer: "return=minimal" },
+    body: JSON.stringify({
+      status: error ? "failed" : "delivered",
+      last_error: error ? error.message || String(error) : null,
+      delivered_at: error ? null : new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    }),
+  });
+};
+
+const deliverOnce = async ({ sessionId, channel, send }) => {
+  const claim = await beginDelivery({ sessionId, channel });
+  if (!claim.shouldSend) return { skipped: true };
+  try {
+    const result = await send();
+    await finishDelivery({ sessionId, channel, tracked: claim.tracked });
+    return result;
+  } catch (error) {
+    try {
+      await finishDelivery({ sessionId, channel, tracked: claim.tracked, error });
+    } catch (trackingError) {
+      await logAdminEvent({
+        level: "error",
+        event: "fulfillment_delivery_tracking_failed",
+        message: "A delivery failed and its failure status could not be saved.",
+        stripeSessionId: sessionId,
+        metadata: { channel, error: error.message, trackingError: trackingError.message },
+      });
+    }
+    throw error;
+  }
+};
+
+const buildAdminOrderText = ({ programs, customer, session }) => `Име на клиента:
 ${customer.customerName}
 
 Имейл:
@@ -341,8 +456,44 @@ Stripe Session ID:
 ${session.id}
 
 Изпратен линк:
-${formatProgramsForEmail(programs)}`,
+${formatProgramsForEmail(programs)}`;
+
+const sendFulfillmentEmails = async ({ programs, customer, session }) => {
+  const customerDelivery = deliverOnce({
+    sessionId: session.id,
+    channel: "customer",
+    send: () =>
+      sendEmail({
+        to: customer.customerEmail,
+        subject: programs.length === 1 ? `Достъп до ${programs[0].name}` : "Достъп до твоите Become Pro програми",
+        text: buildCustomerEmailText({ programs, customer }),
+        html: buildCustomerEmailHtml({ programs, customer }),
+      }),
   });
+  const adminDelivery = deliverOnce({
+    sessionId: session.id,
+    channel: "admin",
+    send: () =>
+      sendEmail({
+        to: process.env.ADMIN_EMAIL,
+        subject: "Нова поръчка в Become Pro",
+        text: buildAdminOrderText({ programs, customer, session }),
+      }),
+  });
+
+  const [customerResult, adminResult] = await Promise.allSettled([customerDelivery, adminDelivery]);
+  if (adminResult.status === "rejected") {
+    await logAdminEvent({
+      level: "error",
+      event: "admin_order_notification_failed",
+      message: "The customer fulfillment was processed, but the admin order notification failed.",
+      stripeSessionId: session.id,
+      metadata: { error: adminResult.reason?.message || String(adminResult.reason || "") },
+    });
+  }
+  if (customerResult.status === "rejected") throw customerResult.reason;
+
+  return { customer: customerResult.value, admin: adminResult.status === "fulfilled" ? adminResult.value : null };
 };
 
 module.exports = async (req, res) => {
@@ -377,12 +528,12 @@ module.exports = async (req, res) => {
           });
         } catch (persistenceError) {
           console.error("Paid order persistence failed:", persistenceError);
-          await markDeliveryFailed({
-            programs,
-            customer,
-            session,
-            reason: "paid_order_save_failed",
-            error: persistenceError,
+          await logAdminEvent({
+            level: "error",
+            event: "paid_order_persistence_failed",
+            message: "The payment succeeded, but the paid order could not be saved before fulfillment.",
+            stripeSessionId: session.id,
+            metadata: { error: persistenceError.message, programIds: programs.map((program) => program.id) },
           });
         }
       }
@@ -398,7 +549,7 @@ module.exports = async (req, res) => {
         await logAdminEvent({
           level: "error",
           event: "purchase_analytics_failed",
-          message: "Paid Summer Program order could not be added to landing analytics.",
+          message: "Paid landing-page order could not be added to landing analytics.",
           stripeSessionId: session.id,
           metadata: { programIds: programs.map((program) => program.id), error: analyticsError.message },
         });
@@ -415,6 +566,7 @@ module.exports = async (req, res) => {
           reason: "email_delivery_failed",
           error: emailError,
         });
+        return sendJson(res, 500, { error: "Customer access email delivery failed. Stripe will retry the webhook." });
       }
     }
 
@@ -458,4 +610,10 @@ module.exports = async (req, res) => {
   } catch (error) {
     return sendJson(res, 400, { error: error.message || "Webhook failed." });
   }
+};
+
+module.exports._test = {
+  buildCustomerEmailHtml,
+  buildCustomerEmailText,
+  getEmailContent,
 };

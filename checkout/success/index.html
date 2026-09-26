@@ -46,10 +46,11 @@
 
   <main class="payment-result section-dark">
     <section class="payment-card reveal">
-      <p class="eyebrow">Успешно плащане</p>
-      <h1>Покупката е успешна. Благодарим ти!</h1>
-      <p><strong data-success-program>Закупената програма</strong> е записана успешно. Ще получиш линк към програмата на имейла, използван при плащането. Ако имаш въпрос или не виждаш имейла, свържи се с нас.</p>
+      <p class="eyebrow" data-payment-eyebrow>Проверка на плащането</p>
+      <h1 data-payment-title>Проверяваме покупката...</h1>
+      <p data-payment-message>Моля, изчакай за момент, докато потвърдим плащането със Stripe.</p>
       <div class="payment-actions">
+        <a class="btn btn-primary" href="#" data-program-access hidden>Отвори програмата</a>
         <a class="btn btn-primary" href="../../programs.html#programs">Виж още програми</a>
         <a class="btn btn-secondary" href="../../contact.html">Свържи се с нас</a>
       </div>
@@ -58,14 +59,36 @@
   <script>
     const params = new URLSearchParams(window.location.search);
     const sessionId = params.get("session_id");
-    const programNode = document.querySelector("[data-success-program]");
-    if (sessionId && programNode) {
+    const eyebrow = document.querySelector("[data-payment-eyebrow]");
+    const title = document.querySelector("[data-payment-title]");
+    const message = document.querySelector("[data-payment-message]");
+    const accessLink = document.querySelector("[data-program-access]");
+    const showError = (text) => {
+      eyebrow.textContent = "Плащането не е потвърдено";
+      title.textContent = "Не успяхме да потвърдим покупката.";
+      message.textContent = text;
+    };
+    if (sessionId) {
       fetch(`/api/checkout-session?session_id=${encodeURIComponent(sessionId)}`)
-        .then((response) => response.ok ? response.json() : null)
+        .then((response) => response.ok ? response.json() : Promise.reject(new Error("Невалидна или изтекла Stripe сесия.")))
         .then((data) => {
-          if (data?.programName) programNode.textContent = data.programName;
+          if (data?.paymentStatus !== "paid") {
+            eyebrow.textContent = "Плащането се обработва";
+            title.textContent = "Все още очакваме потвърждение.";
+            message.textContent = "Не затваряй страницата. Провери отново след кратко изчакване или се свържи с нас, ако сумата е начислена.";
+            return;
+          }
+          eyebrow.textContent = "Успешно плащане";
+          title.textContent = "Покупката е успешна. Благодарим ти!";
+          message.textContent = `Достъпът до ${data.programName || "закупената програма"} е готов. Изпратихме линк и на имейла, използван при плащането.`;
+          if (data.accessUrl) {
+            accessLink.href = data.accessUrl;
+            accessLink.hidden = false;
+          }
         })
-        .catch(() => {});
+        .catch((error) => showError(error.message || "Провери линка или се свържи с нас за съдействие."));
+    } else {
+      showError("В адреса липсва Stripe сесия. Ако си направил плащане, свържи се с нас за проверка.");
     }
   </script>
 </body>

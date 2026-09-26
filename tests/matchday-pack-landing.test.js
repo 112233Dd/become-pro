@@ -63,7 +63,7 @@ test("matchday landing shows real product previews and honest social proof befor
   assert.equal((html.match(/data-matchday-preview-index=/g) || []).length, 3);
   assert.match(html, /27 страници/);
   assert.match(html, /3<\/strong> основни етапа/);
-  assert.match(html, /Отзиви от работата с Become Pro/);
+  assert.match(html, /Доверие в метода зад продукта/);
   assert.doesNotMatch(html, /Вземи системата на Йордан/);
 });
 
@@ -119,11 +119,14 @@ test("matchday checkout purchases only the real matchday product", () => {
   assert.match(shared, /programLink:\s*PROGRAM_LINKS\["matchday-pack"\]/);
   assert.match(webhook, /sendFulfillmentEmails/);
   assert.match(webhook, /program\.programLink/);
+  assert.match(webhook, /landingProgram/);
+  assert.match(script, /showCheckoutError/);
 });
 
 test("matchday landing uses isolated responsive styling", () => {
   const html = read("matchday-pack.html");
   const css = read("matchday-pack.css");
+  const script = read("matchday-pack.js");
 
   assert.match(html, /matchday-pack\.min\.css/);
   assert.match(css, /\.matchday-timeline/);
@@ -136,6 +139,23 @@ test("matchday landing uses isolated responsive styling", () => {
   assert.match(css, /@media \(max-width: 720px\)[\s\S]*\.matchday-testimonial-grid[\s\S]*grid-template-columns: 1fr/);
   assert.match(css, /@media \(max-width: 720px\)/);
   assert.match(css, /prefers-reduced-motion/);
+  assert.match(script, /prefers-reduced-motion/);
+  assert.match(script, /navigator\.connection\?\.saveData/);
+});
+
+test("matchday SEO uses a single canonical product route and product structured data", () => {
+  const html = read("matchday-pack.html");
+  const config = JSON.parse(read("vercel.json"));
+  const redirect = config.redirects.find(({ source }) => source === "/programs/matchday-pack");
+
+  assert.equal(redirect?.destination, "/matchday-pack");
+  assert.equal(redirect?.permanent, true);
+  assert.match(html, /"@type": "Product"/);
+  assert.match(html, /"price": "24\.99"/);
+  assert.match(html, /property="og:url"/);
+  assert.match(html, /name="twitter:card"/);
+  assert.ok(fs.existsSync(path.join(root, "robots.txt")));
+  assert.ok(fs.existsSync(path.join(root, "sitemap.xml")));
 });
 
 test("storefront sends Matchday Pack visitors to its sales landing", () => {

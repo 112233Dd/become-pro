@@ -21,6 +21,11 @@
       "source": "/summer-program",
       "destination": "/programs/summer-program",
       "permanent": false
+    },
+    {
+      "source": "/programs/matchday-pack",
+      "destination": "/matchday-pack",
+      "permanent": true
     }
   ],
   "rewrites": [

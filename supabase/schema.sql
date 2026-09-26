@@ -381,6 +381,25 @@ create index if not exists orders_utm_campaign_idx
 
 alter table public.orders enable row level security;
 
+-- Server-only delivery ledger. It prevents Stripe webhook retries from
+-- sending the same customer or admin email more than once.
+create table if not exists public.fulfillment_deliveries (
+  stripe_checkout_session_id text not null,
+  channel text not null check (channel in ('customer', 'admin')),
+  status text not null default 'sending' check (status in ('sending', 'delivered', 'failed')),
+  attempts integer not null default 1 check (attempts > 0),
+  last_error text,
+  delivered_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  primary key (stripe_checkout_session_id, channel)
+);
+
+alter table public.fulfillment_deliveries enable row level security;
+
+create index if not exists fulfillment_deliveries_status_idx
+  on public.fulfillment_deliveries (status, updated_at);
+
 create table if not exists public.admin_logs (
   id uuid primary key default gen_random_uuid(),
   level text not null default 'error' check (level in ('debug', 'info', 'warn', 'error')),
