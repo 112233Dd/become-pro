@@ -20,7 +20,7 @@ test("all product pages mount the shared detail content and required scripts", (
     const html = read(`programs/${folder}/index.html`);
 
     assert.match(html, new RegExp(`data-product-detail[^>]*data-program-id="${programId}"`));
-    assert.match(html, /<script src="\.\.\/\.\.\/shop\.min\.js"><\/script>/);
+    assert.match(html, /<script src="\.\.\/\.\.\/shop\.min\.js(?:\?v=[^"]+)?"><\/script>/);
     assert.match(html, /<link rel="stylesheet" href="\.\.\/\.\.\/styles\.min\.css"\s*\/>/);
     assert.match(html, /data-cart-count/);
   });
@@ -85,12 +85,30 @@ test("programs hero leads directly into choosing an online program", () => {
   assert.doesNotMatch(html, /program-problems|program-flow|ТРЕНИРАЙ СЪС СИСТЕМА|ЯСНА ЦЕЛ ВЪВ ВСЯКА ТРЕНИРОВКА/);
 });
 
+test("programs page features Matchday Pack before the remaining catalog", () => {
+  const html = read("programs.html");
+  const shop = read("shop.js");
+  const css = read("styles.css");
+
+  assert.ok(html.indexOf("data-program-featured") < html.indexOf("data-program-storefront"));
+  assert.match(html, /Избери програма според целта си/);
+  assert.match(html, /programs-featured\.min\.css\?v=20260928-matchday-focus/);
+  assert.match(shop, /FEATURED_PROGRAM_ID\s*=\s*"matchday-pack"/);
+  assert.match(shop, /Програма на фокус/i);
+  assert.match(shop, /Подготви се за мача с ясен план\./);
+  assert.match(shop, /Еднократно плащане/);
+  assert.match(shop, /href="\/matchday-pack"[^>]*>Разгледай Мачов пакет/);
+  assert.match(shop, /activeShopPrograms[\s\S]*?\.filter\(\(program\) => program\.id !== FEATURED_PROGRAM_ID\)/);
+  assert.match(css, /\.featured-program\s*{[\s\S]*?grid-template-columns:/);
+  assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.featured-program\s*{[\s\S]*?grid-template-columns: minmax\(0, 1fr\)/);
+});
+
 test("programs contents section lists concrete purchased deliverables", () => {
   const html = read("programs.html");
   const css = read("styles.css");
   const section = html.match(/<section class="program-inside[\s\S]*?<\/section>/)?.[0] || "";
 
-  assert.match(html, /programs-content\.min\.css\?v=20260928-trust-mobile/);
+  assert.match(html, /programs-content\.min\.css\?v=20260928-matchday-focus/);
   assert.match(section, /Какво получаваш/i);
   assert.match(section, /Всичко необходимо, за да започнеш да тренираш\./);
   assert.match(section, /тренировъчен план, видео демонстрации и ясни инструкции/);

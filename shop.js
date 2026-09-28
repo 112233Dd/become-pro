@@ -1,5 +1,6 @@
 const SHOP_CART_KEY = "becomeProProgramCart";
 const LEGACY_SHOP_CART_KEYS = ["becomepro-cart", "becomepro_cart"];
+const FEATURED_PROGRAM_ID = "matchday-pack";
 
 const shopPrograms = [
   {
@@ -289,6 +290,9 @@ const shopPrograms = [
 
 const isActiveProgram = (program) => program && program.archived !== true;
 const activeShopPrograms = shopPrograms.filter(isActiveProgram);
+activeShopPrograms.sort(
+  (first, second) => Number(second.id === FEATURED_PROGRAM_ID) - Number(first.id === FEATURED_PROGRAM_ID),
+);
 
 const getAssetPath = (program) => `${window.location.pathname.includes("/programs/") ? "../../" : ""}${program.image}`;
 const getProgramUrl = (program) => {
@@ -600,7 +604,40 @@ const renderProgramStorefront = () => {
   const root = document.querySelector("[data-program-storefront]");
   if (!root) return;
 
-  root.innerHTML = activeShopPrograms.map((program) => renderProgramCard(program)).join("");
+  root.innerHTML = activeShopPrograms
+    .filter((program) => program.id !== FEATURED_PROGRAM_ID)
+    .map((program) => renderProgramCard(program))
+    .join("");
+};
+
+const renderFeaturedProgram = () => {
+  const root = document.querySelector("[data-program-featured]");
+  if (!root) return;
+
+  const program = activeShopPrograms.find((item) => item.id === FEATURED_PROGRAM_ID);
+  if (!program) {
+    root.remove();
+    return;
+  }
+
+  root.innerHTML = `
+    <article class="featured-program" aria-labelledby="featured-program-title">
+      <div class="featured-program-copy">
+        <p class="eyebrow">Програма на фокус</p>
+        <p class="featured-program-name">${program.title}</p>
+        <h2 id="featured-program-title">Подготви се за мача с ясен план.</h2>
+        <p class="featured-program-description">Практична система за подготовката около мача — от деня преди него до възстановяването след последния съдийски сигнал.</p>
+        <div class="featured-program-offer">
+          <strong>${program.price}</strong>
+          <span>Еднократно плащане</span>
+        </div>
+        <a class="btn btn-primary featured-program-cta" href="/matchday-pack">Разгледай Мачов пакет</a>
+      </div>
+      <a class="featured-program-media" href="/matchday-pack" aria-label="Разгледай Мачов пакет">
+        <img src="${getAssetPath(program)}" alt="Корица на ${program.title}" width="800" height="1132" decoding="async" />
+      </a>
+    </article>
+  `;
 };
 
 const renderProductDetail = () => {
@@ -971,6 +1008,7 @@ document.addEventListener("click", (event) => {
   }
 });
 
+renderFeaturedProgram();
 renderProgramStorefront();
 renderPurchaseTrust();
 renderProductDetail();

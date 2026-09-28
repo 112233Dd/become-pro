@@ -21,7 +21,7 @@ test("summer program is absent from active storefront, cart and direct checkout"
   const shop = read("shop.js");
 
   assert.match(shop, /const activeShopPrograms = shopPrograms\.filter\(isActiveProgram\)/);
-  assert.match(shop, /root\.innerHTML = activeShopPrograms\.map/);
+  assert.match(shop, /root\.innerHTML = activeShopPrograms[\s\S]*?\.filter\(\(program\) => program\.id !== FEATURED_PROGRAM_ID\)[\s\S]*?\.map/);
   assert.match(shop, /activeShopPrograms\.find\(\(program\) => program\.id === params\.get\("program"\)\)/);
   assert.match(shop, /activeShopPrograms\.some\(\(program\) => program\.id === id\)/);
   assert.match(shop, /Тази програма вече не се предлага/);
