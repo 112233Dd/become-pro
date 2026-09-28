@@ -7649,3 +7649,56 @@ textarea:focus {
     grid-template-columns: 1fr;
   }
 }
+
+/* Homepage mobile layout guardrails. These stay last so later desktop
+   refinements can never restore narrow multi-column tracks on phones. */
+@media (max-width: 1060px) {
+  .home-why {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .home-why > *,
+  .why-copy,
+  .why-training-photo,
+  .why-points {
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 720px) {
+  .home-path-panel,
+  .home-path-cards,
+  .home-why,
+  .why-points {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .home-path-panel,
+  .home-path-cards,
+  .home-path-cards article,
+  .home-why,
+  .home-why > *,
+  .why-copy,
+  .why-copy > *,
+  .why-points,
+  .why-points article {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .home-path-cards article {
+    min-height: 0;
+  }
+
+  .why-copy h2 {
+    font-size: clamp(34px, 10vw, 44px);
+    line-height: 1.04;
+  }
+
+  .why-copy p {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+}

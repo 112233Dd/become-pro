@@ -152,11 +152,16 @@ test("legal pages and clean routes expose the required policies", () => {
 
 test("mobile layout keeps stats compact and stacks footer and trust content", () => {
   const styles = read("styles.css");
+  const homeStyles = read("styles.home.min.css");
+  const homepageGuardrails = styles.slice(styles.lastIndexOf("Homepage mobile layout guardrails"));
 
   assert.match(styles, /@media \(max-width: 1060px\)[\s\S]*?\.hero-stats,[\s\S]*?\.purchase-trust-grid[\s\S]*?grid-template-columns: repeat\(2,/);
   assert.match(styles, /@media \(max-width: 620px\)[\s\S]*?\.footer-main,[\s\S]*?\.purchase-trust-grid[\s\S]*?grid-template-columns: 1fr/);
   assert.match(styles, /@media \(max-width: 720px\)[\s\S]*?\.player-grid,[\s\S]*?\.online-player-grid[\s\S]*?grid-template-columns: minmax\(0, 1fr\)/);
   assert.match(styles, /\.coach-intro,[\s\S]*?padding-top: 112px/);
+  assert.match(homepageGuardrails, /@media \(max-width: 1060px\)[\s\S]*?\.home-why[\s\S]*?grid-template-columns: minmax\(0, 1fr\)/);
+  assert.match(homepageGuardrails, /@media \(max-width: 720px\)[\s\S]*?\.home-path-cards,[\s\S]*?\.home-why,[\s\S]*?\.why-points[\s\S]*?grid-template-columns: minmax\(0, 1fr\)/);
+  assert.match(homeStyles, /@media \(max-width:720px\)\{\.home-path-panel,\.home-path-cards,\.home-why,\.why-points\{grid-template-columns:minmax\(0,1fr\)/);
 });
 
 test("cart exposes quantity, remove, total, and Stripe checkout controls", () => {
