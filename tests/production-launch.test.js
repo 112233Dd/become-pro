@@ -73,6 +73,20 @@ test("homepage explains the training method with real field proof", () => {
   assert.match(css, /\.why-process/);
 });
 
+test("programs hero explains the training system without vague real claims", () => {
+  const html = read("programs.html");
+
+  assert.match(html, /РАЗВИВАЙ ИГРАТА СИ/);
+  assert.match(html, /ТРЕНИРАЙ СЪС СИСТЕМА\.<br \/>ИГРАЙ С УВЕРЕНОСТ\./);
+  assert.match(html, /Онлайн програми и индивидуални тренировки, създадени да развиват техниката,/);
+  assert.match(html, />Разгледай програмите<\/a>/);
+  assert.match(html, /Онлайн програми \| 1:1 тренировки \| За играчи 10–24 г\./);
+  assert.match(html, /ЯСНА ЦЕЛ ВЪВ ВСЯКА ТРЕНИРОВКА/);
+  assert.match(html, /Знаеш какво тренираш, защо го тренираш и как да го приложиш в игра\./);
+  assert.match(html, /Конкретна цел\. Ясни упражнения\. Приложение в игра\./);
+  assert.doesNotMatch(html, /ФУТБОЛНА СИСТЕМА ЗА РАЗВИТИЕ|РЕАЛНА СИСТЕМА|Реален прогрес|Реални упражнения/);
+});
+
 test("program storefront and product details include purchase trust", () => {
   const programs = read("programs.html");
   const shop = read("shop.js");
