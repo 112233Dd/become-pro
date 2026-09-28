@@ -123,6 +123,28 @@ test("programs flow section shows how the training structure works in practice",
   assert.doesNotMatch(section, /Всички всички програми|Започни от тук|Как работи системата в реално време/);
 });
 
+test("programs contents section lists concrete purchased deliverables", () => {
+  const html = read("programs.html");
+  const css = read("styles.css");
+  const section = html.match(/<section class="program-inside[\s\S]*?<\/section>/)?.[0] || "";
+
+  assert.match(html, /programs-content\.min\.css\?v=20260928-product-specs/);
+  assert.match(section, /Какво получаваш/i);
+  assert.match(section, /Всичко необходимо, за да започнеш да тренираш\./);
+  assert.match(section, /тренировъчен план, видео демонстрации и ясни инструкции/);
+  assert.match(section, /Готова PDF програма/i);
+  assert.match(section, /Видео демонстрации/i);
+  assert.match(section, /Тренировки по ясен план/i);
+  assert.match(section, /Ясни инструкции/i);
+  assert.match(section, /Моментален достъп/i);
+  assert.match(section, /Тренирай отвсякъде/i);
+  assert.equal((section.match(/class="inside-card"/g) || []).length, 6);
+  assert.equal((section.match(/class="inside-card-icon"/g) || []).length, 6);
+  assert.match(section, /PDF формат[\s\S]*Видео демонстрации[\s\S]*Моментален достъп[\s\S]*Телефон и компютър/);
+  assert.doesNotMatch(section, /class="btn|Подходящо за играчи|Възможност за 1:1 надграждане|Фокус върху реална игра/);
+  assert.match(css, /\.program-inside \.inside-grid\s*{\s*grid-template-columns: minmax\(0, 1fr\)/);
+});
+
 test("program storefront and product details include purchase trust", () => {
   const programs = read("programs.html");
   const shop = read("shop.js");

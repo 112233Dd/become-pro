@@ -4148,7 +4148,7 @@ blockquote:hover {
 
 .program-inside {
   display: grid;
-  gap: 30px;
+  gap: clamp(20px, 3vw, 30px);
   overflow: hidden;
   background:
     radial-gradient(circle at 18% 20%, rgba(245, 196, 0, 0.11), transparent 24%),
@@ -4158,7 +4158,7 @@ blockquote:hover {
 
 .program-inside .section-heading,
 .inside-grid,
-.program-inside-note {
+.program-specs {
   width: min(100%, var(--max));
   margin: 0 auto;
 }
@@ -4177,7 +4177,7 @@ blockquote:hover {
 }
 
 .inside-card {
-  min-height: 235px;
+  min-height: 218px;
   padding: clamp(22px, 2.6vw, 30px);
   border: 1px solid rgba(245, 196, 0, 0.18);
   border-radius: 18px;
@@ -4187,17 +4187,31 @@ blockquote:hover {
   box-shadow: 0 26px 80px rgba(0, 0, 0, 0.24);
 }
 
-.inside-card span {
+.inside-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.inside-card-number {
   display: inline-grid;
   place-items: center;
   width: 36px;
   height: 36px;
-  margin-bottom: 28px;
   border: 1px solid rgba(245, 196, 0, 0.34);
   border-radius: 50%;
   color: var(--lime);
   font-size: 12px;
   font-weight: 950;
+}
+
+.inside-card-icon {
+  width: 28px;
+  height: 28px;
+  color: var(--lime);
+  opacity: 0.9;
 }
 
 .inside-card h3 {
@@ -4213,29 +4227,32 @@ blockquote:hover {
   line-height: 1.62;
 }
 
-.program-inside-note {
+.program-specs {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  padding: 20px 22px;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px 0;
+  padding: 15px 20px;
   border: 1px solid rgba(245, 196, 0, 0.22);
   border-radius: 16px;
   background: rgba(245, 196, 0, 0.08);
 }
 
-.program-inside-note strong {
-  color: var(--lime);
+.program-specs span {
+  display: inline-flex;
+  align-items: center;
+  color: #f0eadb;
   font-size: 14px;
-  font-weight: 950;
-  text-transform: uppercase;
+  font-weight: 850;
+  line-height: 1.4;
 }
 
-.program-inside-note p {
-  max-width: 760px;
-  margin: 0;
-  color: #e8e1d1;
-  line-height: 1.55;
+.program-specs span:not(:last-child)::after {
+  content: "·";
+  margin: 0 12px;
+  color: var(--lime);
+  font-weight: 950;
 }
 
 .home-products,
@@ -7700,5 +7717,31 @@ textarea:focus {
   .why-copy p {
     font-size: 16px;
     line-height: 1.6;
+  }
+}
+
+/* Online programs: concrete product contents stay compact and scannable. */
+@media (max-width: 720px) {
+  .program-inside .inside-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .program-inside .inside-card {
+    width: 100%;
+    min-width: 0;
+    padding: 20px;
+  }
+
+  .program-specs {
+    justify-content: flex-start;
+    padding: 14px 16px;
+  }
+
+  .program-specs span {
+    font-size: 13px;
+  }
+
+  .program-specs span:not(:last-child)::after {
+    margin: 0 9px;
   }
 }
