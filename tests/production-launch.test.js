@@ -105,6 +105,24 @@ test("programs problem section contrasts independent training with clear progres
   assert.doesNotMatch(section, /Всички всички програми|Започни от тук/);
 });
 
+test("programs flow section shows how the training structure works in practice", () => {
+  const html = read("programs.html");
+  const section = html.match(/<section class="program-slide program-flow[\s\S]*?<\/section>/)?.[0] || "";
+
+  assert.match(section, /Как работят програмите/i);
+  assert.match(section, /Отваряш програмата\. Следваш плана\. Тренираш с ясна цел\./);
+  assert.match(section, /Ясна структура за всяка тренировка/);
+  assert.match(section, /Конкретни упражнения и повторения/);
+  assert.match(section, /Постепенно надграждане на трудността/);
+  assert.match(section, /Фокус върху приложение в игра/);
+  assert.match(section, /Избери цел/);
+  assert.match(section, /Следвай плана/);
+  assert.match(section, /Пренеси го в игра/);
+  assert.match(section, />Разгледай програмите<\/a>/);
+  assert.equal((section.match(/class="btn/g) || []).length, 1);
+  assert.doesNotMatch(section, /Всички всички програми|Започни от тук|Как работи системата в реално време/);
+});
+
 test("program storefront and product details include purchase trust", () => {
   const programs = read("programs.html");
   const shop = read("shop.js");
