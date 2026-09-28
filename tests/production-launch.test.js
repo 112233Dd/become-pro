@@ -87,6 +87,24 @@ test("programs hero explains the training system without vague real claims", () 
   assert.doesNotMatch(html, /ФУТБОЛНА СИСТЕМА ЗА РАЗВИТИЕ|РЕАЛНА СИСТЕМА|Реален прогрес|Реални упражнения/);
 });
 
+test("programs problem section contrasts independent training with clear progression", () => {
+  const html = read("programs.html");
+  const section = html.match(/<section class="program-slide program-problems[\s\S]*?<\/section>/)?.[0] || "";
+
+  assert.match(section, /Когато тренираш самостоятелно/i);
+  assert.match(section, /Повече тренировки не означават автоматично повече прогрес\./);
+  assert.match(section, /Без ясна цел/);
+  assert.match(section, /Без последователност/);
+  assert.match(section, /Без ясно надграждане/);
+  assert.match(section, /Какво променя програмата/i);
+  assert.match(section, /Ясна структура/);
+  assert.match(section, /Връзка с играта/);
+  assert.match(section, /Ясно надграждане/);
+  assert.match(section, />Разгледай програмите<\/a>/);
+  assert.equal((section.match(/class="btn/g) || []).length, 1);
+  assert.doesNotMatch(section, /Всички всички програми|Започни от тук/);
+});
+
 test("program storefront and product details include purchase trust", () => {
   const programs = read("programs.html");
   const shop = read("shop.js");
