@@ -29,6 +29,7 @@ test("all product pages mount the shared detail content and required scripts", (
 test("homepage hero shows the three approved proof statistics", () => {
   const html = read("index.html");
 
+  assert.match(html, /styles\.home\.min\.css\?v=20260928-mobile-fix/);
   assert.match(html, /<strong>50\+<\/strong><span>футболисти<\/span>/);
   assert.match(html, /<strong>100\+<\/strong><span>проведени тренировки<\/span>/);
   assert.match(html, /<strong>4\+<\/strong><span>футболни програми<\/span>/);
