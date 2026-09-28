@@ -49,7 +49,11 @@ test("homepage presents the coach, online programs, and starting choice clearly"
   assert.match(html, /02 — Индивидуална тренировка/);
   assert.match(html, />Разгледай програмите<\/a>/);
   assert.match(html, />Запази тренировка<\/a>/);
+  assert.match(html, /Следващата стъпка/);
+  assert.match(html, /Готов ли си да работиш целенасочено върху играта си\?/);
+  assert.match(html, /Започни с готова онлайн програма или работи индивидуално с мен\./);
   assert.doesNotMatch(html, /Кой вариант е най-подходящ за теб\?|Запиши се от тук/);
+  assert.doesNotMatch(html, /Готов ли си да тренираш като играч, който иска повече\?|Запиши тренировка/);
   assert.doesNotMatch(html, /Лицето зад бранда|Реални продукти|Виж реалната система/);
 });
 
@@ -112,6 +116,8 @@ test("every public page uses the shared footer", () => {
   assert.match(script, /https:\/\/www\.tiktok\.com\//);
   assert.match(script, /mailto:become\.pro2024@gmail\.com/);
   assert.match(script, /tel:\+359897575257/);
+  assert.match(script, /Онлайн футболни програми и индивидуални тренировки с Йордан Желев\./);
+  assert.doesNotMatch(script, /Футболни програми и индивидуални тренировки за целенасочено развитие\./);
   assert.match(script, /\/privacy-policy/);
   assert.match(script, /\/terms/);
   assert.match(script, /\/cookie-policy/);

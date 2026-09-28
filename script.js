@@ -19,7 +19,7 @@ const renderSiteFooter = () => {
           <img src="/assets/becomepro-logo-compact.webp" alt="Become Pro logo" />
           <span>BECOME <strong>PRO</strong></span>
         </a>
-        <p>Футболни програми и индивидуални тренировки за целенасочено развитие.</p>
+        <p>Онлайн футболни програми и индивидуални тренировки с Йордан Желев.</p>
       </div>
       <nav class="footer-column" aria-label="Бързи връзки">
         <h2>Навигация</h2>
