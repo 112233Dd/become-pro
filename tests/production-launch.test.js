@@ -90,7 +90,7 @@ test("programs contents section lists concrete purchased deliverables", () => {
   const css = read("styles.css");
   const section = html.match(/<section class="program-inside[\s\S]*?<\/section>/)?.[0] || "";
 
-  assert.match(html, /programs-content\.min\.css\?v=20260928-page-optimization/);
+  assert.match(html, /programs-content\.min\.css\?v=20260928-trust-mobile/);
   assert.match(section, /Какво получаваш/i);
   assert.match(section, /Всичко необходимо, за да започнеш да тренираш\./);
   assert.match(section, /тренировъчен план, видео демонстрации и ясни инструкции/);
@@ -101,9 +101,13 @@ test("programs contents section lists concrete purchased deliverables", () => {
   assert.equal((section.match(/class="inside-card"/g) || []).length, 4);
   assert.equal((section.match(/class="inside-card-icon"/g) || []).length, 4);
   assert.match(section, /Сигурно плащане чрез Stripe[\s\S]*Моментален достъп[\s\S]*Помощ при проблем с достъпа/);
+  const trustLine = section.match(/<div class="program-trust-line"[\s\S]*?<\/div>/)?.[0] || "";
+  assert.equal((trustLine.match(/<span>/g) || []).length, 3);
   assert.doesNotMatch(section, /class="btn|Подходящо за играчи|Възможност за 1:1 надграждане|Фокус върху реална игра/);
   assert.match(css, /\.program-inside \.inside-grid\s*{\s*grid-template-columns: minmax\(0, 1fr\)/);
   assert.match(css, /\.programs-page-main \.program-shop \.program-grid\s*{\s*grid-template-columns: minmax\(0, 1fr\)/);
+  assert.match(css, /\.program-trust-line span:not\(:last-child\)::after/);
+  assert.match(css, /\.program-trust-line span::before/);
 });
 
 test("program storefront and product details include purchase trust", () => {
