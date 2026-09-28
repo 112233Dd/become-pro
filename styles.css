@@ -4622,7 +4622,7 @@ blockquote:hover {
 }
 
 .home-path {
-  min-height: 92vh;
+  min-height: auto;
   display: grid;
   align-content: center;
 }
@@ -4646,7 +4646,7 @@ blockquote:hover {
   grid-template-rows: auto auto 1fr auto;
   gap: 14px;
   min-width: 0;
-  min-height: 300px;
+  min-height: 270px;
   padding: clamp(20px, 2vw, 28px);
   border: 1px solid rgba(245, 196, 0, 0.46);
   border-radius: 20px;

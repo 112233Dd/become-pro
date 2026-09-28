@@ -43,6 +43,13 @@ test("homepage presents the coach, online programs, and starting choice clearly"
   assert.match(html, /Готови онлайн програми/);
   assert.match(html, /Тренирай самостоятелно с ясна структура и цел\./);
   assert.match(html, /Избери как искаш да започнеш\./);
+  assert.match(html, /Избери как да започнеш/);
+  assert.match(html, /Как искаш да тренираш\?/);
+  assert.match(html, /01 — Готова програма/);
+  assert.match(html, /02 — Индивидуална тренировка/);
+  assert.match(html, />Разгледай програмите<\/a>/);
+  assert.match(html, />Запази тренировка<\/a>/);
+  assert.doesNotMatch(html, /Кой вариант е най-подходящ за теб\?|Запиши се от тук/);
   assert.doesNotMatch(html, /Лицето зад бранда|Реални продукти|Виж реалната система/);
 });
 
