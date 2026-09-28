@@ -35,6 +35,17 @@ test("homepage hero shows the three approved proof statistics", () => {
   assert.doesNotMatch(html, /<strong>10[–-]24<\/strong><span>години подходяща възраст<\/span>/);
 });
 
+test("homepage presents the coach, online programs, and starting choice clearly", () => {
+  const html = read("index.html");
+
+  assert.match(html, /Зад Become Pro/);
+  assert.match(html, /Създадено от футболист\. Изградено за футболисти\./);
+  assert.match(html, /Готови онлайн програми/);
+  assert.match(html, /Тренирай самостоятелно с ясна структура и цел\./);
+  assert.match(html, /Избери как искаш да започнеш\./);
+  assert.doesNotMatch(html, /Лицето зад бранда|Реални продукти|Виж реалната система/);
+});
+
 test("program storefront and product details include purchase trust", () => {
   const programs = read("programs.html");
   const shop = read("shop.js");
