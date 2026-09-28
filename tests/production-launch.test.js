@@ -73,54 +73,16 @@ test("homepage explains the training method with real field proof", () => {
   assert.match(css, /\.why-process/);
 });
 
-test("programs hero explains the training system without vague real claims", () => {
+test("programs hero leads directly into choosing an online program", () => {
   const html = read("programs.html");
+  const hero = html.match(/<section class="programs-hero[\s\S]*?<\/section>/)?.[0] || "";
 
-  assert.match(html, /РАЗВИВАЙ ИГРАТА СИ/);
-  assert.match(html, /ТРЕНИРАЙ СЪС СИСТЕМА\.<br \/>ИГРАЙ С УВЕРЕНОСТ\./);
-  assert.match(html, /Онлайн програми и индивидуални тренировки, създадени да развиват техниката,/);
-  assert.match(html, />Разгледай програмите<\/a>/);
-  assert.match(html, /Онлайн програми \| 1:1 тренировки \| За играчи 10–24 г\./);
-  assert.match(html, /ЯСНА ЦЕЛ ВЪВ ВСЯКА ТРЕНИРОВКА/);
-  assert.match(html, /Знаеш какво тренираш, защо го тренираш и как да го приложиш в игра\./);
-  assert.match(html, /Конкретна цел\. Ясни упражнения\. Приложение в игра\./);
-  assert.doesNotMatch(html, /ФУТБОЛНА СИСТЕМА ЗА РАЗВИТИЕ|РЕАЛНА СИСТЕМА|Реален прогрес|Реални упражнения/);
-});
-
-test("programs problem section contrasts independent training with clear progression", () => {
-  const html = read("programs.html");
-  const section = html.match(/<section class="program-slide program-problems[\s\S]*?<\/section>/)?.[0] || "";
-
-  assert.match(section, /Когато тренираш самостоятелно/i);
-  assert.match(section, /Повече тренировки не означават автоматично повече прогрес\./);
-  assert.match(section, /Без ясна цел/);
-  assert.match(section, /Без последователност/);
-  assert.match(section, /Без ясно надграждане/);
-  assert.match(section, /Какво променя програмата/i);
-  assert.match(section, /Ясна структура/);
-  assert.match(section, /Връзка с играта/);
-  assert.match(section, /Ясно надграждане/);
-  assert.match(section, />Разгледай програмите<\/a>/);
-  assert.equal((section.match(/class="btn/g) || []).length, 1);
-  assert.doesNotMatch(section, /Всички всички програми|Започни от тук/);
-});
-
-test("programs flow section shows how the training structure works in practice", () => {
-  const html = read("programs.html");
-  const section = html.match(/<section class="program-slide program-flow[\s\S]*?<\/section>/)?.[0] || "";
-
-  assert.match(section, /Как работят програмите/i);
-  assert.match(section, /Отваряш програмата\. Следваш плана\. Тренираш с ясна цел\./);
-  assert.match(section, /Ясна структура за всяка тренировка/);
-  assert.match(section, /Конкретни упражнения и повторения/);
-  assert.match(section, /Постепенно надграждане на трудността/);
-  assert.match(section, /Фокус върху приложение в игра/);
-  assert.match(section, /Избери цел/);
-  assert.match(section, /Следвай плана/);
-  assert.match(section, /Пренеси го в игра/);
-  assert.match(section, />Разгледай програмите<\/a>/);
-  assert.equal((section.match(/class="btn/g) || []).length, 1);
-  assert.doesNotMatch(section, /Всички всички програми|Започни от тук|Как работи системата в реално време/);
+  assert.match(hero, /ОНЛАЙН ПРОГРАМИ/);
+  assert.match(hero, /<h1>Онлайн програми за футболисти<\/h1>/);
+  assert.match(hero, /техника, сила или подготовка за мач/);
+  assert.match(hero, /Получаваш я веднага и тренираш самостоятелно по ясен план\./);
+  assert.doesNotMatch(hero, /class="btn|индивидуални тренировки|реален прогрес|отключи потенциала/i);
+  assert.doesNotMatch(html, /program-problems|program-flow|ТРЕНИРАЙ СЪС СИСТЕМА|ЯСНА ЦЕЛ ВЪВ ВСЯКА ТРЕНИРОВКА/);
 });
 
 test("programs contents section lists concrete purchased deliverables", () => {
@@ -128,28 +90,28 @@ test("programs contents section lists concrete purchased deliverables", () => {
   const css = read("styles.css");
   const section = html.match(/<section class="program-inside[\s\S]*?<\/section>/)?.[0] || "";
 
-  assert.match(html, /programs-content\.min\.css\?v=20260928-product-specs/);
+  assert.match(html, /programs-content\.min\.css\?v=20260928-page-optimization/);
   assert.match(section, /Какво получаваш/i);
   assert.match(section, /Всичко необходимо, за да започнеш да тренираш\./);
   assert.match(section, /тренировъчен план, видео демонстрации и ясни инструкции/);
-  assert.match(section, /Готова PDF програма/i);
+  assert.match(section, /Готова програма/i);
   assert.match(section, /Видео демонстрации/i);
-  assert.match(section, /Тренировки по ясен план/i);
   assert.match(section, /Ясни инструкции/i);
   assert.match(section, /Моментален достъп/i);
-  assert.match(section, /Тренирай отвсякъде/i);
-  assert.equal((section.match(/class="inside-card"/g) || []).length, 6);
-  assert.equal((section.match(/class="inside-card-icon"/g) || []).length, 6);
-  assert.match(section, /PDF формат[\s\S]*Видео демонстрации[\s\S]*Моментален достъп[\s\S]*Телефон и компютър/);
+  assert.equal((section.match(/class="inside-card"/g) || []).length, 4);
+  assert.equal((section.match(/class="inside-card-icon"/g) || []).length, 4);
+  assert.match(section, /Сигурно плащане чрез Stripe[\s\S]*Моментален достъп[\s\S]*Помощ при проблем с достъпа/);
   assert.doesNotMatch(section, /class="btn|Подходящо за играчи|Възможност за 1:1 надграждане|Фокус върху реална игра/);
   assert.match(css, /\.program-inside \.inside-grid\s*{\s*grid-template-columns: minmax\(0, 1fr\)/);
+  assert.match(css, /\.programs-page-main \.program-shop \.program-grid\s*{\s*grid-template-columns: minmax\(0, 1fr\)/);
 });
 
 test("program storefront and product details include purchase trust", () => {
   const programs = read("programs.html");
   const shop = read("shop.js");
 
-  assert.match(programs, /data-program-storefront[\s\S]*data-purchase-trust/);
+  assert.match(programs, /data-program-storefront/);
+  assert.doesNotMatch(programs, /data-purchase-trust/);
   assert.match(shop, /Какво получаваш след покупка\?/);
   assert.match(shop, /Сигурно плащане/);
   assert.match(shop, /Плащаш безопасно чрез Stripe/);
@@ -159,6 +121,22 @@ test("program storefront and product details include purchase trust", () => {
   assert.match(shop, /Бърза помощ/);
   assert.match(shop, /<svg viewBox=/);
   assert.match(shop, /renderPurchaseTrust/);
+});
+
+test("programs FAQ and final CTA focus on choosing a program", () => {
+  const html = read("programs.html");
+  const faq = html.match(/<section class="faq[\s\S]*?<\/section>/)?.[0] || "";
+  const cta = html.match(/<section class="final-cta[\s\S]*?<\/section>/)?.[0] || "";
+
+  assert.equal((faq.match(/<details>/g) || []).length, 9);
+  assert.match(faq, /Какво точно получавам с програмата\?/);
+  assert.match(faq, /Какво да направя, ако имам проблем с достъпа\?/);
+  assert.doesNotMatch(faq, /class="btn/);
+  assert.match(cta, /Готов ли си да започнеш\?/i);
+  assert.match(cta, /Избери върху какво искаш да работиш\./);
+  assert.match(cta, /href="#programs">Разгледай програмите<\/a>/);
+  assert.match(cta, /href="contact\.html">Искам препоръка<\/a>/);
+  assert.doesNotMatch(cta, /индивидуалн|тренировка/i);
 });
 
 test("every public page uses the shared footer", () => {
