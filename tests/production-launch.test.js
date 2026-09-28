@@ -53,6 +53,21 @@ test("homepage presents the coach, online programs, and starting choice clearly"
   assert.doesNotMatch(html, /Лицето зад бранда|Реални продукти|Виж реалната система/);
 });
 
+test("homepage explains the training method with real field proof", () => {
+  const html = read("index.html");
+  const css = read("styles.css");
+
+  assert.match(html, /class="why-training-photo"/);
+  assert.match(html, /src="assets\/home-why-coach-training\.jpg"/);
+  assert.match(html, /Фокус[\s\S]*Повторение[\s\S]*Корекция[\s\S]*Приложение/);
+  assert.match(html, /class="why-point-number">01<\/span>[\s\S]*<h3>Фокус<\/h3>/);
+  assert.match(html, /class="why-point-number">02<\/span>[\s\S]*<h3>Структура<\/h3>/);
+  assert.match(html, /class="why-point-number">03<\/span>[\s\S]*<h3>Приложение<\/h3>/);
+  assert.doesNotMatch(html, /Започни с малък риск\. Надгради, когато имаш реална нужда\./);
+  assert.match(css, /\.why-training-photo/);
+  assert.match(css, /\.why-process/);
+});
+
 test("program storefront and product details include purchase trust", () => {
   const programs = read("programs.html");
   const shop = read("shop.js");

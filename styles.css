@@ -4267,8 +4267,7 @@ blockquote:hover {
 .brand-face-card,
 .real-products-card,
 .home-inline-cta,
-.home-path-panel,
-.why-feature-card {
+.home-path-panel {
   border: 1px solid rgba(245, 196, 0, 0.16);
   border-radius: 18px;
   background:
@@ -4700,15 +4699,17 @@ blockquote:hover {
 }
 
 .home-why {
-  min-height: 82vh;
+  min-height: auto;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.72fr);
-  align-items: start;
-  gap: clamp(28px, 5vw, 70px);
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.78fr);
+  align-items: center;
+  column-gap: clamp(28px, 5vw, 70px);
+  row-gap: 24px;
 }
 
 .why-copy {
   max-width: 760px;
+  align-self: center;
 }
 
 .why-copy h2 {
@@ -4720,29 +4721,67 @@ blockquote:hover {
 
 .why-copy p {
   max-width: 710px;
+  margin-bottom: 0;
   color: #e0dacb;
   font-size: 18px;
   line-height: 1.75;
 }
 
-.why-feature-card {
-  padding: 32px;
+.why-training-photo {
+  position: relative;
+  height: clamp(480px, 42vw, 620px);
+  min-height: 0;
+  align-self: center;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(245, 196, 0, 0.28);
+  border-radius: 22px;
   background:
-    linear-gradient(145deg, rgba(245, 196, 0, 0.16), rgba(255, 255, 255, 0.04)),
-    rgba(245, 196, 0, 0.04);
+    linear-gradient(145deg, rgba(245, 196, 0, 0.12), rgba(255, 255, 255, 0.03)),
+    #0b0b09;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.42);
 }
 
-.why-feature-card h3 {
-  margin: 0 0 18px;
+.why-training-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 52%, rgba(3, 3, 3, 0.82));
+  pointer-events: none;
+}
+
+.why-training-photo img {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: cover;
+  object-position: center 36%;
+}
+
+.why-process {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin: 0;
+  padding: 13px 15px;
+  border: 1px solid rgba(245, 196, 0, 0.34);
+  border-radius: 999px;
+  background: rgba(3, 3, 3, 0.76);
   color: var(--white);
-  font-size: clamp(25px, 2.4vw, 36px);
-  line-height: 1.1;
+  font-size: 12px;
+  font-weight: 900;
+  backdrop-filter: blur(12px);
 }
 
-.why-feature-card p {
-  margin: 0 0 24px;
-  color: #e3ddcf;
-  line-height: 1.75;
+.why-process i {
+  color: var(--lime);
+  font-style: normal;
 }
 
 .why-points {
@@ -4750,22 +4789,37 @@ blockquote:hover {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
-  width: min(100%, 900px);
+  width: 100%;
 }
 
 .why-points article {
-  padding: 18px;
-  border-left: 2px solid var(--lime);
-  background: rgba(255, 255, 255, 0.04);
+  min-height: 190px;
+  padding: clamp(22px, 2.4vw, 30px);
+  border: 1px solid rgba(245, 196, 0, 0.22);
+  border-top: 2px solid var(--lime);
+  border-radius: 16px;
+  background:
+    linear-gradient(145deg, rgba(245, 196, 0, 0.1), transparent 62%),
+    rgba(255, 255, 255, 0.045);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.3);
 }
 
-.why-points span {
+.why-point-number {
+  display: block;
+  margin-bottom: 22px;
   color: var(--lime);
+  font-size: 12px;
   font-weight: 900;
 }
 
+.why-points h3 {
+  margin: 0;
+  color: var(--white);
+  font-size: clamp(22px, 2vw, 28px);
+}
+
 .why-points p {
-  margin: 8px 0 0;
+  margin: 10px 0 0;
   color: #d8d2c3;
   line-height: 1.55;
 }
@@ -6340,6 +6394,17 @@ textarea:focus {
     max-width: 720px;
   }
 
+  .why-training-photo {
+    width: min(100%, 720px);
+    height: clamp(520px, 70vw, 640px);
+    min-height: 0;
+    justify-self: center;
+  }
+
+  .why-training-photo img {
+    min-height: 0;
+  }
+
   .brand-face-card,
   .real-products-card {
     height: auto;
@@ -7059,6 +7124,33 @@ textarea:focus {
     display: grid;
     padding: 20px;
     border-radius: 16px;
+  }
+
+  .why-training-photo {
+    width: 100%;
+    height: clamp(430px, 115vw, 560px);
+    min-height: 0;
+  }
+
+  .why-training-photo img {
+    min-height: 0;
+  }
+
+  .why-process {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    border-radius: 16px;
+  }
+
+  .why-points {
+    grid-template-columns: 1fr;
+  }
+
+  .why-points article {
+    min-height: 0;
   }
 
   .faq-next-card {
