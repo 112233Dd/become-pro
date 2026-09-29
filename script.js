@@ -96,12 +96,34 @@ nav?.querySelectorAll("a").forEach((link) => {
   link.addEventListener("click", closeNav);
 });
 
-const currentPage = window.location.pathname.split("/").pop() || "index.html";
+const normalizeNavigationRoute = (value) => {
+  const pathname = new URL(value, window.location.origin).pathname;
+  const normalizedPath = pathname
+    .replace(/\/index\.html$/i, "")
+    .replace(/\.html$/i, "")
+    .replace(/\/+$/, "") || "/";
+
+  if (normalizedPath === "/matchday-pack" || normalizedPath.startsWith("/programs/")) {
+    return "/programs";
+  }
+
+  return normalizedPath;
+};
+
+const currentNavigationRoute = normalizeNavigationRoute(window.location.pathname);
 
 navLinks.forEach((link) => {
   const href = link.getAttribute("href") || "";
-  const linkPage = href.split("#")[0];
-  link.classList.toggle("is-active", linkPage === currentPage);
+  if (!href || href.startsWith("#")) return;
+
+  const isCurrentPage = normalizeNavigationRoute(href) === currentNavigationRoute;
+  link.classList.toggle("is-active", isCurrentPage);
+
+  if (isCurrentPage) {
+    link.setAttribute("aria-current", "page");
+  } else {
+    link.removeAttribute("aria-current");
+  }
 });
 
 const sectionNavLinks = navLinks.filter((link) => link.getAttribute("href")?.startsWith("#"));

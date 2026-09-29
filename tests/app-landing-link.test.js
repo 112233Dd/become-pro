@@ -20,3 +20,17 @@ test("shared navigation and footer do not promote the player app", () => {
   assert.doesNotMatch(read("styles.css"), /\.hero-app-link/);
   assert.match(read("styles.css"), /\.hero-media\s*\{\s*min-height: 390px;\s*order: 1;/, "tablet hero copy should precede the large video");
 });
+
+test("shared navigation marks clean routes as the current page", () => {
+  const script = read("script.js");
+  const css = read("styles.css");
+
+  assert.match(script, /normalizeNavigationRoute/);
+  assert.match(script, /replace\(\/\\\/index\\\.html\$\/i/);
+  assert.match(script, /replace\(\/\\\.html\$\/i/);
+  assert.match(script, /normalizedPath === "\/matchday-pack"/);
+  assert.match(script, /normalizedPath\.startsWith\("\/programs\/"\)/);
+  assert.match(script, /link\.classList\.toggle\("is-active", isCurrentPage\)/);
+  assert.match(script, /link\.setAttribute\("aria-current", "page"\)/);
+  assert.match(css, /\.site-nav a\.is-active\s*{[\s\S]*?background:/);
+});

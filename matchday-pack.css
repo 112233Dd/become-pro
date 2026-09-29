@@ -110,7 +110,8 @@ p {
 }
 
 .matchday-nav a:hover,
-.matchday-nav a:focus-visible {
+.matchday-nav a:focus-visible,
+.matchday-nav a.is-active {
   color: var(--match-yellow);
   background: rgba(245, 196, 0, 0.1);
 }

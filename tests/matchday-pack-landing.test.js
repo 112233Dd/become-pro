@@ -115,6 +115,9 @@ test("matchday checkout purchases only the real matchday product", () => {
   assert.match(script, /checkout_error/);
   assert.match(script, /data-matchday-nav-toggle/);
   assert.match(script, /aria-expanded/);
+  assert.match(script, /a\[href="\/programs"\]/);
+  assert.match(script, /classList\.add\("is-active"\)/);
+  assert.match(script, /setAttribute\("aria-current", "page"\)/);
   assert.match(shared, /"matchday-pack":\s*"https:\/\/drive\.google\.com\/file\/d\/[^\"]+\/view\?usp=sharing"/);
   assert.match(shared, /programLink:\s*PROGRAM_LINKS\["matchday-pack"\]/);
   assert.match(webhook, /sendFulfillmentEmails/);
@@ -126,6 +129,7 @@ test("matchday checkout purchases only the real matchday product", () => {
 test("matchday landing uses isolated responsive styling", () => {
   const html = read("matchday-pack.html");
   const css = read("matchday-pack.css");
+  assert.match(css, /\.matchday-nav a\.is-active/);
   const script = read("matchday-pack.js");
 
   assert.match(html, /matchday-pack\.min\.css/);

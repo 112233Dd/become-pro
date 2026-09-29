@@ -1,6 +1,9 @@
 (() => {
   const nav = document.querySelector("[data-matchday-nav]");
   const navToggle = document.querySelector("[data-matchday-nav-toggle]");
+  const programsNavLink = nav?.querySelector('a[href="/programs"]');
+  programsNavLink?.classList.add("is-active");
+  programsNavLink?.setAttribute("aria-current", "page");
   const closeNav = () => {
     nav?.classList.remove("is-open");
     document.body.classList.remove("nav-open");
