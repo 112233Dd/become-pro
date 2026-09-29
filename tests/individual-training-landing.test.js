@@ -87,6 +87,13 @@ test("landing page contains the approved conversion structure", () => {
   assert.match(html, /individual-training\.min\.css/);
   assert.match(html, /individual-training\.min\.js/);
   assert.match(css, /html\s*\{[\s\S]*?background-color:\s*#050505/);
+  assert.match(css, /--max:\s*1180px/);
+  assert.match(css, /\.training-landing-shell\s*\{[\s\S]*?width:\s*min\(var\(--max\)/);
+  assert.match(css, /\.site-header\s*\{[\s\S]*?position:\s*fixed/);
+  assert.match(css, /@media \(max-width:\s*1320px\)/);
+  assert.match(css, /\.training-landing-hero::before/);
+  assert.match(css, /\.hero-grid\s*\{[\s\S]*?min-height:\s*auto/);
+  assert.match(script, /classList\.toggle\("is-scrolled", window\.scrollY > 20\)/);
   assert.match(css, /\.training-sticky-dock\s*\{[\s\S]*?background:\s*#050505/);
   assert.match(css, /padding:\s*12px 16px calc\(12px \+ env\(safe-area-inset-bottom\)\)/);
   assert.match(script, /stickyDock\?\.classList\.toggle\("is-visible", shouldShow\)/);

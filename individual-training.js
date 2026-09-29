@@ -1,6 +1,13 @@
 (() => {
   const nav = document.querySelector("[data-nav]");
   const navToggle = document.querySelector("[data-nav-toggle]");
+  const header = document.querySelector("[data-header]");
+
+  const updateHeader = () => {
+    header?.classList.toggle("is-scrolled", window.scrollY > 20);
+  };
+  updateHeader();
+  window.addEventListener("scroll", updateHeader, { passive: true });
 
   document.querySelectorAll("[data-video-play]").forEach((button) => {
     button.addEventListener("click", () => {
