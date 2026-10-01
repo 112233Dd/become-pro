@@ -26,6 +26,36 @@
       "source": "/programs/matchday-pack",
       "destination": "/matchday-pack",
       "permanent": true
+    },
+    {
+      "source": "/training",
+      "destination": "/individual-training",
+      "permanent": true
+    },
+    {
+      "source": "/training/sofia",
+      "destination": "/individual-training",
+      "permanent": true
+    },
+    {
+      "source": "/training/plovdiv",
+      "destination": "/individual-training",
+      "permanent": true
+    },
+    {
+      "source": "/training/stara-zagora",
+      "destination": "/individual-training",
+      "permanent": true
+    },
+    {
+      "source": "/training/parents",
+      "destination": "/individual-training",
+      "permanent": true
+    },
+    {
+      "source": "/training/players",
+      "destination": "/individual-training",
+      "permanent": true
     }
   ],
   "rewrites": [
@@ -55,30 +85,6 @@
     },
     {
       "source": "/individual-training",
-      "destination": "/individual-training.html"
-    },
-    {
-      "source": "/training",
-      "destination": "/individual-training.html"
-    },
-    {
-      "source": "/training/plovdiv",
-      "destination": "/individual-training.html"
-    },
-    {
-      "source": "/training/sofia",
-      "destination": "/individual-training.html"
-    },
-    {
-      "source": "/training/stara-zagora",
-      "destination": "/individual-training.html"
-    },
-    {
-      "source": "/training/parents",
-      "destination": "/individual-training.html"
-    },
-    {
-      "source": "/training/players",
       "destination": "/individual-training.html"
     },
     {

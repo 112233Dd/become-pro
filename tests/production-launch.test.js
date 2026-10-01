@@ -165,6 +165,57 @@ test("programs FAQ and final CTA focus on choosing a program", () => {
   assert.doesNotMatch(cta, /индивидуалн|тренировка/i);
 });
 
+test("legacy training routes redirect permanently to the canonical service page", () => {
+  const config = JSON.parse(read("vercel.json"));
+  const redirects = new Map(config.redirects.map(({ source, destination, permanent }) => [
+    source,
+    { destination, permanent },
+  ]));
+
+  [
+    "/training",
+    "/training/sofia",
+    "/training/plovdiv",
+    "/training/stara-zagora",
+    "/training/parents",
+    "/training/players",
+  ].forEach((source) => {
+    assert.deepEqual(redirects.get(source), {
+      destination: "/individual-training",
+      permanent: true,
+    });
+  });
+});
+
+test("active product pages expose product-specific sharing and structured data", () => {
+  const activeProductPages = [
+    ["technical-pack", "program-cover-technical-pack.webp"],
+    ["strength-level-1", "program-cover-strength-level-1.webp"],
+    ["strength-level-2", "program-cover-strength-level-2.webp"],
+    ["strength-level-3", "program-cover-strength-level-3.webp"],
+  ];
+
+  activeProductPages.forEach(([folder, image]) => {
+    const html = read(`programs/${folder}/index.html`);
+    const structuredData = html.match(
+      /<script type="application\/ld\+json">([\s\S]*?)<\/script>/,
+    )?.[1];
+
+    assert.match(html, /<meta property="og:type" content="product"/);
+    assert.match(html, new RegExp(`<meta property="og:url" content="https://becomeprofootball\\.com/programs/${folder}"`));
+    assert.match(html, new RegExp(`<meta property="og:image" content="https://becomeprofootball\\.com/assets/${image}"`));
+    assert.ok(structuredData, `${folder} needs Product structured data`);
+
+    const product = JSON.parse(structuredData);
+    assert.equal(product["@type"], "Product");
+    assert.equal(product.offers.price, "24.99");
+    assert.equal(product.offers.priceCurrency, "EUR");
+    assert.equal(product.offers.availability, "https://schema.org/InStock");
+  });
+
+  assert.match(read("programs/summer-program/index.html"), /<meta name="robots" content="noindex,follow"/);
+});
+
 test("every public page uses the shared footer", () => {
   const pages = [
     "index.html",
