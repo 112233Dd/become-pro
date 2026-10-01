@@ -93,6 +93,7 @@ test("programs page features Matchday Pack before the remaining catalog", () => 
   assert.ok(html.indexOf("data-program-featured") < html.indexOf("data-program-storefront"));
   assert.match(html, /Избери програма според целта си/);
   assert.match(html, /programs-featured\.min\.css\?v=20260928-matchday-focus/);
+  assert.match(html, /programs-grid\.min\.css\?v=20261001-two-by-two/);
   assert.match(shop, /FEATURED_PROGRAM_ID\s*=\s*"matchday-pack"/);
   assert.match(shop, /Програма на фокус/i);
   assert.match(shop, /Подготви се за мача с ясен план\./);
@@ -101,6 +102,9 @@ test("programs page features Matchday Pack before the remaining catalog", () => 
   assert.match(shop, /activeShopPrograms[\s\S]*?\.filter\(\(program\) => program\.id !== FEATURED_PROGRAM_ID\)/);
   assert.match(css, /\.featured-program\s*{[\s\S]*?grid-template-columns:/);
   assert.match(css, /@media \(max-width: 720px\)[\s\S]*?\.featured-program\s*{[\s\S]*?grid-template-columns: minmax\(0, 1fr\)/);
+  const gridCss = read("programs-grid.min.css");
+  assert.match(gridCss, /grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
+  assert.match(gridCss, /@media\(max-width:720px\).*grid-template-columns:minmax\(0,1fr\)/);
 });
 
 test("programs contents section lists concrete purchased deliverables", () => {
