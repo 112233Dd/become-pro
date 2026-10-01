@@ -38,8 +38,9 @@ test("matchday landing follows the complete conversion flow", () => {
   });
 
   assert.match(html, /24\.99\s*€/);
-  assert.ok((html.match(/data-matchday-checkout/g) || []).length >= 5);
+  assert.ok((html.match(/data-matchday-checkout/g) || []).length >= 7);
   assert.match(html, /data-mobile-sticky-cta/);
+  assert.equal((html.match(/<section class="matchday-inline-cta/g) || []).length, 2);
   assert.match(html, /program-cover-matchday\.webp/);
   assert.match(html, /data-matchday-nav-toggle/);
   ["/programs", "/individual-training", "/coach", "/players", "/faq", "/contact"].forEach((href) => {
@@ -94,12 +95,19 @@ test("matchday product previews open in an accessible lightbox", () => {
   assert.match(css, /height:\s*100dvh/);
 });
 
-test("matchday field proof uses a clean real training clip", () => {
+test("matchday field proof uses the three dedicated muted training clips", () => {
   const html = read("matchday-pack.html");
 
-  assert.match(html, /individual-tech-first-touch-poster\.webp/);
-  assert.match(html, /individual-tech-first-touch\.mp4/);
-  assert.doesNotMatch(html, /individual-decisions-game-situations/);
+  assert.match(html, /matchday-roskata-ladder-ball-shots-poster\.webp/);
+  assert.match(html, /matchday-roskata-ladder-ball-shots\.mp4/);
+  assert.match(html, /matchday-stoyancho-hurdles-left-foot-poster\.webp/);
+  assert.match(html, /matchday-stoyancho-hurdles-left-foot\.mp4/);
+  assert.match(html, /matchday-marti-inside-outside-cones-poster\.webp/);
+  assert.match(html, /matchday-marti-inside-outside-cones\.mp4/);
+  assert.equal((html.match(/<video muted loop playsinline/g) || []).length, 3);
+  assert.doesNotMatch(html, /one-touch-passing-drop\.mp4/);
+  assert.doesNotMatch(html, /individual-tech-first-touch\.mp4/);
+  assert.doesNotMatch(html, /individual-speed-explosiveness\.mp4/);
 });
 
 test("matchday checkout purchases only the real matchday product", () => {
@@ -119,11 +127,21 @@ test("matchday checkout purchases only the real matchday product", () => {
   assert.match(script, /classList\.add\("is-active"\)/);
   assert.match(script, /setAttribute\("aria-current", "page"\)/);
   assert.match(shared, /"matchday-pack":\s*"https:\/\/drive\.google\.com\/file\/d\/[^\"]+\/view\?usp=sharing"/);
-  assert.match(shared, /programLink:\s*PROGRAM_LINKS\["matchday-pack"\]/);
+  assert.match(shared, /Object\.entries\(publicProductCatalog\)/);
+  assert.match(shared, /programLink:\s*PROGRAM_LINKS\[id\]/);
   assert.match(webhook, /sendFulfillmentEmails/);
   assert.match(webhook, /program\.programLink/);
   assert.match(webhook, /landingProgram/);
   assert.match(script, /showCheckoutError/);
+});
+
+test("matchday mobile buy button is visible immediately instead of waiting for scroll", () => {
+  const script = read("matchday-pack.js");
+  const css = read("matchday-pack.css");
+
+  assert.match(script, /window\.innerWidth <= 720/);
+  assert.doesNotMatch(script, /window\.scrollY > 120/);
+  assert.match(css, /\.matchday-mobile-sticky\s*\{[\s\S]*?opacity:\s*1;/);
 });
 
 test("matchday landing uses isolated responsive styling", () => {

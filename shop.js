@@ -1,18 +1,18 @@
 const SHOP_CART_KEY = "becomeProProgramCart";
 const LEGACY_SHOP_CART_KEYS = ["becomepro-cart", "becomepro_cart"];
 const FEATURED_PROGRAM_ID = "matchday-pack";
+const publicProgramCatalog = window.BECOME_PRO_PROGRAM_CATALOG || {};
+const getPublicProgram = (id) => {
+  const program = publicProgramCatalog[id];
+  if (!program) throw new Error(`Missing public program data for ${id}.`);
+  return { ...program, price: program.displayPrice, image: program.image.replace(/^\//, "") };
+};
 
 const shopPrograms = [
   {
-    id: "summer-program",
-    archived: true,
-    title: "Лятна програма",
-    price: "€34.99",
-    image: "assets/program-cover-summer.webp",
-    badge: "🥇 Най-добрият избор за лятото",
+    ...getPublicProgram("summer-program"),
+    badge: "Лятна подготовка",
     badgeVariant: "featured",
-    description:
-      "Програма за футболисти, които искат да използват лятото правилно и да се върнат по-подготвени, по-дисциплинирани и по-уверени.",
     suitable: "Играчи, които искат структурирана подготовка през лятото.",
     focus: "Постоянство • Форма • Развитие",
     problem: "липса на структура през ваканционния период",
@@ -52,28 +52,23 @@ const shopPrograms = [
       title: "В програмата са включени:",
       layout: "three",
       items: [
-        ["💪 Фитнес програма – всички 3 нива", "Сила, издръжливост и стабилна физическа основа."],
-        ["⚡ Скоростна програма", "Ускорение, експлозивност и по-бърза реакция."],
-        ["🎯 Технически пакет", "Контрол, подаване, дрибъл и завършване в един пълен пакет."],
-        ["⚽ Бонус: Ball Mastery", "Над 80 упражнения и над 1000 докосвания на тренировка."],
-        ["🍽️ Бонус: Хранителен наръчник", "Практични насоки какво да ядеш преди и след мач."],
+        ["Фитнес програма – всички 3 нива", "Сила, издръжливост и стабилна физическа основа."],
+        ["Скоростна програма", "Ускорение, експлозивност и по-бърза реакция."],
+        ["Технически пакет", "Контрол, подаване, дрибъл и завършване в един пълен пакет."],
+        ["Бонус: Ball Mastery", "Над 80 упражнения и над 1000 докосвания на тренировка."],
+        ["Бонус: Хранителен наръчник", "Практични насоки какво да ядеш преди и след мач."],
         [
-          "🧠 Бонус: Viber група с ежедневни задачи",
+          "Бонус: Viber група с ежедневни задачи",
           "Всеки ден допълнителни задачи за футболната интелигентност, мотивация и развитие.",
         ],
       ],
     },
   },
   {
-    id: "technical-pack",
-    title: "Технически пакет",
-    price: "€24.99",
-    image: "assets/program-cover-technical-pack.webp",
-    description:
-      "За футболисти, които искат да подобрят първото докосване, подаването, дрибъла и завършващия удар.",
+    ...getPublicProgram("technical-pack"),
     suitable: "Играчи, които искат цялостно техническо развитие.",
     focus: "Техника • Контрол • Скорост • Увереност",
-    badge: "⭐ 5 програми в 1 пакет",
+    badge: "5 програми в 1 пакет",
     problem: "липса на ясна техническа структура и случайна самостоятелна работа",
     result:
       "по-качествени действия с топката, повече спокойствие при първо докосване и по-ясна идея в игра.",
@@ -110,21 +105,16 @@ const shopPrograms = [
       eyebrow: "Включено в пакета",
       title: "В пакета са включени 5 програми:",
       items: [
-        ["⚽ Завършващ удар", "Удари, завършване и повече увереност пред вратата."],
-        ["⚽ Първо докосване", "По-добър контрол и подготовка на следващото действие."],
-        ["⚽ Подаване", "По-точни и по-уверени подавания в различни ситуации."],
-        ["⚽ Дрибъл", "Контрол, смяна на посока и увереност 1v1."],
-        ["🎁 ПОДАРЪК: Ball Mastery", "Допълнителна програма с много докосвания и работа върху контрола на топката."],
+        ["Завършващ удар", "Удари, завършване и повече увереност пред вратата."],
+        ["Първо докосване", "По-добър контрол и подготовка на следващото действие."],
+        ["Подаване", "По-точни и по-уверени подавания в различни ситуации."],
+        ["Дрибъл", "Контрол, смяна на посока и увереност 1v1."],
+        ["Бонус: Ball Mastery", "Допълнителна програма с много докосвания и работа върху контрола на топката."],
       ],
     },
   },
   {
-    id: "strength-level-1",
-    title: "Силова програма — Ниво 1",
-    price: "€24.99",
-    image: "assets/program-cover-strength-level-1.webp",
-    description:
-      "За начинаещи в силовата подготовка — работа върху стабилност, контрол на тялото и правилна техника.",
+    ...getPublicProgram("strength-level-1"),
     suitable: "Играчи, които започват със силова подготовка.",
     focus: "Основа • Стабилност • Контрол",
     problem: "липса на стабилна физическа основа и сигурна техника на движение",
@@ -161,12 +151,7 @@ const shopPrograms = [
     ],
   },
   {
-    id: "strength-level-2",
-    title: "Силова програма — Ниво 2",
-    price: "€24.99",
-    image: "assets/program-cover-strength-level-2.webp",
-    description:
-      "За футболисти с изградена основа — работа върху сила, експлозивност и издръжливост.",
+    ...getPublicProgram("strength-level-2"),
     suitable: "Играчи със средно ниво на подготовка.",
     focus: "Сила • Експлозивност • Издръжливост",
     problem: "нужда от по-сериозно натоварване и по-ясна прогресия",
@@ -203,12 +188,7 @@ const shopPrograms = [
     ],
   },
   {
-    id: "strength-level-3",
-    title: "Силова програма — Ниво 3",
-    price: "€24.99",
-    image: "assets/program-cover-strength-level-3.webp",
-    description:
-      "За напреднали футболисти — работа върху мощност, скорост и физическа готовност за високо темпо.",
+    ...getPublicProgram("strength-level-3"),
     suitable: "Напреднали играчи.",
     focus: "Мощност • Скорост • Атлетизъм",
     problem: "нужда от по-висока мощност, скорост и физическа готовност",
@@ -240,29 +220,24 @@ const shopPrograms = [
       [
         "05",
         "Какъв резултат гоним",
-        "По-силна физика, повече мощ и подготовка, която доближава играча до професионалното ниво.",
+        "По-силна физика, повече мощ и по-добра готовност за тренировки с висока интензивност.",
       ],
     ],
   },
   {
-    id: "matchday-pack",
-    title: "Мачов пакет",
-    price: "€24.99",
-    image: "assets/program-cover-matchday.webp",
-    description:
-      "За футболисти, които искат подредена подготовка преди мач и насоки за възстановяване след него.",
+    ...getPublicProgram("matchday-pack"),
     suitable: "Футболисти, които искат по-добра мачова готовност.",
     focus: "Подготовка • Увереност • Възстановяване",
     problem: "липса на ясна рутина преди и след мач",
     result:
       "по-спокойна подготовка, по-добри навици около мача и по-ясна идея какво да правиш преди важен ден.",
     intro:
-      "Мачовият пакет е за играчи, които искат да подходят по-професионално към деня на мача, подготовката и възстановяването.",
+      "Мачовият пакет е за играчи, които искат да подредят подготовката около мача — от деня преди него до възстановяването след последния съдийски сигнал.",
     descriptionCards: [
       [
         "01",
         "Какво представлява",
-        "MATCHDAY PACK е пълен наръчник за футболисти, който ти показва как да се подготвиш като професионалист преди, по време и след мач.",
+        "MATCHDAY PACK е практичен PDF наръчник, който подрежда подготовката преди мача и възстановяването след него.",
       ],
       [
         "02",
@@ -282,7 +257,7 @@ const shopPrograms = [
       [
         "05",
         "Какъв резултат гоним",
-        "По-добра готовност, повече увереност и максимум от представянето ти, когато има значение.",
+        "По-подредена рутина, по-добри навици около мача и ясни следващи действия.",
       ],
     ],
   },
@@ -297,11 +272,11 @@ activeShopPrograms.sort(
 const getAssetPath = (program) => `${window.location.pathname.includes("/programs/") ? "../../" : ""}${program.image}`;
 const getProgramUrl = (program) => {
   if (program.id === "matchday-pack") return "/matchday-pack";
-  return `${window.location.pathname.includes("/programs/") ? "../" : "programs/"}${program.id}/index.html`;
+  return `/programs/${program.id}`;
 };
-const getCartUrl = () => `${window.location.pathname.includes("/programs/") ? "../../" : ""}cart.html`;
+const getCartUrl = () => "/cart";
 const parseProgramPrice = (program) => Number(String(program.price).replace(/[^\d.]/g, "")) || 0;
-const formatProgramPrice = (value) => `€${value.toFixed(2)}`;
+const formatProgramPrice = (value) => `${value.toFixed(2)} €`;
 const normalizeCartItems = (items) =>
   [...new Set(Array.isArray(items) ? items : [])].filter(
     (id) => typeof id === "string" && activeShopPrograms.some((program) => program.id === id),
@@ -826,8 +801,8 @@ const renderCartPage = () => {
           <h1>Количката е празна.</h1>
           <p>Избери онлайн програма и я добави тук. Плащането минава през Stripe, а достъпът се изпраща на имейл след успешна покупка.</p>
           <div class="cart-empty-actions">
-            <a class="btn btn-primary" href="programs.html#programs">Избери онлайн програма</a>
-            <a class="btn btn-secondary" href="contact.html">Нуждая се от помощ</a>
+            <a class="btn btn-primary" href="/programs#programs">Избери онлайн програма</a>
+            <a class="btn btn-secondary" href="/contact">Нуждая се от помощ</a>
           </div>
         </div>
         <div class="cart-empty-recommendations" aria-label="Препоръчани следващи стъпки">
@@ -835,13 +810,13 @@ const renderCartPage = () => {
             <span>01</span>
             <h2>Започни с готова структура</h2>
             <p>Виж всички онлайн програми и избери фокус според нуждите на играча.</p>
-            <a href="programs.html#programs">Към програмите</a>
+            <a href="/programs#programs">Към програмите</a>
           </article>
           <article>
             <span>02</span>
             <h2>Не си сигурен коя програма е правилна?</h2>
             <p>Изпрати кратко запитване и ще получиш насока според възраст, позиция и цел.</p>
-            <a href="contact.html">Задай въпрос</a>
+            <a href="/contact">Задай въпрос</a>
           </article>
           <article>
             <span>03</span>
@@ -912,7 +887,7 @@ const renderCheckoutPage = () => {
           <p class="eyebrow">Checkout</p>
           <h1>Няма избрана програма.</h1>
           <p>Избери програма или добави продукт в количката, за да продължиш към плащане.</p>
-          <a class="btn btn-primary" href="programs.html#programs">Виж програмите</a>
+          <a class="btn btn-primary" href="/programs#programs">Виж програмите</a>
         </div>
       </section>
     `;

@@ -30,6 +30,7 @@ const normalizeLogInquiry = (log) => ({
   name: log.metadata?.name || "",
   phone: log.metadata?.phone || "",
   email: log.metadata?.email || "",
+  inquiry_type: log.metadata?.inquiry_type || "other",
   message: log.metadata?.message || log.message || "",
   status: log.metadata?.status || "new",
   source: "admin_logs",
@@ -105,14 +106,24 @@ const handleContactInquiries = async (req, res) => {
     let inquiries;
     try {
       inquiries = await supabaseRequest(
-        "contact_inquiries?select=id,created_at,name,phone,email,message,status&order=created_at.desc",
+        "contact_inquiries?select=id,created_at,name,phone,email,inquiry_type,message,status&order=created_at.desc",
       );
     } catch (schemaError) {
       if (!isContactSchemaError(schemaError)) throw schemaError;
-      const logs = await supabaseRequest(
-        "admin_logs?select=id,created_at,message,metadata&event=eq.contact_inquiry&order=created_at.desc",
-      );
-      inquiries = Array.isArray(logs) ? logs.map(normalizeLogInquiry) : [];
+      try {
+        inquiries = await supabaseRequest(
+          "contact_inquiries?select=id,created_at,name,phone,email,message,status&order=created_at.desc",
+        );
+        inquiries = Array.isArray(inquiries)
+          ? inquiries.map((inquiry) => ({ ...inquiry, inquiry_type: "other" }))
+          : [];
+      } catch (legacySchemaError) {
+        if (!isContactSchemaError(legacySchemaError)) throw legacySchemaError;
+        const logs = await supabaseRequest(
+          "admin_logs?select=id,created_at,message,metadata&event=eq.contact_inquiry&order=created_at.desc",
+        );
+        inquiries = Array.isArray(logs) ? logs.map(normalizeLogInquiry) : [];
+      }
     }
 
     return sendJson(res, 200, { inquiries: Array.isArray(inquiries) ? inquiries : [] });

@@ -20,12 +20,29 @@
     <meta name="twitter:description" content="Започни да работиш върху играта си с Йордан Желев чрез индивидуални тренировки и онлайн програми." />
     <meta name="twitter:image" content="https://becomeprofootball.com/assets/og-image.png" />
     <link rel="canonical" href="https://becomeprofootball.com/" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Become Pro",
+        "url": "https://becomeprofootball.com/",
+        "logo": "https://becomeprofootball.com/assets/becomepro-logo-compact.webp",
+        "founder": {
+          "@type": "Person",
+          "name": "Йордан Желев"
+        },
+        "sameAs": [
+          "https://www.instagram.com/yordan.zhelew1/",
+          "https://www.tiktok.com/@yordan.zhelew1?lang=en"
+        ]
+      }
+    </script>
 
     <link rel="stylesheet" href="styles.home.min.css?v=20260928-mobile-fix" />
   </head>
   <body>
     <header class="site-header" data-header>
-      <a class="brand" href="index.html" aria-label="Become Pro начало">
+      <a class="brand" href="/" aria-label="Become Pro начало">
         <span class="brand-mark"><img src="assets/becomepro-logo-compact.webp" alt="Become Pro logo" /></span>
         <span>BECOME PRO</span>
       </a>
@@ -34,19 +51,19 @@
         <span></span>
       </button>
       <nav class="site-nav" data-nav>
-        <a href="programs.html">Програми</a>
+        <a href="/programs">Програми</a>
         <a href="/individual-training">Индивидуални тренировки</a>
-        <a href="coach.html">За треньора</a>
-        <a href="players.html">Играчи</a>
-        <a href="faq.html">Често задавани въпроси</a>
-        <a href="contact.html">Контакти</a>
+        <a href="/coach">За треньора</a>
+        <a href="/players">Играчи</a>
+        <a href="/faq">Често задавани въпроси</a>
+        <a href="/contact">Контакти</a>
       </nav>
       <div class="header-actions">
         <a class="header-cta" href="/individual-training">Запази тренировка</a>
       </div>
     </header>
-    <div class="mobile-quick-actions" aria-label="Бързи действия">
-      <a href="programs.html#programs">Програми</a>
+    <div class="mobile-quick-actions" role="navigation" aria-label="Бързи действия">
+      <a href="/matchday-pack">Мачов пакет</a>
       <a href="/individual-training">Тренировка</a>
     </div>
 
@@ -63,17 +80,17 @@
             Тренирай индивидуално с мен или избери готова онлайн програма според целите си.
           </p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="/individual-training">Запази тренировка</a>
-            <a class="btn btn-secondary" href="programs.html">Виж онлайн програмите</a>
+            <a class="btn btn-primary" href="/matchday-pack">Разгледай Мачов пакет</a>
+            <a class="btn btn-secondary" href="/individual-training">Запази тренировка</a>
           </div>
           <div class="coach-trust-strip">
             <span>Йордан Желев — треньорът зад Become Pro</span>
             <p>Бивш футболист с дебют в Първа лига на 16 г. и опит в националния отбор на България U15.</p>
           </div>
-          <div class="hero-stats" aria-label="Become Pro в числа">
-            <div><strong>50+</strong><span>футболисти</span></div>
-            <div><strong>100+</strong><span>проведени тренировки</span></div>
-            <div><strong>4+</strong><span>футболни програми</span></div>
+          <div class="hero-stats" role="list" aria-label="Become Pro в числа">
+            <div role="listitem"><strong>50+</strong><span>футболисти</span></div>
+            <div role="listitem"><strong>100+</strong><span>проведени тренировки</span></div>
+            <div role="listitem"><strong>4+</strong><span>футболни програми</span></div>
           </div>
         </div>
         <div class="hero-media hero-training-video reveal deferred-video-shell" data-deferred-video-src="assets/videos/hero-hat-swap-game.mp4" data-video-label="Индивидуална тренировка Become Pro">
@@ -109,17 +126,17 @@
                 и как да го изпълняваш стъпка по стъпка.
               </p>
             </div>
-            <div class="product-showcase-grid start-path-grid" aria-label="Начини да започнеш с Become Pro">
-              <a class="start-path-card featured" href="programs.html">
+            <div class="product-showcase-grid start-path-grid" role="list" aria-label="Начини да започнеш с Become Pro">
+              <a class="start-path-card featured" role="listitem" href="/matchday-pack">
                 <span class="path-card-media">
-                  <img src="assets/home-start-live-training.webp" alt="Онлайн програми Become Pro" width="800" height="450" loading="lazy" decoding="async" />
+                  <img src="assets/program-cover-matchday.webp" alt="Корица на Мачов пакет" width="800" height="450" loading="lazy" decoding="async" />
                 </span>
                 <span class="path-card-copy">
-                  <span class="path-label">Онлайн програми</span>
-                  <strong>Технически Пакет</strong>
+                  <span class="path-label">Програма на фокус</span>
+                  <strong>Мачов пакет</strong>
                 </span>
               </a>
-              <a class="start-path-card field" href="/individual-training">
+              <a class="start-path-card field" role="listitem" href="/individual-training">
                 <span class="path-card-media">
                   <img src="assets/home-start-online-programs.webp" alt="Индивидуални тренировки Become Pro" width="800" height="450" loading="lazy" decoding="async" />
                 </span>
@@ -137,7 +154,7 @@
             <p>Тренирай самостоятелно с готова програма или работи индивидуално с мен и получавай лична обратна връзка.</p>
           </div>
           <div class="cta-actions">
-            <a class="btn btn-primary" href="programs.html">Виж програмите</a>
+            <a class="btn btn-primary" href="/matchday-pack">Разгледай Мачов пакет</a>
             <a class="btn btn-secondary" href="/individual-training">Запази тренировка</a>
           </div>
         </div>
@@ -155,7 +172,7 @@
               <span>01 — Готова програма</span>
               <h3>Тренирай самостоятелно</h3>
               <p>Получаваш ясна структура и готов план, който можеш да следваш в удобно за теб време.</p>
-              <a class="btn btn-primary" href="programs.html">Разгледай програмите</a>
+              <a class="btn btn-primary" href="/programs">Разгледай програмите</a>
             </article>
             <article>
               <span>02 — Индивидуална тренировка</span>
@@ -177,7 +194,7 @@
         </div>
         <figure class="why-training-photo">
           <img src="assets/home-why-coach-training.jpg" alt="Йордан Желев с млади футболисти на терена" width="1200" height="1600" loading="lazy" decoding="async" />
-          <figcaption class="why-process" aria-label="Тренировъчен процес: Фокус, Повторение, Корекция, Приложение">
+          <figcaption class="why-process" role="group" aria-label="Тренировъчен процес: Фокус, Повторение, Корекция, Приложение">
             <span>Фокус</span><i aria-hidden="true">→</i>
             <span>Повторение</span><i aria-hidden="true">→</i>
             <span>Корекция</span><i aria-hidden="true">→</i>
@@ -212,7 +229,7 @@
           </p>
         </div>
         <div class="cta-actions">
-          <a class="btn btn-primary dark" href="programs.html">Разгледай програмите</a>
+          <a class="btn btn-primary dark" href="/matchday-pack">Разгледай Мачов пакет</a>
           <a class="btn btn-secondary dark" href="/individual-training">Запази тренировка</a>
         </div>
       </section>    </main>
@@ -221,6 +238,3 @@
     <script src="script.min.js"></script>
   </body>
 </html>
-
-
-

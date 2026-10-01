@@ -65,11 +65,11 @@ test("landing page contains the approved conversion structure", () => {
   assert.match(html, /results-trust-bar/);
   assert.match(html, /40\+ проведени индивидуални тренировки/);
   assert.match(html, /Играчи от София, Пловдив и Стара Загора/);
-  assert.match(html, /Реален прогрес на терена/);
+  assert.match(html, /Техника, скорост и игрови решения/);
   assert.match(html, /ЗА ИГРАЧИ С АМБИЦИЯ/);
   assert.match(html, /За кого са тези тренировки\?/);
   assert.match(html, /Искаш повече игрово време/);
-  assert.match(html, /Искаш да изпревариш конкуренцията/);
+  assert.match(html, /Искаш допълнителна работа/);
   assert.match(html, /data-page-variant="individual-training"/);
   assert.match(html, /data-primary-cta/);
   assert.match(html, /id="training-fit"/);

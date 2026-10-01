@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Програми | Become Pro</title>
-    <meta name="description" content="Онлайн футболни програми и индивидуални тренировки за футболисти." />
+    <title>Онлайн програми за футболисти | Become Pro</title>
+    <meta name="description" content="Избери футболна програма за техника, сила или подготовка за мач. Получаваш тренировъчния план и достъпа директно по имейл." />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -12,12 +12,12 @@
     <meta name="theme-color" content="#050505" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Become Pro" />
-    <meta property="og:title" content="Become Pro" />
-    <meta property="og:description" content="Онлайн футболни програми и индивидуални тренировки за футболисти." />
+    <meta property="og:title" content="Онлайн програми за футболисти | Become Pro" />
+    <meta property="og:description" content="Програми за техника, сила и подготовка за мач с план, видео демонстрации и ясни инструкции." />
     <meta property="og:image" content="https://becomeprofootball.com/assets/og-image.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Become Pro" />
-    <meta name="twitter:description" content="Онлайн футболни програми и индивидуални тренировки за футболисти." />
+    <meta name="twitter:title" content="Онлайн програми за футболисти | Become Pro" />
+    <meta name="twitter:description" content="Програми за техника, сила и подготовка за мач с план и видео демонстрации." />
     <meta name="twitter:image" content="https://becomeprofootball.com/assets/og-image.png" />
     <link rel="canonical" href="https://becomeprofootball.com/programs" />
 
@@ -27,7 +27,7 @@
   </head>
   <body>
     <header class="site-header" data-header>
-      <a class="brand" href="index.html" aria-label="Become Pro начало">
+      <a class="brand" href="/" aria-label="Become Pro начало">
         <span class="brand-mark"><img src="assets/becomepro-logo-compact.webp" alt="Become Pro logo" /></span>
         <span>BECOME PRO</span>
       </a>
@@ -36,19 +36,19 @@
         <span></span>
       </button>
       <nav class="site-nav" data-nav>
-        <a href="programs.html">Програми</a>
+        <a href="/programs">Програми</a>
         <a href="/individual-training">Индивидуални тренировки</a>
-        <a href="coach.html">За треньора</a>
-        <a href="players.html">Играчи</a>
-        <a href="faq.html">Често задавани въпроси</a>
-        <a href="contact.html">Контакти</a>
+        <a href="/coach">За треньора</a>
+        <a href="/players">Играчи</a>
+        <a href="/faq">Често задавани въпроси</a>
+        <a href="/contact">Контакти</a>
       </nav>
       <div class="header-actions">
-        <a class="header-cta" href="cart.html">Количка <span data-cart-count>0</span></a>
+        <a class="header-cta" href="/cart">Количка <span data-cart-count>0</span></a>
       </div>
     </header>
-    <div class="mobile-quick-actions" aria-label="Бързи действия">
-      <a href="programs.html#programs">Програми</a>
+    <div class="mobile-quick-actions" role="navigation" aria-label="Бързи действия">
+      <a href="/programs#programs">Програми</a>
       <a href="/individual-training">Тренировка</a>
     </div>
 
@@ -98,10 +98,10 @@
             <p>След успешна покупка получаваш програмата директно на имейла си.</p>
           </article>
         </div>
-        <div class="program-trust-line" aria-label="Сигурност и достъп">
-          <span>Сигурно плащане чрез Stripe</span>
-          <span>Моментален достъп</span>
-          <span>Помощ при проблем с достъпа</span>
+        <div class="program-trust-line" role="list" aria-label="Сигурност и достъп">
+          <span role="listitem">Сигурно плащане чрез Stripe</span>
+          <span role="listitem">Моментален достъп</span>
+          <span role="listitem">Помощ при проблем с достъпа</span>
         </div>
       </section>
 
@@ -157,16 +157,14 @@
         </div>
         <div class="cta-actions">
           <a class="btn btn-primary dark" href="#programs">Разгледай програмите</a>
-          <a class="btn btn-secondary dark" href="contact.html">Искам препоръка</a>
+          <a class="btn btn-secondary dark" href="/contact">Искам препоръка</a>
         </div>
       </section>
     </main>
     <footer class="site-footer" data-site-footer></footer>
 
+    <script src="/program-catalog.js"></script>
     <script src="shop.js?v=20260928-matchday-focus"></script>
     <script src="script.min.js"></script>
   </body>
 </html>
-
-
-

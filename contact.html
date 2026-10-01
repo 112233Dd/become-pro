@@ -31,7 +31,7 @@
   </head>
   <body>
     <header class="site-header" data-header>
-      <a class="brand" href="index.html" aria-label="Become Pro начало">
+      <a class="brand" href="/" aria-label="Become Pro начало">
         <span class="brand-mark"><img src="assets/becomepro-logo-compact.webp" alt="Become Pro logo" /></span>
         <span>BECOME PRO</span>
       </a>
@@ -40,19 +40,19 @@
         <span></span>
       </button>
       <nav class="site-nav" data-nav>
-        <a href="programs.html">Програми</a>
+        <a href="/programs">Програми</a>
         <a href="/individual-training">Индивидуални тренировки</a>
-        <a href="coach.html">За треньора</a>
-        <a href="players.html">Играчи</a>
-        <a href="faq.html">Често задавани въпроси</a>
-        <a href="contact.html">Контакти</a>
+        <a href="/coach">За треньора</a>
+        <a href="/players">Играчи</a>
+        <a href="/faq">Често задавани въпроси</a>
+        <a href="/contact">Контакти</a>
       </nav>
       <div class="header-actions">
         <a class="header-cta" href="/individual-training">Запази тренировка</a>
       </div>
     </header>
-    <div class="mobile-quick-actions" aria-label="Бързи действия">
-      <a href="programs.html#programs">Програми</a>
+    <div class="mobile-quick-actions" role="navigation" aria-label="Бързи действия">
+      <a href="/programs#programs">Програми</a>
       <a href="/individual-training">Тренировка</a>
     </div>
 
@@ -65,10 +65,10 @@
           <p>
             Използвай тази страница, ако имаш въпрос, нужда от насока или искаш да разбереш кой вариант е най-подходящ за теб.
           </p>
-          <div class="contact-reasons" aria-label="Причини да ни пишеш">
-            <span>Ясна насока</span>
-            <span>Помощ с избора</span>
-            <span>Бърз отговор</span>
+          <div class="contact-reasons" role="list" aria-label="Причини да ни пишеш">
+            <span role="listitem">Ясна насока</span>
+            <span role="listitem">Помощ с избора</span>
+            <span role="listitem">Бърз отговор</span>
           </div>
           <div class="contact-info-card">
             <p>Директен контакт</p>
@@ -95,6 +95,16 @@
           <label class="full">
             Имейл адрес
             <input type="email" name="email" autocomplete="email" required />
+          </label>
+          <label class="full">
+            С какво можем да помогнем?
+            <select name="inquiry_type" required>
+              <option value="">Избери тема</option>
+              <option value="program_recommendation">Препоръка за програма</option>
+              <option value="individual_training">Индивидуална тренировка</option>
+              <option value="access_support">Проблем с покупка или достъп</option>
+              <option value="other">Друг въпрос</option>
+            </select>
           </label>
           <label class="full">
             Съобщение

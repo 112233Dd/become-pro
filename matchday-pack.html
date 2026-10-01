@@ -75,10 +75,10 @@
           <p class="matchday-lead">
             Практична система, която подрежда всичко важно около мача — от деня преди него до възстановяването след последния съдийски сигнал.
           </p>
-          <div class="matchday-hero-points" aria-label="Основни ползи">
-            <span>Подготовка</span>
-            <span>Увереност</span>
-            <span>Възстановяване</span>
+          <div class="matchday-hero-points" role="list" aria-label="Основни ползи">
+            <span role="listitem">Подготовка</span>
+            <span role="listitem">Увереност</span>
+            <span role="listitem">Възстановяване</span>
           </div>
           <p class="matchday-product-format">За футболисти, които искат повторяема рутина · 27-страничен PDF · бонус тренировки</p>
           <div class="matchday-hero-offer">
@@ -156,6 +156,21 @@
         </div>
       </section>
 
+      <section class="matchday-inline-cta" aria-label="Вземи Мачов пакет">
+        <div>
+          <p class="matchday-eyebrow">ГОТОВ ЗА СЛЕДВАЩИЯ МАЧ?</p>
+          <h2>Изгради рутина, която можеш да повториш преди всеки важен мач.</h2>
+          <p>Получаваш 27-страничния наръчник, бонус тренировките и доживотен достъп.</p>
+        </div>
+        <div class="matchday-inline-cta-action">
+          <strong>24.99 €</strong>
+          <button class="matchday-primary-cta" type="button" data-matchday-checkout data-primary-cta>
+            Вземи Мачов пакет
+          </button>
+          <span>Еднократно плащане</span>
+        </div>
+      </section>
+
       <section id="matchday-contents" class="matchday-section matchday-contents" data-track-view="view_program_contents">
         <div class="matchday-heading matchday-heading-center">
           <p class="matchday-eyebrow">КАКВО ПОЛУЧАВАШ</p>
@@ -178,11 +193,11 @@
           <h2>Виж как изглежда Мачов пакет отвътре.</h2>
           <p>Получаваш завършен дигитален наръчник от 27 страници, който се отваря удобно на телефон или компютър и съдържа практични насоки и връзки към бонус тренировки.</p>
         </div>
-        <div class="matchday-preview-facts" aria-label="Формат на Мачов пакет">
-          <span><strong>27</strong> страници</span>
-          <span><strong>PDF</strong> формат</span>
-          <span><strong>3</strong> основни етапа</span>
-          <span><strong>Телефон</strong> и компютър</span>
+        <div class="matchday-preview-facts" role="list" aria-label="Формат на Мачов пакет">
+          <span role="listitem"><strong>27</strong> страници</span>
+          <span role="listitem"><strong>PDF</strong> формат</span>
+          <span role="listitem"><strong>3</strong> основни етапа</span>
+          <span role="listitem"><strong>Телефон</strong> и компютър</span>
         </div>
         <div class="matchday-preview-grid">
           <figure class="matchday-preview-card">
@@ -208,6 +223,21 @@
           </figure>
         </div>
         <p class="matchday-preview-note">Показани са 3 реални страници от продукта. Пълният материал се изпраща по имейл след успешно плащане.</p>
+      </section>
+
+      <section class="matchday-inline-cta matchday-inline-cta-proof" aria-label="Купи Мачов пакет">
+        <div>
+          <p class="matchday-eyebrow">ВИДЯ КАКВО ПОЛУЧАВАШ</p>
+          <h2>Следващата стъпка е да подредиш собствения си мачов ден.</h2>
+          <p>Отваряш материала директно от телефона и следваш конкретните стъпки преди и след мача.</p>
+        </div>
+        <div class="matchday-inline-cta-action">
+          <strong>24.99 €</strong>
+          <button class="matchday-primary-cta" type="button" data-matchday-checkout data-primary-cta>
+            Вземи Мачов пакет
+          </button>
+          <span>Сигурно Stripe плащане</span>
+        </div>
       </section>
 
       <section id="matchday-testimonials" class="matchday-section matchday-testimonials" data-track-view="view_testimonials">
@@ -246,10 +276,10 @@
               Вземи Мачов пакет
             </button>
           </div>
-          <div class="matchday-trust-grid" aria-label="Доверие и сигурност">
-            <span>✓ Сигурно Stripe плащане</span>
-            <span>✓ Автоматичен достъп след плащане</span>
-            <span>✓ Получаваш го по имейл</span>
+          <div class="matchday-trust-grid" role="list" aria-label="Доверие и сигурност">
+            <span role="listitem">✓ Сигурно Stripe плащане</span>
+            <span role="listitem">✓ Автоматичен достъп след плащане</span>
+            <span role="listitem">✓ Получаваш го по имейл</span>
           </div>
           <p class="matchday-checkout-status" data-matchday-checkout-status aria-live="polite"></p>
         </div>
@@ -263,25 +293,25 @@
         </div>
         <div class="matchday-video-grid">
           <article>
-            <video muted loop playsinline preload="none" poster="/assets/videos/one-touch-passing-drop-poster.webp" data-lazy-video data-desktop-autoplay aria-label="Тренировка за първо докосване и подаване">
-              <source data-src="/assets/videos/one-touch-passing-drop.mp4" type="video/mp4" />
+            <video muted loop playsinline preload="none" poster="/assets/videos/matchday-roskata-ladder-ball-shots-poster.webp" data-lazy-video data-desktop-autoplay aria-label="Комплекс със стълбичка, топка и завършващи удари">
+              <source data-src="/assets/videos/matchday-roskata-ladder-ball-shots.mp4" type="video/mp4" />
             </video>
-            <button class="matchday-video-play" type="button" data-video-play aria-label="Пусни видеото за първо докосване и подаване">▶ Пусни</button>
-            <div><span>ТЯЛО</span><h3>Готово тяло.</h3><p>Влизаш активен още от първата минута.</p></div>
+            <button class="matchday-video-play" type="button" data-video-play aria-label="Пусни видеото с комплекс със стълбичка, топка и удари">▶ Пусни</button>
+            <div><span>ТЯЛО И ТОПКА</span><h3>Комплексна подготовка.</h3><p>Стълбичка, работа с топка и завършващ удар в една задача.</p></div>
           </article>
           <article>
-            <video muted loop playsinline preload="none" poster="/assets/videos/individual-tech-first-touch-poster.webp" data-lazy-video data-desktop-autoplay aria-label="Индивидуална тренировка за техника и първо докосване">
-              <source data-src="/assets/videos/individual-tech-first-touch.mp4" type="video/mp4" />
+            <video muted loop playsinline preload="none" poster="/assets/videos/matchday-stoyancho-hurdles-left-foot-poster.webp" data-lazy-video data-desktop-autoplay aria-label="Тренировка с хърдели и работа само с левия крак">
+              <source data-src="/assets/videos/matchday-stoyancho-hurdles-left-foot.mp4" type="video/mp4" />
             </video>
-            <button class="matchday-video-play" type="button" data-video-play aria-label="Пусни видеото за техника и първо докосване">▶ Пусни</button>
-            <div><span>ФОКУС</span><h3>Ясен фокус.</h3><p>Вниманието остава върху играта, не върху напрежението.</p></div>
+            <button class="matchday-video-play" type="button" data-video-play aria-label="Пусни видеото с хърдели и работа с левия крак">▶ Пусни</button>
+            <div><span>КООРДИНАЦИЯ</span><h3>Силен слаб крак.</h3><p>Хърдели, баланс и контрол само с левия крак.</p></div>
           </article>
           <article>
-            <video muted loop playsinline preload="none" poster="/assets/videos/individual-speed-explosiveness-poster.webp" data-lazy-video data-desktop-autoplay aria-label="Индивидуална тренировка за скорост и експлозивност">
-              <source data-src="/assets/videos/individual-speed-explosiveness.mp4" type="video/mp4" />
+            <video muted loop playsinline preload="none" poster="/assets/videos/matchday-marti-inside-outside-cones-poster.webp" data-lazy-video data-desktop-autoplay aria-label="Тренировка с вътрешен и външен контакт между шапки">
+              <source data-src="/assets/videos/matchday-marti-inside-outside-cones.mp4" type="video/mp4" />
             </video>
-            <button class="matchday-video-play" type="button" data-video-play aria-label="Пусни видеото за скорост и експлозивност">▶ Пусни</button>
-            <div><span>ДЕЙСТВИЕ</span><h3>Спокойно първо действие.</h3><p>Първият пас и първото докосване идват с повече увереност.</p></div>
+            <button class="matchday-video-play" type="button" data-video-play aria-label="Пусни видеото с вътрешен и външен контакт между шапки">▶ Пусни</button>
+            <div><span>ТЕХНИКА</span><h3>Бързи докосвания.</h3><p>Вътрешен и външен контакт в къса дистанция.</p></div>
           </article>
         </div>
       </section>

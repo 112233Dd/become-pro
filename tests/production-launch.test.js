@@ -1,4 +1,4 @@
-﻿const test = require("node:test");
+const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
@@ -120,7 +120,7 @@ test("programs contents section lists concrete purchased deliverables", () => {
   assert.equal((section.match(/class="inside-card-icon"/g) || []).length, 4);
   assert.match(section, /Сигурно плащане чрез Stripe[\s\S]*Моментален достъп[\s\S]*Помощ при проблем с достъпа/);
   const trustLine = section.match(/<div class="program-trust-line"[\s\S]*?<\/div>/)?.[0] || "";
-  assert.equal((trustLine.match(/<span>/g) || []).length, 3);
+  assert.equal((trustLine.match(/<span\b/g) || []).length, 3);
   assert.doesNotMatch(section, /class="btn|Подходящо за играчи|Възможност за 1:1 надграждане|Фокус върху реална игра/);
   assert.match(css, /\.program-inside \.inside-grid\s*{\s*grid-template-columns: minmax\(0, 1fr\)/);
   assert.match(css, /\.programs-page-main \.program-shop \.program-grid\s*{\s*grid-template-columns: minmax\(0, 1fr\)/);
@@ -157,7 +157,7 @@ test("programs FAQ and final CTA focus on choosing a program", () => {
   assert.match(cta, /Готов ли си да започнеш\?/i);
   assert.match(cta, /Избери върху какво искаш да работиш\./);
   assert.match(cta, /href="#programs">Разгледай програмите<\/a>/);
-  assert.match(cta, /href="contact\.html">Искам препоръка<\/a>/);
+  assert.match(cta, /href="\/contact">Искам препоръка<\/a>/);
   assert.doesNotMatch(cta, /индивидуалн|тренировка/i);
 });
 

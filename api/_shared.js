@@ -1,5 +1,6 @@
 const crypto = require("crypto");
 const tls = require("tls");
+const publicProductCatalog = require("../program-catalog");
 
 const PROGRAM_LINK = "https://drive.google.com/file/d/1OXwQyMSRqO-e10RVv-fl16YiF1fMA0Lk/view?usp=sharing";
 const PROGRAM_LINKS = {
@@ -14,69 +15,12 @@ const ORDER_STATUSES = new Set(["pending", "paid", "failed", "expired", "deliver
 const STRIPE_API_VERSION = "2026-02-25.clover";
 const DEFAULT_SITE_URL = "https://becomeprofootball.com";
 
-const productCatalog = {
-  "technical-pack": {
-    id: "technical-pack",
-    name: "Технически пакет",
-    price: 24.99,
-    priceCents: 2499,
-    image: "/assets/program-cover-technical-pack.webp",
-    programLink: PROGRAM_LINKS["technical-pack"],
-    description:
-      "Пълна техническа система за футболисти, които искат по-добър контрол, по-уверени действия с топката и повече качество в игра.",
-  },
-  "strength-level-1": {
-    id: "strength-level-1",
-    name: "Силова програма — Ниво 1",
-    price: 24.99,
-    priceCents: 2499,
-    image: "/assets/program-cover-strength-level-1.webp",
-    programLink: PROGRAM_LINKS["strength-level-1"],
-    description:
-      "Начална силова програма за футболисти, които искат стабилна основа, правилна техника и по-добър контрол на тялото.",
-  },
-  "strength-level-2": {
-    id: "strength-level-2",
-    name: "Силова програма — Ниво 2",
-    price: 24.99,
-    priceCents: 2499,
-    image: "/assets/program-cover-strength-level-2.webp",
-    programLink: PROGRAM_LINKS["strength-level-2"],
-    description:
-      "Следващо ниво за футболисти, които вече имат основа и искат повече сила, експлозивност и устойчивост.",
-  },
-  "strength-level-3": {
-    id: "strength-level-3",
-    name: "Силова програма — Ниво 3",
-    price: 24.99,
-    priceCents: 2499,
-    image: "/assets/program-cover-strength-level-3.webp",
-    programLink: PROGRAM_LINKS["strength-level-3"],
-    description:
-      "Напреднала програма за футболисти, които искат по-висока физическа готовност, мощност и атлетизъм.",
-  },
-  "summer-program": {
-    id: "summer-program",
-    archived: true,
-    name: "Лятна програма",
-    price: 34.99,
-    priceCents: 3499,
-    image: "/assets/program-cover-summer.webp",
-    programLink: PROGRAM_LINKS["summer-program"],
-    description:
-      "Структурирана програма за футболисти, които искат да използват лятото правилно и да се върнат по-подготвени.",
-  },
-  "matchday-pack": {
-    id: "matchday-pack",
-    name: "Мачов пакет",
-    price: 24.99,
-    priceCents: 2499,
-    image: "/assets/program-cover-matchday.webp",
-    programLink: PROGRAM_LINKS["matchday-pack"],
-    description:
-      "Пакет за играчи, които искат по-добра рутина преди мач, повече спокойствие и по-добра мачова готовност.",
-  },
-};
+const productCatalog = Object.fromEntries(
+  Object.entries(publicProductCatalog).map(([id, program]) => [
+    id,
+    { ...program, programLink: PROGRAM_LINKS[id] },
+  ]),
+);
 
 const required = (name) => {
   const value = process.env[name];

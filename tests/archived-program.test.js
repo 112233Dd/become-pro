@@ -9,9 +9,11 @@ const read = (relativePath) => fs.readFileSync(path.join(root, relativePath), "u
 test("summer program remains in the catalog for historical fulfillment but is archived", () => {
   const shop = read("shop.js");
   const shared = read("api/_shared.js");
+  const catalog = read("program-catalog.js");
 
-  assert.match(shop, /id:\s*"summer-program",\s*archived:\s*true/);
-  assert.match(shared, /"summer-program":\s*{\s*id:\s*"summer-program",\s*archived:\s*true/);
+  assert.match(shop, /getPublicProgram\("summer-program"\)/);
+  assert.match(catalog, /"summer-program":\s*Object\.freeze\(\{[\s\S]*?archived:\s*true/);
+  assert.match(shared, /publicProductCatalog/);
   assert.match(shared, /programs\.some\(\(program\) => program\.archived === true\)/);
   assert.match(shared, /This program is archived and no longer available for purchase/);
   assert.match(shared, /getProgramsByNames[\s\S]*Object\.values\(productCatalog\)/);

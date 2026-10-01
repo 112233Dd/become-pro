@@ -36,12 +36,22 @@ const notificationHtml = ({ title, rows }) => `
   </div>`;
 
 const createContactInquiry = async (body) => {
+  const inquiryTypes = new Set(["program_recommendation", "individual_training", "access_support", "other"]);
+  const inquiryType = cleanText(body.inquiryType, 40);
+  const inquiryTypeLabels = {
+    program_recommendation: "Препоръка за програма",
+    individual_training: "Индивидуална тренировка",
+    access_support: "Проблем с покупка или достъп",
+    other: "Друг въпрос",
+  };
+  const inquiryTypeLabel = inquiryTypeLabels[inquiryType] || inquiryTypeLabels.other;
   const name = cleanText(body.name, 120);
   const phone = cleanText(body.phone, 40);
   const email = cleanText(body.email, 160).toLowerCase();
   const message = cleanText(body.message, 2000);
   const consent = Boolean(body.consent);
 
+  if (!inquiryTypes.has(inquiryType)) return { error: "Моля, избери тема на запитването." };
   if (name.length < 2) return { error: "Моля, въведи име." };
   if (phone.length < 6) return { error: "Моля, въведи валиден телефон." };
   if (!isEmail(email)) return { error: "Моля, въведи валиден имейл адрес." };
@@ -53,34 +63,45 @@ const createContactInquiry = async (body) => {
     rows = await supabaseRequest("contact_inquiries", {
       method: "POST",
       headers: { Prefer: "return=representation" },
-      body: JSON.stringify([{ name, phone, email, message, status: "new" }]),
+      body: JSON.stringify([{ inquiry_type: inquiryType, name, phone, email, message, status: "new" }]),
     });
   } catch (schemaError) {
     if (!isContactSchemaError(schemaError)) throw schemaError;
-    rows = await supabaseRequest("admin_logs", {
-      method: "POST",
-      headers: { Prefer: "return=representation" },
-      body: JSON.stringify([
-        {
-          level: "info",
-          event: "contact_inquiry",
-          message: `Контактно запитване от ${name}`,
-          metadata: { name, phone, email, message, status: "new" },
-        },
-      ]),
-    });
+    try {
+      rows = await supabaseRequest("contact_inquiries", {
+        method: "POST",
+        headers: { Prefer: "return=representation" },
+        body: JSON.stringify([{ name, phone, email, message: `[${inquiryType}] ${message}`, status: "new" }]),
+      });
+      rows = rows?.map((row) => ({ ...row, inquiry_type: inquiryType }));
+    } catch (legacySchemaError) {
+      if (!isContactSchemaError(legacySchemaError)) throw legacySchemaError;
+      rows = await supabaseRequest("admin_logs", {
+        method: "POST",
+        headers: { Prefer: "return=representation" },
+        body: JSON.stringify([
+          {
+            level: "info",
+            event: "contact_inquiry",
+            message: `Контактно запитване от ${name}`,
+            metadata: { inquiry_type: inquiryType, name, phone, email, message, status: "new" },
+          },
+        ]),
+      });
+    }
   }
 
   try {
     await sendEmail({
       to: getAdminNotificationEmail(),
-      subject: "Ново контактно запитване",
+      subject: `Ново контактно запитване: ${inquiryTypeLabel}`,
       text: [
         "Получено е ново контактно запитване.",
         "",
         `Име: ${name}`,
         `Телефон: ${phone}`,
         `Имейл: ${email}`,
+        `Тема: ${inquiryTypeLabel}`,
         "",
         "Съобщение:",
         message,
@@ -93,6 +114,7 @@ const createContactInquiry = async (body) => {
           ["Име", name],
           ["Телефон", phone],
           ["Имейл", email],
+          ["Тема", inquiryTypeLabel],
           ["Съобщение", message],
         ],
       }),

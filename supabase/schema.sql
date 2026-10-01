@@ -1,4 +1,4 @@
-﻿-- Become Pro Supabase schema
+-- Become Pro Supabase schema
 -- Run this in Supabase Dashboard -> SQL Editor.
 
 create table if not exists public.training_requests (
@@ -142,6 +142,7 @@ create table if not exists public.contact_inquiries (
   name text not null check (char_length(name) between 2 and 120),
   phone text not null check (char_length(phone) between 6 and 40),
   email text not null check (char_length(email) between 5 and 160),
+  inquiry_type text not null default 'other' check (inquiry_type in ('program_recommendation', 'individual_training', 'access_support', 'other')),
   message text not null check (char_length(message) between 5 and 2000),
   status text not null default 'new' check (status in ('new', 'answered', 'archived')),
   created_at timestamptz not null default now(),
@@ -151,6 +152,7 @@ create table if not exists public.contact_inquiries (
 alter table public.contact_inquiries add column if not exists name text;
 alter table public.contact_inquiries add column if not exists phone text;
 alter table public.contact_inquiries add column if not exists email text;
+alter table public.contact_inquiries add column if not exists inquiry_type text default 'other';
 alter table public.contact_inquiries add column if not exists message text;
 alter table public.contact_inquiries add column if not exists status text default 'new';
 alter table public.contact_inquiries add column if not exists created_at timestamptz default now();
@@ -162,6 +164,13 @@ alter table public.contact_inquiries
 alter table public.contact_inquiries
   add constraint contact_inquiries_status_check
   check (status in ('new', 'answered', 'archived'));
+
+alter table public.contact_inquiries
+  drop constraint if exists contact_inquiries_inquiry_type_check;
+
+alter table public.contact_inquiries
+  add constraint contact_inquiries_inquiry_type_check
+  check (inquiry_type in ('program_recommendation', 'individual_training', 'access_support', 'other'));
 
 alter table public.contact_inquiries enable row level security;
 

@@ -27,6 +27,9 @@ test("contact page is a general contact form, not a training request form", () =
   );
   assert.doesNotMatch(form, /name="applicant_type"/);
   assert.doesNotMatch(form, /name="city"/);
+  assert.match(form, /name="inquiry_type"/);
+  assert.match(form, /program_recommendation/);
+  assert.match(form, /access_support/);
   assert.doesNotMatch(form, /Моето дете|Себе си|Запази място|Запази тренировка/);
 });
 
@@ -37,6 +40,7 @@ test("general contact frontend submits through the shared requests endpoint", ()
   assert.match(script, /requestType:\s*"contact"/);
   assert.match(script, /name:\s*formData\.get\(["']name["']\)/);
   assert.match(script, /email:\s*formData\.get\(["']email["']\)/);
+  assert.match(script, /inquiryType:\s*formData\.get\(["']inquiry_type["']\)/);
   assert.match(script, /message:\s*formData\.get\(["']message["']\)/);
   assert.match(
     script,
@@ -59,6 +63,7 @@ test("public contact inquiry API validates, stores, and emails the inquiry", () 
   assert.match(endpoint, /name/);
   assert.match(endpoint, /phone/);
   assert.match(endpoint, /email/);
+  assert.match(endpoint, /inquiryType/);
   assert.match(endpoint, /message/);
   assert.match(endpoint, /status:\s*"new"/);
   assert.match(endpoint, /sendEmail/);
@@ -178,6 +183,7 @@ test("Supabase schema defines contact inquiries and allowed statuses", () => {
   assert.match(schema, /name text not null/);
   assert.match(schema, /phone text not null/);
   assert.match(schema, /email text not null/);
+  assert.match(schema, /inquiry_type text not null/);
   assert.match(schema, /message text not null/);
   assert.match(schema, /'new'/);
   assert.match(schema, /'answered'/);

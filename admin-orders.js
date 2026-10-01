@@ -518,12 +518,21 @@ const renderTrainingRequests = () => {
 const getFilteredContactInquiries = () =>
   contactInquiries.filter((inquiry) => {
     const status = inquiry.status || "new";
-    const haystack = [inquiry.name, inquiry.phone, inquiry.email, inquiry.message].join(" ").toLowerCase();
+    const haystack = [inquiry.name, inquiry.phone, inquiry.email, inquiry.inquiry_type, inquiry.message]
+      .join(" ")
+      .toLowerCase();
     return (
       (selectedContactInquiryStatus === "all" || status === selectedContactInquiryStatus) &&
       (!contactInquirySearchTerm || haystack.includes(contactInquirySearchTerm))
     );
   });
+
+const contactInquiryTypeLabels = {
+  program_recommendation: "Препоръка за програма",
+  individual_training: "Индивидуална тренировка",
+  access_support: "Покупка или достъп",
+  other: "Друг въпрос",
+};
 
 const renderContactInquiries = () => {
   if (!contactInquiryTableBody) return;
@@ -547,6 +556,7 @@ const renderContactInquiries = () => {
           <td><strong>${escapeHtml(inquiry.name || "-")}</strong></td>
           <td><a href="tel:${escapeHtml(inquiry.phone || "")}">${escapeHtml(inquiry.phone || "-")}</a></td>
           <td><a href="mailto:${escapeHtml(inquiry.email || "")}">${escapeHtml(inquiry.email || "-")}</a></td>
+          <td>${escapeHtml(contactInquiryTypeLabels[inquiry.inquiry_type] || contactInquiryTypeLabels.other)}</td>
           <td class="admin-message-cell">${escapeHtml(inquiry.message || "-")}</td>
           <td>
             <select

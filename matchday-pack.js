@@ -199,14 +199,10 @@
   });
 
   const mobileStickyCta = document.querySelector("[data-mobile-sticky-cta]");
-  const visiblePurchaseCtas = new Set();
-  let footerVisible = false;
   const updateMobileStickyCta = () => {
     if (!mobileStickyCta) return;
     const visible =
-      window.scrollY > 120 &&
-      visiblePurchaseCtas.size === 0 &&
-      !footerVisible &&
+      window.innerWidth <= 720 &&
       !lightbox?.open &&
       !document.querySelector(".matchday-faq details[open]");
     mobileStickyCta.classList.toggle("is-visible", visible);
@@ -215,24 +211,7 @@
     mobileStickyCta.style.transform = visible ? "translateY(0)" : "translateY(100%)";
   };
   updateMobileStickyCta();
-  window.addEventListener("scroll", updateMobileStickyCta, { passive: true });
-  if ("IntersectionObserver" in window) {
-    const stickyGuardObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.target.matches(".matchday-footer")) {
-          footerVisible = entry.isIntersecting;
-        } else if (entry.isIntersecting) {
-          visiblePurchaseCtas.add(entry.target);
-        } else {
-          visiblePurchaseCtas.delete(entry.target);
-        }
-      });
-      updateMobileStickyCta();
-    }, { threshold: 0.2 });
-    document
-      .querySelectorAll("[data-primary-cta]:not(.matchday-mobile-sticky [data-primary-cta]), .matchday-footer")
-      .forEach((element) => stickyGuardObserver.observe(element));
-  }
+  window.addEventListener("resize", updateMobileStickyCta, { passive: true });
 
   window.matchdayPackAnalytics = { sessionId, landingPageUrl, pageVariant, campaign, referrer, deviceType, track };
 

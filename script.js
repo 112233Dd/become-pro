@@ -268,6 +268,7 @@ contactForm?.addEventListener("submit", async (event) => {
     name: formData.get("name"),
     phone: formData.get("phone"),
     email: formData.get("email"),
+    inquiryType: formData.get("inquiry_type"),
     message: formData.get("message"),
     consent: Boolean(formData.get("consent")),
   };
@@ -301,4 +302,3 @@ contactForm?.addEventListener("submit", async (event) => {
     }
   }
 });
-

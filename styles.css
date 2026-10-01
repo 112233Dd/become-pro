@@ -995,7 +995,7 @@ blockquote:hover {
 }
 
 .program-shop .program-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   grid-auto-rows: 1fr;
   align-items: stretch;
   gap: clamp(16px, 2vw, 24px);
@@ -5995,6 +5995,7 @@ cite {
 }
 
 .contact-inquiry-form input,
+.contact-inquiry-form select,
 .contact-inquiry-form textarea {
   background: #050606;
   border-color: rgba(255, 255, 255, 0.13);
@@ -6003,11 +6004,13 @@ cite {
 }
 
 .contact-inquiry-form input:hover,
+.contact-inquiry-form select:hover,
 .contact-inquiry-form textarea:hover {
   border-color: rgba(245, 196, 0, 0.48);
 }
 
 .contact-inquiry-form input:focus,
+.contact-inquiry-form select:focus,
 .contact-inquiry-form textarea:focus {
   border-color: var(--lime);
   box-shadow:

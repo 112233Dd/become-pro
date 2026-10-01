@@ -288,25 +288,23 @@ test("success and cancel pages exist for Stripe redirects", () => {
   assert.match(successPage, /api\/checkout-session/);
   assert.match(cancelPage, /data-checkout-retry/);
   assert.match(cancelPage, /"matchday-pack": "\/matchday-pack#matchday-price"/);
-  assert.match(cancelPage, /programs\.html#programs/);
+  assert.match(cancelPage, /\/programs#programs/);
   assert.match(checkoutSession, /accessUrl:\s*paymentStatus === "paid"/);
 });
 
 test("summer program keeps the promo price while other programs use EUR 24.99", () => {
-  const shop = read("shop.js");
-  const shared = read("api/_shared.js");
+  const catalog = read("program-catalog.js");
 
-  assert.equal((shop.match(/price:\s*"€24\.99"/g) || []).length, 5);
-  assert.match(shop, /id:\s*"summer-program"[\s\S]*?price:\s*"€34\.99"/);
-  assert.equal((shared.match(/price:\s*24\.99,/g) || []).length, 5);
-  assert.equal((shared.match(/priceCents:\s*2499,/g) || []).length, 5);
-  assert.match(shared, /"summer-program":\s*\{[\s\S]*?price:\s*34\.99,[\s\S]*?priceCents:\s*3499,/);
-  assert.doesNotMatch(shared, /priceCents:\s*50,/);
+  assert.equal((catalog.match(/price:\s*24\.99,/g) || []).length, 5);
+  assert.equal((catalog.match(/priceCents:\s*2499,/g) || []).length, 5);
+  assert.equal((catalog.match(/displayPrice:\s*"24\.99 €"/g) || []).length, 5);
+  assert.match(catalog, /"summer-program":[\s\S]*?price:\s*34\.99,[\s\S]*?priceCents:\s*3499,[\s\S]*?displayPrice:\s*"34\.99 €"/);
+  assert.doesNotMatch(catalog, /priceCents:\s*50,/);
 });
 
 test("FAQ never advertises the retired EUR 0.50 test price", () => {
   const faq = read("faq.html");
-  assert.match(faq, /Основните онлайн програми са €24\.99/);
+  assert.match(faq, /Активните онлайн програми са по 24\.99 €/);
   assert.doesNotMatch(faq, /€0\.50|0,50 €/);
 });
 
@@ -323,12 +321,13 @@ test("storefront cards render the configured visible program prices", () => {
 
 test("storefront renders only active shop programs through the shared card renderer", () => {
   const shop = read("shop.js");
+  const publicCatalog = read("program-catalog.js");
   const catalog = extractNamedDeclaration(shop, "shopPrograms");
   const storefrontRenderer = extractNamedDeclaration(shop, "renderProgramStorefront");
 
-  assert.equal((catalog.match(/\bid\s*:/g) || []).length, 6, "shopPrograms must contain six programs");
-  assert.equal((catalog.match(/price\s*:\s*["']€24\.99["']/g) || []).length, 5, "Only non-summer programs use the €24.99 price");
-  assert.match(catalog, /id:\s*"summer-program"[\s\S]*?price:\s*"€34\.99"/, "Summer program must render the approved €34.99 promo price");
+  assert.equal((catalog.match(/getPublicProgram\(/g) || []).length, 6, "shopPrograms must load six shared programs");
+  assert.equal((publicCatalog.match(/displayPrice:\s*"24\.99 €"/g) || []).length, 5, "Only non-summer programs use the 24.99 € price");
+  assert.match(publicCatalog, /"summer-program":[\s\S]*?displayPrice:\s*"34\.99 €"/, "Summer program must render the approved 34.99 € promo price");
   assert.match(storefrontRenderer, /\bactiveShopPrograms\b/, "Storefront must use activeShopPrograms");
   assert.match(storefrontRenderer, /\.map\s*\(/, "Storefront must iterate over all programs");
   assert.match(storefrontRenderer, /\brenderProgramCard\s*\(/, "Storefront must use the shared card renderer");
@@ -412,6 +411,6 @@ test("training campaign page opens the short form and Results is publicly named 
   assert.match(training, /class="training-landing"/);
   assert.match(training, /id="training-form"/);
   assert.match(training, /data-training-landing-form/);
-  assert.match(players, /<title>Играчи \| Become Pro<\/title>/);
+  assert.match(players, /<title>Работа с футболисти \| Become Pro<\/title>/);
   publicPages.forEach((page) => assert.doesNotMatch(page, />Резултати<\/a>/));
 });
