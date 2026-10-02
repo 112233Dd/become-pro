@@ -38,7 +38,9 @@ test("homepage hero shows the three approved proof statistics", () => {
 
 test("homepage presents the coach, online programs, and starting choice clearly", () => {
   const html = read("index.html");
+  const hero = html.match(/<section class="hero[\s\S]*?<\/section>/)?.[0] || "";
 
+  assert.match(hero, /href="\/programs">Към програмите<\/a>/);
   assert.match(html, /Зад Become Pro/);
   assert.match(html, /Създадено от футболист\. Изградено за футболисти\./);
   assert.match(html, /Готови онлайн програми/);
@@ -53,6 +55,10 @@ test("homepage presents the coach, online programs, and starting choice clearly"
   assert.match(html, /Следващата стъпка/);
   assert.match(html, /Готов ли си да работиш целенасочено върху играта си\?/);
   assert.match(html, /Започни с готова онлайн програма или работи индивидуално с мен\./);
+  assert.match(html, /assets\/home-start-online-programs\.webp/);
+  assert.match(html, /assets\/home-start-live-training\.webp/);
+  assert.doesNotMatch(html, /href="\/matchday-pack"/);
+  assert.doesNotMatch(html, /Разгледай Мачов пакет|Програма на фокус/);
   assert.doesNotMatch(html, /Кой вариант е най-подходящ за теб\?|Запиши се от тук/);
   assert.doesNotMatch(html, /Готов ли си да тренираш като играч, който иска повече\?|Запиши тренировка/);
   assert.doesNotMatch(html, /Лицето зад бранда|Реални продукти|Виж реалната система/);

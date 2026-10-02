@@ -28,15 +28,15 @@ const createResponse = () => ({
 });
 
 test("individual training campaign route and page exist", () => {
-  const rewrites = new Map(JSON.parse(read("vercel.json")).rewrites.map((item) => [item.source, item.destination]));
+  const config = JSON.parse(read("vercel.json"));
+  const rewrites = new Map(config.rewrites.map((item) => [item.source, item.destination]));
+  const redirects = new Map(config.redirects.map((item) => [item.source, item]));
 
   assert.equal(rewrites.get("/individual-training"), "/individual-training.html");
-  assert.equal(rewrites.get("/training"), "/individual-training.html");
-  assert.equal(rewrites.get("/training/plovdiv"), "/individual-training.html");
-  assert.equal(rewrites.get("/training/sofia"), "/individual-training.html");
-  assert.equal(rewrites.get("/training/stara-zagora"), "/individual-training.html");
-  assert.equal(rewrites.get("/training/parents"), "/individual-training.html");
-  assert.equal(rewrites.get("/training/players"), "/individual-training.html");
+  ["/training", "/training/plovdiv", "/training/sofia", "/training/stara-zagora", "/training/parents", "/training/players"].forEach((route) => {
+    assert.equal(redirects.get(route)?.destination, "/individual-training");
+    assert.equal(redirects.get(route)?.permanent, true);
+  });
   assert.ok(fs.existsSync(path.join(root, "individual-training.html")));
   assert.ok(fs.existsSync(path.join(root, "training", "index.html")));
   ["plovdiv", "sofia", "stara-zagora", "parents", "players"].forEach((variant) => {
