@@ -64,9 +64,9 @@
       id: "matchday-pack",
       name: "Мачов пакет",
       title: "Мачов пакет",
-      price: 24.99,
-      priceCents: 2499,
-      displayPrice: "24.99 €",
+      price: 34.99,
+      priceCents: 3499,
+      displayPrice: "34.99 €",
       image: "/assets/program-cover-matchday.webp",
       description:
         "За футболисти, които искат подредена подготовка преди мач и насоки за възстановяване след него.",

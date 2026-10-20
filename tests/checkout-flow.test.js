@@ -292,19 +292,20 @@ test("success and cancel pages exist for Stripe redirects", () => {
   assert.match(checkoutSession, /accessUrl:\s*paymentStatus === "paid"/);
 });
 
-test("summer program keeps the promo price while other programs use EUR 24.99", () => {
+test("summer and matchday programs use EUR 34.99 while the standard programs use EUR 24.99", () => {
   const catalog = read("program-catalog.js");
 
-  assert.equal((catalog.match(/price:\s*24\.99,/g) || []).length, 5);
-  assert.equal((catalog.match(/priceCents:\s*2499,/g) || []).length, 5);
-  assert.equal((catalog.match(/displayPrice:\s*"24\.99 €"/g) || []).length, 5);
+  assert.equal((catalog.match(/price:\s*24\.99,/g) || []).length, 4);
+  assert.equal((catalog.match(/priceCents:\s*2499,/g) || []).length, 4);
+  assert.equal((catalog.match(/displayPrice:\s*"24\.99 €"/g) || []).length, 4);
   assert.match(catalog, /"summer-program":[\s\S]*?price:\s*34\.99,[\s\S]*?priceCents:\s*3499,[\s\S]*?displayPrice:\s*"34\.99 €"/);
+  assert.match(catalog, /"matchday-pack":[\s\S]*?price:\s*34\.99,[\s\S]*?priceCents:\s*3499,[\s\S]*?displayPrice:\s*"34\.99 €"/);
   assert.doesNotMatch(catalog, /priceCents:\s*50,/);
 });
 
 test("FAQ never advertises the retired EUR 0.50 test price", () => {
   const faq = read("faq.html");
-  assert.match(faq, /Активните онлайн програми са по 24\.99 €/);
+  assert.match(faq, /Стандартните онлайн програми са по 24\.99 €, а Мачов пакет е 34\.99 €/);
   assert.doesNotMatch(faq, /€0\.50|0,50 €/);
 });
 
@@ -326,8 +327,9 @@ test("storefront renders only active shop programs through the shared card rende
   const storefrontRenderer = extractNamedDeclaration(shop, "renderProgramStorefront");
 
   assert.equal((catalog.match(/getPublicProgram\(/g) || []).length, 6, "shopPrograms must load six shared programs");
-  assert.equal((publicCatalog.match(/displayPrice:\s*"24\.99 €"/g) || []).length, 5, "Only non-summer programs use the 24.99 € price");
+  assert.equal((publicCatalog.match(/displayPrice:\s*"24\.99 €"/g) || []).length, 4, "Only the four standard programs use the 24.99 € price");
   assert.match(publicCatalog, /"summer-program":[\s\S]*?displayPrice:\s*"34\.99 €"/, "Summer program must render the approved 34.99 € promo price");
+  assert.match(publicCatalog, /"matchday-pack":[\s\S]*?displayPrice:\s*"34\.99 €"/, "Matchday Pack must render the approved 34.99 € price");
   assert.match(storefrontRenderer, /\bactiveShopPrograms\b/, "Storefront must use activeShopPrograms");
   assert.match(storefrontRenderer, /\.map\s*\(/, "Storefront must iterate over all programs");
   assert.match(storefrontRenderer, /\brenderProgramCard\s*\(/, "Storefront must use the shared card renderer");

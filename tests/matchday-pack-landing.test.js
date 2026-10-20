@@ -37,7 +37,7 @@ test("matchday landing follows the complete conversion flow", () => {
     lastIndex = index;
   });
 
-  assert.match(html, /24\.99\s*€/);
+  assert.match(html, /34\.99\s*€/);
   assert.ok((html.match(/data-matchday-checkout/g) || []).length >= 7);
   assert.match(html, /data-mobile-sticky-cta/);
   assert.equal((html.match(/<section class="matchday-inline-cta/g) || []).length, 2);
@@ -173,7 +173,7 @@ test("matchday SEO uses a single canonical product route and product structured 
   assert.equal(redirect?.destination, "/matchday-pack");
   assert.equal(redirect?.permanent, true);
   assert.match(html, /"@type": "Product"/);
-  assert.match(html, /"price": "24\.99"/);
+  assert.match(html, /"price": "34\.99"/);
   assert.match(html, /property="og:url"/);
   assert.match(html, /name="twitter:card"/);
   assert.ok(fs.existsSync(path.join(root, "robots.txt")));
