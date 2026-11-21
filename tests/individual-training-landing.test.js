@@ -97,7 +97,7 @@ test("landing page uses real training media, player proof, FAQ, and compact lega
   assert.match(html, /assets\/videos\/individual-speed-explosiveness-poster\.webp/);
   assert.match(html, /assets\/videos\/individual-decisions-game-situations-poster\.webp/);
   assert.equal((html.match(/<video controls muted playsinline preload="none"/g) || []).length, 3);
-  assert.match(html, /brand-face-coach-stadium\.jfif/);
+  assert.match(html, /yordan-zhelev-match-dribble\.webp/);
   for (const [, asset] of html.matchAll(/(?:src|poster)="(\/assets\/[^"?]+)/g)) {
     assert.ok(fs.existsSync(path.join(root, asset)), asset);
   }
