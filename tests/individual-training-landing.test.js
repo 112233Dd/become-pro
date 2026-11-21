@@ -44,80 +44,24 @@ test("individual training campaign route and page exist", () => {
   });
 });
 
-test("landing page contains the approved conversion structure", () => {
+test("campaign explains the first session and links each booking CTA to the form", () => {
   const html = read("individual-training.html");
-  const css = read("individual-training.css");
-  const script = read("individual-training.js");
-
-  assert.match(html, /<header class="site-header" data-header>/);
-  assert.match(html, /<nav class="site-nav" data-nav>/);
-  assert.match(html, /class="is-active" href="\/individual-training"/);
-  assert.match(html, /data-nav-toggle/);
-  assert.doesNotMatch(html, /mobile-quick-actions/);
-
-  assert.match(html, /<p class="hero-slogan">Не чакай шанса си\. Подготви се за него\.<\/p>/);
-  assert.match(html, /<p class="landing-eyebrow">ИНДИВИДУАЛНИ ФУТБОЛНИ ТРЕНИРОВКИ<\/p>/);
-  assert.match(html, /<h1>Развий увереността и качествата си на терена<\/h1>/);
-  assert.match(html, /Персонални тренировки според възрастта, позицията, нивото и целите на футболиста\./);
-  assert.match(html, /data-cta-location="hero">Запиши индивидуална тренировка<\/a>/);
-  assert.match(html, /hero-trust-line/);
-  assert.match(html, /С Йордан Желев - футболен треньор и основател на Become Pro\./);
-  assert.match(html, /results-trust-bar/);
-  assert.match(html, /40\+ проведени индивидуални тренировки/);
-  assert.match(html, /Играчи от София, Пловдив и Стара Загора/);
-  assert.match(html, /Техника, скорост и игрови решения/);
-  assert.match(html, /ЗА ИГРАЧИ С АМБИЦИЯ/);
-  assert.match(html, /За кого са тези тренировки\?/);
-  assert.match(html, /Искаш повече игрово време/);
-  assert.match(html, /Искаш допълнителна работа/);
+  const sections = [...html.matchAll(/<section id="([^"]+)"/g)].map((match) => match[1]);
+  assert.deepEqual(sections, [
+    "training-fit", "training-video", "how-it-works", "player-results",
+    "coach-proof", "training-form", "training-faq",
+  ]);
+  assert.match(html, /безплатна първа тренировка/i);
+  assert.match(html, /0 €/);
   assert.match(html, /data-page-variant="individual-training"/);
-  assert.match(html, /data-primary-cta/);
-  assert.match(html, /id="training-fit"/);
-  assert.match(html, /id="player-benefits"/);
-  assert.match(html, /training-process-section/);
-  assert.match(html, /id="how-it-works"/);
-  assert.match(html, /class="landing-cta-panel early-form-cta"/);
-  assert.match(html, /id="player-results"/);
-  assert.match(html, /id="coach-proof"/);
-  assert.match(html, /id="training-video"/);
-  assert.match(html, /id="training-faq"/);
-  assert.match(html, /id="training-form"/);
-  assert.match(html, /data-mobile-sticky-cta/);
-  assert.match(html, /data-mobile-sticky-dock/);
-  assert.match(html, /individual-training\.min\.css/);
+  assert.match(html, /individual-training-campaign\.css/);
   assert.match(html, /individual-training\.min\.js/);
-  assert.match(css, /html\s*\{[\s\S]*?background-color:\s*#050505/);
-  assert.match(css, /--max:\s*1180px/);
-  assert.match(css, /\.training-landing-shell\s*\{[\s\S]*?width:\s*min\(var\(--max\)/);
-  assert.match(css, /\.site-header\s*\{[\s\S]*?position:\s*fixed/);
-  assert.match(css, /@media \(max-width:\s*1320px\)/);
-  assert.match(css, /\.training-landing-hero::before/);
-  assert.match(css, /\.hero-grid\s*\{[\s\S]*?min-height:\s*auto/);
-  assert.match(script, /classList\.toggle\("is-scrolled", window\.scrollY > 20\)/);
-  assert.match(css, /\.training-sticky-dock\s*\{[\s\S]*?background:\s*#050505/);
-  assert.match(css, /padding:\s*12px 16px calc\(12px \+ env\(safe-area-inset-bottom\)\)/);
-  assert.match(script, /stickyDock\?\.classList\.toggle\("is-visible", shouldShow\)/);
-
-  const order = [
-    'id="training-fit"',
-    'id="player-results"',
-    'id="training-video"',
-    'id="player-benefits"',
-    'id="coach-proof"',
-    'id="how-it-works"',
-    'id="training-faq"',
-    'id="training-form"',
-  ].map((needle) => html.indexOf(needle));
-
-  order.forEach((index) => assert.notEqual(index, -1));
-  assert.deepEqual([...order].sort((a, b) => a - b), order);
-  assert.doesNotMatch(html, /class="hero-points"|Личен фокус според нивото|Корекции в реално време/);
-  assert.match(html, /Избираме удобен ден, час и локация/);
-  assert.match(html, /Готов ли си да направиш първата крачка\?/);
-  assert.match(html, /Попълни анкетата и ще се свържем с теб, за да уточним удобен ден и час за първата тренировка\./);
-  assert.match(html, /ИСКАШ ЛИ ДА БЪДЕШ СЛЕДВАЩИЯТ ИГРАЧ\?/);
-  assert.match(html, /Готов ли си да започнеш\?/);
-  assert.match(html, /Остави заявка и ще се свържем с теб до 24 часа, за да уточним удобен ден, час и фокус за първата тренировка\./);
+  const buttons = [...html.matchAll(/<a [^>]*data-primary-cta[^>]*>/g)];
+  assert.ok(buttons.length >= 4);
+  for (const [button] of buttons) assert.match(button, /href="#training-form"/);
+  assert.match(html, /data-mobile-sticky-cta/);
+  assert.equal((html.match(/class="skill"/g) || []).length, 4);
+  assert.equal((html.match(/class="quote"/g) || []).length, 3);
 });
 
 test("landing form contains only the compact approved fields and success message", () => {
@@ -152,17 +96,11 @@ test("landing page uses real training media, player proof, FAQ, and compact lega
   assert.match(html, /assets\/videos\/individual-tech-first-touch-poster\.webp/);
   assert.match(html, /assets\/videos\/individual-speed-explosiveness-poster\.webp/);
   assert.match(html, /assets\/videos\/individual-decisions-game-situations-poster\.webp/);
-  assert.equal((html.match(/<video controls muted playsinline preload="none" data-poster=/g) || []).length, 3);
-  assert.match(html, /data-deferred-video-src/);
-  assert.match(html, /data-video-play/);
-  assert.match(html, /one-touch-passing-drop-poster\.webp/);
-  assert.match(html, /coach-yordan-zhelev\.png/);
-  assert.match(html, /coach-achievement-list/);
-  assert.match(html, /coach-cta-panel/);
-  assert.match(html, /training-video-cards-cta/);
-  assert.match(html, /faq-cta-panel/);
-  assert.match(html, /ВИЖ КАК ИЗГЛЕЖДА ЕДНА ИНДИВИДУАЛНА ТРЕНИРОВКА/);
-  assert.match(html, /Реални тренировки\. Реални играчи\. Реална обратна връзка\./);
+  assert.equal((html.match(/<video controls muted playsinline preload="none"/g) || []).length, 3);
+  assert.match(html, /brand-face-coach-stadium\.jfif/);
+  for (const [, asset] of html.matchAll(/(?:src|poster)="(\/assets\/[^"?]+)/g)) {
+    assert.ok(fs.existsSync(path.join(root, asset)), asset);
+  }
   assert.match(html, /Техника и първо докосване/);
   assert.match(html, /Скорост и експлозивност/);
   assert.match(html, /Решения и игрови ситуации/);
