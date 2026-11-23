@@ -296,7 +296,11 @@
   const scrollToTarget = (href) => {
     const target = href?.startsWith("#") ? document.querySelector(href) : null;
     if (!target) return false;
-    target.scrollIntoView({ behavior: "smooth", block: "start" });
+    const bookingPanel = href === "#training-form" && target.querySelector(".form-panel");
+    const destination = bookingPanel || target;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    destination.scrollIntoView({ behavior: reduceMotion ? "instant" : "smooth", block: "start" });
+    if (bookingPanel) bookingPanel.focus({ preventScroll: true });
     window.history.replaceState(null, "", href);
     return true;
   };
@@ -372,6 +376,11 @@
   };
   ["focusin", "input", "change"].forEach((eventName) => form?.addEventListener(eventName, markFormStart));
 
+  form?.addEventListener("input", () => {
+    formStatus.textContent = "";
+    delete formStatus.dataset.state;
+  });
+
   const getFieldValue = (formData, key) => String(formData.get(key) || "").trim();
   const validateTrainingForm = (formData) => {
     if (!getFieldValue(formData, "applicant_type")) return "Моля, избери кого искаш да запишеш.";
@@ -386,18 +395,21 @@
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
     const submitButton = form.querySelector('button[type="submit"]');
+    if (submitButton.disabled) return;
     const formData = new FormData(form);
     const originalText = submitButton.textContent;
     const validationError = validateTrainingForm(formData);
 
     if (validationError) {
       track("form_submit_error");
+      formStatus.dataset.state = "error";
       formStatus.textContent = validationError;
       return;
     }
 
     submitButton.disabled = true;
     submitButton.textContent = "Изпращане...";
+    formStatus.dataset.state = "pending";
     formStatus.textContent = "Изпращаме заявката...";
 
     const payload = {
@@ -425,7 +437,9 @@
         body: JSON.stringify(payload),
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Заявката не беше изпратена.");
+      if (!response.ok || data?.ok !== true || !(data.storageSaved || data.notificationSent)) {
+        throw new Error("Не успяхме да потвърдим заявката. Опитай отново или се обади на +359 897 575 257.");
+      }
 
       track("form_submit_success");
       if (!leadTracked) {
@@ -435,6 +449,7 @@
           lead_type: "individual_training",
         });
       }
+      formStatus.dataset.state = "success";
       formStatus.textContent =
         formStatus.dataset.successMessage ||
         "Благодарим! Получихме заявката ти. Ще се свържем с теб, за да уточним подходящ ден и час.";
@@ -444,7 +459,8 @@
       sendMarketingEvent("training_form_error", {
         error_type: "submit_failed",
       });
-      formStatus.textContent = error.message || "Заявката не беше изпратена. Моля, опитайте отново.";
+      formStatus.dataset.state = "error";
+      formStatus.textContent = "Не успяхме да потвърдим заявката. Опитай отново или се обади на +359 897 575 257.";
     } finally {
       submitButton.disabled = false;
       submitButton.textContent = originalText;
