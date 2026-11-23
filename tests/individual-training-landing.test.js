@@ -51,7 +51,8 @@ test("campaign explains the first session and links each booking CTA to the form
     "why-individual", "training-fit", "coach-proof", "training-video", "player-results",
     "first-session", "how-it-works", "training-form", "training-faq",
   ]);
-  assert.match(html, /безплатна първа тренировка/i);
+  assert.match(html, /data-cta-location="hero">Заяви безплатна тренировка/);
+  assert.match(html, /Свързваме се с теб до 24 часа/);
   assert.match(html, /0 €/);
   assert.match(html, /data-page-variant="individual-training"/);
   assert.match(html, /individual-training-campaign\.css/);
