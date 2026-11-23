@@ -2,6 +2,8 @@ const { logAdminEvent, readJsonBody, sendEmail, sendJson, supabaseRequest } = re
 
 const APPLICANT_TYPES = new Set(["Моето дете", "Себе си"]);
 
+const INDIVIDUAL_CITIES = new Set(["София", "Пловдив", "Стара Загора"]);
+
 const cleanText = (value, maxLength) => String(value || "").trim().slice(0, maxLength);
 const isEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || "").trim());
 const isLegacyTrainingSchemaError = (error) =>
@@ -166,6 +168,16 @@ module.exports = async (req, res) => {
     }
     if (name.length < 2) return sendJson(res, 400, { error: "Моля, въведи име." });
     if (playerAge.length < 1) return sendJson(res, 400, { error: "Моля, въведи възраст." });
+    if (attributionRow.page_variant === "individual-training") {
+      const age = Number(playerAge);
+      if (!Number.isInteger(age) || age < 8 || age > 24) {
+        return sendJson(res, 400, { error: "Възрастта на играча трябва да е от 8 до 24 години." });
+      }
+      if (!INDIVIDUAL_CITIES.has(city)) return sendJson(res, 400, { error: "Моля, избери град от списъка." });
+      if (!/^[+\d\s().-]+$/.test(phone) || (phone.match(/\d/g) || []).length < 6) {
+        return sendJson(res, 400, { error: "Моля, въведи валиден телефонен номер." });
+      }
+    }
     if (city.length < 2) return sendJson(res, 400, { error: "Моля, въведи град." });
     if (phone.length < 6) return sendJson(res, 400, { error: "Моля, въведи валиден телефон." });
     if (!consent) return sendJson(res, 400, { error: "Моля, потвърди съгласието за връзка." });

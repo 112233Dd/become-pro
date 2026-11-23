@@ -48,8 +48,8 @@ test("campaign explains the first session and links each booking CTA to the form
   const html = read("individual-training.html");
   const sections = [...html.matchAll(/<section id="([^"]+)"/g)].map((match) => match[1]);
   assert.deepEqual(sections, [
-    "training-fit", "training-video", "how-it-works", "player-results",
-    "coach-proof", "training-form", "training-faq",
+    "why-individual", "training-fit", "coach-proof", "training-video", "player-results",
+    "first-session", "how-it-works", "training-form", "training-faq",
   ]);
   assert.match(html, /безплатна първа тренировка/i);
   assert.match(html, /0 €/);
@@ -71,12 +71,15 @@ test("landing form contains only the compact approved fields and success message
   ["applicant_type", "name", "player_age", "city", "phone", "consent"].forEach((name) => {
     assert.match(form, new RegExp(`name="${name}"`));
   });
-  assert.match(form, /novalidate/);
+  assert.doesNotMatch(form, /novalidate/);
+  assert.match(form, /min="8" max="24"/);
+  assert.match(form, /<select name="city" required>/);
+  assert.match(form, /data-landing-form-status[^>]*><\/p>/);
   assert.match(form, /type="number" name="player_age"/);
   assert.doesNotMatch(form, /name="email"|position|goal/);
   assert.match(form, /Моето дете/);
   assert.match(form, /Себе си/);
-  assert.match(form, /Запази тренировка/);
+  assert.match(form, /Заяви безплатна тренировка/);
   assert.match(form, /Съгласявам се предоставените от мен данни/);
   assert.match(form, /\/privacy-policy/);
   assert.match(

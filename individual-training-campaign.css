@@ -38,7 +38,7 @@ header { position: sticky; top: 0; z-index: 5; background: white; border-bottom:
 header .button { background: var(--sun); color: var(--ink); min-height: 42px; }
 header .button:hover { background: #ffcf2c; }
 .hero { background: var(--cream); }
-.hero-grid { display: grid; grid-template-columns: .99fr 1.01fr; align-items: center; gap: clamp(32px,5vw,86px); padding-block: clamp(52px,7vw,104px); }
+.hero-grid { display: grid; grid-template-columns: .99fr 1.01fr; align-items: center; gap: clamp(32px,5vw,86px); padding-block: clamp(32px,4vw,64px); }
 .kicker { font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .09em; color: var(--green); margin-bottom: 18px; }
 h1, h2, h3 { text-wrap: balance; }
 h1, h2 { font-weight: 800; letter-spacing: -.045em; line-height: 1.08; }
@@ -49,7 +49,7 @@ mark { background: #ffe384; color: var(--ink); padding: 1px 4px; box-decoration-
 .locations { color: #46584c; font-size: .86rem; font-weight: 600; margin-top: 14px; }
 .locations i { padding: 0 4px; font-style: normal; }
 .hero-photo { position: relative; }
-.hero-photo img { width: 100%; aspect-ratio: 1.43; object-fit: cover; border-radius: 18px; }
+.hero-photo img { width: 100%; height: auto; aspect-ratio: 1.43; object-fit: cover; border-radius: 18px; }
 .hero-photo figcaption { position: absolute; left: 16px; bottom: 16px; display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 99px; color: white; background: #18392fea; font-size: .78rem; }
 .hero-photo figcaption span { width: 7px; height: 7px; border-radius: 50%; background: #ffe178; }
 .section { padding-block: clamp(54px,6vw,84px); }
@@ -80,7 +80,7 @@ h3 { font-size: 1.21rem; line-height: 1.26; letter-spacing: -.025em; }
 .quote figcaption img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; object-position: 50% 29%; }
 .quote strong { display: block; color: var(--ink); font-size: .97rem; }
 .coach, .booking { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px,6vw,84px); align-items: center; }
-.coach > img { width: min(100%, 440px); height: auto; margin-inline: auto; border-radius: 18px; }
+
 .coach h2 ~ p, .offer-copy > p:last-child { margin-top: 16px; color: var(--muted); }
 .offer { background: var(--mint); }
 .price { font-size: clamp(3.5rem,6vw,5.1rem); line-height: 1; margin-top: 26px; font-weight: 800; letter-spacing: -.06em; color: var(--green); }
@@ -93,7 +93,7 @@ h3 { font-size: 1.21rem; line-height: 1.26; letter-spacing: -.025em; }
 .landing-form { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
 .landing-form label { font-size: .89rem; font-weight: 700; }
 .landing-form label:first-child, .consent-field, .landing-form button, .landing-form-status { grid-column: 1 / -1; }
-input:not([type=checkbox]), select { width: 100%; background: #fff; color: var(--ink); border: 1px solid #93a499; border-radius: 8px; padding: 11px; min-height: 45px; margin-top: 4px; font: inherit; font-size: 16px; }
+input:not([type=checkbox]):not([type=radio]), select { width: 100%; background: #fff; color: var(--ink); border: 1px solid #93a499; border-radius: 8px; padding: 11px; min-height: 45px; margin-top: 4px; font: inherit; font-size: 16px; }
 .landing-form .consent-field { display: flex; gap: 10px; align-items: flex-start; font-size: .8rem; font-weight: 400; color: var(--muted); }
 .consent-field input { width: 18px; height: 18px; flex-shrink: 0; accent-color: var(--green); }
 .landing-form-status { font-weight: 700; }
@@ -126,7 +126,7 @@ footer a { font-size: .82rem; }
   .brand img { width: 25px; height: 25px; }
   header .button { font-size: .82rem; padding: 10px 14px; gap: 8px; }
   .hero-grid, .booking, .coach, .quotes, .training-video-card-grid { grid-template-columns: 1fr; }
-  .hero-grid { padding-block: 38px; }
+  .hero-grid { padding-block: 24px 32px; }
   h1 { font-size: clamp(2.22rem,8vw,3.3rem); }
   .hero-photo img { aspect-ratio: 1.75; }
   .skills { gap: 12px; }
@@ -144,5 +144,50 @@ footer a { font-size: .82rem; }
 }
 @media (max-width: 410px) {
   .skills { grid-template-columns: 1fr; }
-  .landing-form { grid-template-columns: 1fr; }
+}
+
+
+.booking-note, .required-note, .experience { color: var(--muted); font-size: .85rem; }
+.booking-note { margin-top: 8px; }
+.experience { margin-top: 12px; }
+.comparison, .session-copy { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; }
+.comparison article { padding: clamp(20px,3vw,38px); background: #f3f7f1; border-radius: 15px; }
+.comparison article + article { background: var(--mint); border-left: 4px solid var(--green); }
+.comparison p, .coach h3 + p, .session-copy p { color: var(--muted); margin-top: 10px; }
+#training-fit { padding-top: 0; }
+.coach-photos { display: grid; grid-template-columns: 1.35fr 1fr; align-items: end; gap: 10px; }
+.coach-photos img { width: 100%; height: auto; border-radius: 14px; }
+.coach h3 { margin-top: 22px; }
+.coach .coach-motto { padding-left: 15px; border-left: 3px solid var(--green); color: var(--green); font-weight: 700; }
+.training-video-card h3 { padding-bottom: 6px; }
+.training-video-card > p { margin: 0 20px 20px; font-size: .92rem; color: var(--muted); }
+.source-link { margin-top: 22px; text-align: center; color: var(--green); }
+#how-it-works { padding-block: 30px 40px; background: #f5f8f3; }
+#how-it-works .section-intro { margin-bottom: 22px; }
+#how-it-works .steps li::before { width: 34px; height: 34px; margin-bottom: 9px; }
+.form-panel h3 { margin-bottom: 4px; }
+.required-note { margin-bottom: 20px; }
+.applicant, .location-picker, .landing-form .booking-note { grid-column: 1/-1; }
+.applicant { margin: 0; padding: 0; border: 0; }
+.applicant legend { margin-bottom: 6px; padding: 0; font-size: .89rem; font-weight: 700; }
+.applicant label { display: inline-flex; align-items: center; gap: 5px; min-height: 44px; margin-right: 8px; cursor: pointer; }
+.applicant input { width: 18px; height: 18px; accent-color: var(--green); }
+.landing-form .booking-note { text-align: center; margin: 0; }
+.form-panel { scroll-margin-top: 88px; }
+.landing-form-status[data-state="error"] { color: #973315; }
+.landing-form-status[data-state="success"] { color: var(--green); }
+.last-call h2 { margin-bottom: 10px; }
+.last-call p { margin-bottom: 22px; color: var(--muted); }
+@media (max-width: 700px) {
+  .comparison, .session-copy, .landing-form { grid-template-columns: minmax(0,1fr); }
+  .coach-photos { max-width: 420px; margin-inline: auto; }
+  .session-copy { gap: 8px; }
+  .brand { flex-shrink: 0; }
+  header .button { min-height: 44px; }
+  .landing-form select { min-width: 0; }
+}
+@media (max-width: 410px) {
+  .header-row { gap: 8px; }
+  header .button { padding-inline: 9px; }
+  header .button span { display: none; }
 }
