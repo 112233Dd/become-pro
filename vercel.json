@@ -60,6 +60,10 @@
   ],
   "rewrites": [
     {
+      "source": "/winter-program",
+      "destination": "/winter-program.html"
+    },
+    {
       "source": "/cart",
       "destination": "/cart.html"
     },
