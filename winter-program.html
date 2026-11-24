@@ -41,7 +41,7 @@
       .bonus-card svg { width:28px; height:28px; stroke:var(--ice); fill:none; stroke-width:1.6; }
       .bonus-card h4 { margin:12px 0 6px; font-size:1.35rem; }
       .offer-panel { display:grid; grid-template-columns:minmax(0, .92fr) minmax(0, 1fr); background:#10212d; border:1px solid #395464; }
-      .campaign-photo { width:100%; height:100%; object-fit:cover; object-position:50% 38%; min-height:0; }
+      .campaign-photo { width:100%; height:auto; aspect-ratio:1; object-fit:contain; align-self:center; display:block; }
       .offer-copy { padding:clamp(22px,4vw,68px); }
       #offer h2 { font-size:clamp(2.2rem,4vw,4.6rem); line-height:1.02; max-width:15ch; }
       #offer h2 em { display:block; }
@@ -54,7 +54,7 @@
       #winter-purchase .btn { width:100%; min-height:56px; font-size:1rem; }
       #winter-purchase .btn:disabled { background:#283b47; color:#c5d0d7; cursor:not-allowed; opacity:1; }
       #winter-purchase [hidden] { display:none; }
-      @media(max-width:800px){ .offer-panel,.extras {grid-template-columns:minmax(0,1fr);} .campaign-photo {height:clamp(200px,60vw,370px);} }
+      @media(max-width:800px){ .offer-panel,.extras {grid-template-columns:minmax(0,1fr);} }
       .reviews { width: min(1400px, calc(100% - 2.5rem)); }
       .reviews h2 { max-width: 32ch; font-size: clamp(2rem, 3.6vw, 3.5rem); font-weight: 700; line-height: 1.14; letter-spacing: normal; }
       .reviews .intro { font-size: 1.125rem; }
@@ -280,7 +280,7 @@
       <section id="offer" class="offer">
         <div class="wrap section" id="levels">
           <article class="offer-panel">
-            <img class="campaign-photo" src="/winter-program/media/coach.webp" alt="Йордан Желев с топката по време на мач" loading="lazy" />
+            <img class="campaign-photo" src="/winter-program/media/winter-program-poster.png" width="1080" height="1080" alt="Постер на Зимна програма — Йордан Желев с топка на зимен стадион" loading="lazy" />
             <div class="offer-copy">
               <p class="eyebrow">ЗИМЕН СЕЗОН 2026/27</p>
               <h2>BECOME PRO <em>WINTER PROGRAM</em></h2>
