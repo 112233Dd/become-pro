@@ -31,6 +31,18 @@
     <link rel="icon" href="/favicon.ico" />
     <link rel="stylesheet" href="/winter-program/winter.css" />
     <style>
+      #contents > .wrap { width: min(1200px, calc(100% - 2.5rem)); }
+      #contents h2 { max-width: 30ch; font-size: clamp(2rem, 3.7vw, 3.75rem); line-height: 1.08; }
+      .demo-note { margin-top: 18px; color: var(--ice); }
+      #contents .tracks { margin-top: 20px; }
+      #contents .tracks h3 { font-size: clamp(1.15rem, 1.65vw, 1.5rem); letter-spacing: normal; line-height: 1.22; }
+      .tracks h3 small { color: var(--ice); font-size: .8em; }
+      #contents .tracks p { font-size: 1.0625rem; }
+      .tracks .clip-poster, #contents .tracks video { display: block; position: relative; width: 100%; aspect-ratio: 9 / 16; max-height: none; }
+      .clip-poster img { width: 100%; height: 100%; object-fit: cover; }
+      .clip-poster span { position: absolute; inset: 50% auto auto 50%; transform: translate(-50%, -50%); display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: #07121de6; border: 2px solid var(--ice); color: white; }
+      .clip-poster:focus-visible { outline-offset: -4px; }
+      .levels-intro { margin: 32px 0 16px; max-width: 60ch; }
       .problem-title {
         max-width: 100%;
         font-size: clamp(1.95rem, 3.8vw, 3.75rem);
@@ -137,43 +149,43 @@
       </section>
       <section id="contents" class="band">
         <div class="wrap section">
-          <h2>Една програма.<br /><em>Няколко ключови направления.</em></h2>
-          <p class="intro">Виж как тренираме на терена. Кадрите са от индивидуалните тренировки на Become Pro.</p>
+          <h2>ТРИ НАПРАВЛЕНИЯ.<br /><em>ЕДНА ЦЕЛ — ПО-ДОБРА ПОДГОТОВКА.</em></h2>
+          <p class="intro">Физическа, бегова и техническа работа, обединени в 4-седмична програма, съобразена с твоята възраст.</p>
+          <p class="demo-note">Демонстрационни кадри от индивидуални тренировки на Become Pro.</p>
           <div class="tracks">
             <article>
-              <video controls playsinline muted preload="none" poster="/winter-program/media/hurdles.jpg" aria-label="Координация с препятствия и пас в Пловдив">
-                <source src="/winter-program/media/hurdles.mp4" type="video/mp4" />
-                <a href="/winter-program/media/hurdles.mp4">Гледай упражнението от Пловдив</a>
-              </video>
+              <a class="clip-poster" href="/winter-program/media/hurdles.mp4" aria-label="Пусни видеото: Координация с препятствия и пас">
+                <img src="/winter-program/media/hurdles.jpg" alt="" loading="lazy" width="540" height="960" />
+                <span aria-hidden="true">▶</span>
+              </a>
               <div>
-                <span class="clip-place">Пловдив · Препятствия и пас</span>
-                <h3>Физическа подготовка</h3>
-                <p>Сила, двигателни качества и физическо развитие.</p>
+                <h3><small>01 /</small> ФИЗИЧЕСКА ПОДГОТОВКА</h3>
+                <p>Развивай сила, координация и двигателни качества чрез подходяща за възрастта ти подготовка.</p>
               </div>
             </article>
             <article>
-              <video controls playsinline muted preload="none" poster="/winter-program/media/reaction.jpg" aria-label="Загрявка и реакция в Нова Загора">
-                <source src="/winter-program/media/reaction.mp4" type="video/mp4" />
-                <a href="/winter-program/media/reaction.mp4">Гледай упражнението от Нова Загора</a>
-              </video>
+              <a class="clip-poster" href="/assets/videos/individual-speed-explosiveness.mp4" aria-label="Пусни видеото: Първи крачки и ускорение">
+                <img src="/assets/videos/individual-speed-explosiveness-poster.webp" alt="" loading="lazy" width="540" height="960" />
+                <span aria-hidden="true">▶</span>
+              </a>
               <div>
-                <span class="clip-place">Нова Загора · Загрявка и реакция</span>
-                <h3>Бегова подготовка</h3>
-                <p>Кондиция, ускорения и бегова работа.</p>
+                <h3><small>02 /</small> БЕГОВА ПОДГОТОВКА</h3>
+                <p>Структурирана бегова работа с акцент върху кондицията, ускоренията и правилното натоварване.</p>
               </div>
             </article>
             <article>
-              <video controls playsinline muted preload="none" poster="/winter-program/media/finish.jpg" aria-label="Завършващ удар под ъгъл с десния крак в Стара Загора">
-                <source src="/winter-program/media/finish.mp4" type="video/mp4" />
-                <a href="/winter-program/media/finish.mp4">Гледай упражнението от Стара Загора</a>
-              </video>
+              <a class="clip-poster" href="/winter-program/media/finish.mp4" aria-label="Пусни видеото: Завършващ удар под ъгъл">
+                <img src="/winter-program/media/finish.jpg" alt="" loading="lazy" width="540" height="960" />
+                <span aria-hidden="true">▶</span>
+              </a>
               <div>
-                <span class="clip-place">Стара Загора · Удар под ъгъл</span>
-                <h3>Техническа подготовка</h3>
-                <p>Първо докосване, подаване и завършващ удар.</p>
+                <h3><small>03 /</small> ТЕХНИЧЕСКА ПОДГОТОВКА</h3>
+                <p>Работи върху първото докосване, подаванията и завършващия удар с целенасочени упражнения.</p>
               </div>
             </article>
           </div>
+          <p class="levels-intro">Всяка възраст има своите особености. Затова подготовката е разделена на три възрастови нива.</p>
+          <a class="btn" href="#levels">ВИЖ ТРИТЕ НИВА</a>
         </div>
       </section>
       <section id="levels" class="wrap section">
@@ -437,5 +449,27 @@
       </nav>
     </footer>
     <a href="#levels" class="dock btn" hidden>Избери своята програма <span aria-hidden="true">↗</span></a>
+    <script>
+      document.querySelectorAll('.clip-poster').forEach(link => {
+        link.addEventListener('click', event => {
+          if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+          event.preventDefault();
+          const video = document.createElement('video');
+          video.controls = true;
+          video.playsInline = true;
+          video.poster = link.querySelector('img').src;
+          video.setAttribute('aria-label', link.getAttribute('aria-label'));
+          video.tabIndex = 0;
+          video.src = link.href;
+          video.addEventListener('play', () => {
+            document.querySelectorAll('.tracks video').forEach(other => { if (other !== video) other.pause(); });
+          });
+          video.addEventListener('error', () => { video.replaceWith(link); link.focus(); }, { once: true });
+          link.replaceWith(video);
+          video.focus({ preventScroll: true });
+          video.play().catch(() => { /* Native controls allow another play attempt. */ });
+        });
+      });
+    </script>
   </body>
 </html>
