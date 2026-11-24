@@ -82,7 +82,7 @@ h3 { font-size: 1.21rem; line-height: 1.26; letter-spacing: -.025em; }
 .stories { background: var(--cream); }
 .quote { background: white; border-radius: 15px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; gap: 24px; }
 .quote blockquote { font-size: 1.12rem; font-weight: 600; }
-.quote figcaption { display: flex; gap: 12px; align-items: center; color: var(--muted); font-size: .85rem; }
+.quote figcaption { margin-top: auto; min-height: 48px; display: flex; gap: 12px; align-items: center; color: var(--muted); font-size: .85rem; }
 .quote figcaption img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; object-position: 50% 29%; }
 .quote strong { display: block; color: var(--ink); font-size: .97rem; }
 .coach, .booking { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px,6vw,84px); align-items: center; }
@@ -179,7 +179,8 @@ footer a { font-size: .82rem; }
 .coach .coach-motto { padding-left: 15px; border-left: 3px solid var(--green); color: var(--green); font-weight: 700; }
 .training-video-card h3 { padding-bottom: 6px; }
 .training-video-card > p { margin: 0 20px 20px; font-size: .92rem; color: var(--muted); }
-.source-link { margin-top: 22px; text-align: center; color: var(--green); }
+.stories .center { margin-top: 36px; }
+.stories .quotes { grid-auto-rows: 1fr; }
 #how-it-works { padding-block: 30px 40px; background: #f5f8f3; }
 #how-it-works .section-intro { margin-bottom: 22px; }
 #how-it-works .steps li::before { width: 34px; height: 34px; margin-bottom: 9px; }
