@@ -42,7 +42,13 @@
       .clip-poster img { width: 100%; height: 100%; object-fit: cover; }
       .clip-poster span { position: absolute; inset: 50% auto auto 50%; transform: translate(-50%, -50%); display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: #07121de6; border: 2px solid var(--ice); color: white; }
       .clip-poster:focus-visible { outline-offset: -4px; }
-      .levels-intro { margin: 32px 0 16px; max-width: 60ch; }
+      #coach { width: min(1400px, calc(100% - 2.5rem)); gap: clamp(28px, 4vw, 64px); }
+      #coach figure { max-width: none; }
+      #coach img { height: auto; aspect-ratio: 1.12; }
+      #coach h2 { font-size: clamp(2rem, 3.35vw, 3.4rem); line-height: 1.12; letter-spacing: normal; font-weight: 700; }
+      #coach .eyebrow { font-size: .875rem; }
+      #coach p:not(.eyebrow) { font-size: clamp(1.125rem, 1.45vw, 1.3rem); line-height: 1.55; max-width: 55ch; }
+      .coach-facts { display: flex; flex-wrap: wrap; gap: 8px 24px; list-style: none; margin: 24px 0 0; padding: 14px 0 0; border-top: 1px solid var(--line); color: var(--ice); }
       .problem-title {
         max-width: 100%;
         font-size: clamp(1.95rem, 3.8vw, 3.75rem);
@@ -184,19 +190,6 @@
               </div>
             </article>
           </div>
-          <p class="levels-intro">Виж как физическата, беговата и техническата работа се подреждат в четири седмици.</p>
-          <a class="btn" href="#weeks">ВИЖ ЧЕТИРИТЕ СЕДМИЦИ</a>
-        </div>
-      </section>
-      <section class="timeline band">
-        <div class="wrap section">
-          <h2 id="weeks">Четири седмици с ясна структура.</h2>
-          <ol>
-            <li>Седмица <strong>1</strong></li>
-            <li>Седмица <strong>2</strong></li>
-            <li>Седмица <strong>3</strong></li>
-            <li>Седмица <strong>4</strong></li>
-          </ol>
         </div>
       </section>
       <section id="coach" class="wrap section coach">
@@ -210,15 +203,14 @@
         </figure>
         <div>
           <p class="eyebrow">Йордан Желев · Основател на Become Pro</p>
-          <h2>Създадено от футболист.<br /><em>За футболисти.</em></h2>
-          <p>
-            На 16 години Йордан дебютира в Първа лига. Има опит и с националния отбор на България до 15
-            години.
-          </p>
-          <p>
-            Днес в Become Pro той помага на играчите да разберат върху кой детайл да работят и как да го
-            приложат в мач.
-          </p>
+          <h2>СЪЗДАДЕНО ОТ ФУТБОЛИСТ.<br /><em>ЗА ФУТБОЛИСТИ.</em></h2>
+          <p>Като бивш професионален футболист знам колко важна е правилната подготовка — не само по време на сезона, но и в паузите между полусезоните.</p>
+          <p>Създадох Become Pro с една цел: да помагам на футболистите да развиват качествата си чрез целенасочени и структурирани тренировки.</p>
+          <p>Зимната програма следва същата идея — <strong>ясен план, съобразен с възрастта и нуждите на футболиста.</strong></p>
+          <ul class="coach-facts" aria-label="Опит на треньора">
+            <li>Дебют в Първа лига на 16 години</li>
+            <li>Индивидуална работа с футболисти</li>
+          </ul>
         </div>
       </section>
       <section class="band">
