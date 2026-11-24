@@ -19,15 +19,6 @@
     <meta property="og:url" content="https://becomeprofootball.com/winter-program" />
     <meta property="og:image" content="https://becomeprofootball.com/winter-program/media/stadium.webp" />
     <meta name="theme-color" content="#091218" />
-    <noscript
-      ><style>
-        #interest,
-        #offer-level,
-        label[for="offer-level"] {
-          display: none;
-        }
-      </style></noscript
-    >
     <link rel="icon" href="/favicon.ico" />
     <link rel="stylesheet" href="/winter-program/winter.css" />
     <style>
@@ -42,9 +33,25 @@
       .clip-poster img { width: 100%; height: 100%; object-fit: cover; }
       .clip-poster span { position: absolute; inset: 50% auto auto 50%; transform: translate(-50%, -50%); display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: #07121de6; border: 2px solid var(--ice); color: white; }
       .clip-poster:focus-visible { outline-offset: -4px; }
-      .purchase-steps { padding-left: 1.5rem; margin: 16px 0; }
-      .purchase-steps li::marker { color: var(--ice); }
-      .purchase-steps span { display: block; color: var(--muted); }
+      #offer h2 { max-width: none; font-size: clamp(2.15rem, 4vw, 4rem); line-height: 1.08; letter-spacing: -.025em; }
+      #offer .intro { font-size: 1.15rem; }
+      .winter-offers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2vw, 28px); margin-top: 32px; }
+      .winter-card { display: flex; flex-direction: column; background: #0c1922; border: 1px solid #3b5362; overflow: hidden; }
+      .winter-visual { position: relative; aspect-ratio: 1.95; background: #142d3f; }
+      .winter-visual img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%; filter: saturate(.66); }
+      .winter-visual::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, #071420b8, #142e4610 70%); }
+      .winter-visual span { position: absolute; bottom: 14px; left: 20px; z-index: 1; padding: 4px 10px; color: #b5eaff; background: #091822e8; font-weight: 700; }
+      .winter-details { display: flex; flex: 1; flex-direction: column; padding: clamp(18px, 2vw, 30px); }
+      .winter-details .eyebrow { margin-bottom: 9px; color: var(--ice); font-size: .78rem; }
+      .winter-details h3 { font-size: clamp(1.6rem, 2.1vw, 2.15rem); line-height: 1.12; letter-spacing: -.02em; }
+      .variant-description { margin-top: 12px; color: var(--muted); }
+      #offer .winter-details ul { padding-left: 1.2rem; margin: 18px 0 24px; }
+      .winter-details li::marker { color: var(--ice); }
+      .variant-sale { margin-top: auto; border-top: 1px solid var(--line); padding-top: 16px; }
+      .variant-price { font-size: 1.35rem; font-weight: 700; }
+      .variant-terms { margin: 4px 0 16px; color: var(--muted); font-size: .94rem; }
+      .variant-sale .btn { width: 100%; }
+      @media (max-width: 760px) { .winter-offers { grid-template-columns: 1fr; } }
       .reviews { width: min(1400px, calc(100% - 2.5rem)); }
       .reviews h2 { max-width: 32ch; font-size: clamp(2rem, 3.6vw, 3.5rem); font-weight: 700; line-height: 1.14; letter-spacing: normal; }
       .reviews .intro { font-size: 1.125rem; }
@@ -95,7 +102,7 @@
       }
     </style>
     <script defer src="/winter-program/config.js"></script>
-    <script defer src="/winter-program/winter.js"></script>
+    <script defer src="/winter-program/winter.js?v=offers"></script>
   </head>
   <body>
     <a class="skip" href="#main">Към съдържанието</a>
@@ -109,7 +116,7 @@
         <nav aria-label="Основна навигация">
           <a href="#contents">Подготовка</a><a href="#levels">Възрастови групи</a><a href="#coach">Треньор</a>
         </nav>
-        <a class="nav-cta" href="#offer">Заяви интерес <span aria-hidden="true">↗</span></a>
+        <a class="nav-cta" href="#offer">Избери своята програма <span aria-hidden="true">↗</span></a>
       </div>
     </header>
     <main id="main">
@@ -248,75 +255,52 @@
         </div>
       </section>
       <section id="offer" class="offer">
-        <div class="wrap section offer-grid">
-          <div>
-            <p class="eyebrow">BECOME PRO — WINTER PROGRAM 2026/27</p>
-            <h2>Една програма.<br /><em>Съобразена с твоята възраст.</em></h2>
-            <p>Избери възрастовата си група за 4-седмичната подготовка.</p>
-            <ul>
-              <li>Физическа и силова работа</li>
-              <li>Бягане и кондиция</li>
-              <li>Футболна техника</li>
-            </ul>
-          </div>
-          <div class="panel" id="levels">
-            <h3 id="offer-title">Заяви интерес</h3>
-            <label for="offer-level">Възрастова група</label
-            ><select id="offer-level" form="interest" required>
-              <option value="">Избери възрастова група</option>
-              <option value="01">Под 12 години</option>
-              <option value="02">12–15 години</option>
-              <option value="03">16+ години</option>
-            </select>
-            <form id="interest" method="post" action="/api/training-requests">
-              <p class="form-help">
-                Остави контакт за информация за зимната програма. Заявката не те обвързва с покупка.
-              </p>
-              <label
-                >Твоето име<input name="name" required minlength="2" maxlength="120" autocomplete="name"
-              /></label>
-              <div class="fields">
-                <label
-                  >Имейл<input
-                    name="email"
-                    required
-                    type="email"
-                    maxlength="160"
-                    autocomplete="email" /></label
-                ><label
-                  >Телефон<input
-                    name="phone"
-                    required
-                    type="tel"
-                    minlength="6"
-                    maxlength="40"
-                    autocomplete="tel"
-                /></label>
+        <div id="levels" class="wrap section">
+          <h2>Избери своята зимна програма</h2>
+          <p class="intro">4-седмична зимна подготовка, съобразена с възрастта и нуждите на футболиста.</p>
+          <div class="winter-offers">
+            <article class="winter-card" data-variant="01">
+              <div class="winter-visual"><img src="/winter-program/media/junior.webp" alt="" loading="lazy" decoding="async" /><span>4 седмици</span></div>
+              <div class="winter-details">
+                <p class="eyebrow">BECOME PRO WINTER PROGRAM</p>
+                <h3>До 12 години</h3>
+                <p class="variant-description">За млади футболисти до 11 години включително. Подготовка, съобразена с възрастта им.</p>
+                <ul><li>Физическа и силова работа</li><li>Бягане и кондиция</li><li>Футболна техника</li></ul>
+                <div class="variant-sale">
+                  <p class="variant-price">Цена предстои</p>
+                  <p class="variant-terms">Покупките ще бъдат отворени скоро.</p>
+                  <button class="btn" disabled aria-label="Купи програмата — До 12 години">КУПИ ПРОГРАМАТА</button>
+                </div>
               </div>
-              <label class="consent"
-                ><input type="checkbox" name="consent" required />
-                <span
-                  >Съгласявам се Become Pro да се свърже с мен за зимната програма.
-                  <a href="/privacy-policy">Поверителност</a></span
-                ></label
-              >
-              <button class="btn" type="submit">Изпрати заявката <span aria-hidden="true">↗</span></button>
-            </form>
-            <div id="checkout" hidden>
-              <ol class="purchase-steps" aria-label="Стъпки за покупка">
-                <li>Избери възрастовата група</li>
-                <li id="start-action">Закупи програмата</li>
-                <li>Получи достъп <span id="start-description"></span></li>
-              </ol>
-              <p id="price"></p>
-              <p id="terms"></p>
-              <a class="btn" id="buy">Купи програмата ↗</a>
-            </div>
-            <p id="status" role="status" tabindex="-1"></p>
-            <noscript
-              >За да заявиш интерес, пиши на
-              <a href="mailto:become.pro2024@gmail.com">become.pro2024@gmail.com</a> и посочи възрастовата група.</noscript
-            >
+            </article>
+            <article class="winter-card" data-variant="02">
+              <div class="winter-visual"><img src="/winter-program/media/youth.webp" alt="" loading="lazy" decoding="async" /><span>4 седмици</span></div>
+              <div class="winter-details">
+                <p class="eyebrow">BECOME PRO WINTER PROGRAM</p>
+                <h3>12–15 години</h3>
+                <p class="variant-description">Структурирана зимна подготовка за подрастващи футболисти.</p>
+                <ul><li>Физическа подготовка</li><li>Бегова работа</li><li>Техническа подготовка</li></ul>
+                <div class="variant-sale">
+                  <p class="variant-price">Цена предстои</p>
+                  <p class="variant-terms">Покупките ще бъдат отворени скоро.</p>
+                  <button class="btn" disabled aria-label="Купи програмата — 12–15 години">КУПИ ПРОГРАМАТА</button>
+                </div>
+              </div>
+            </article>
+            <article class="winter-card" data-variant="03">
+              <div class="winter-visual"><img src="/winter-program/media/senior.webp" alt="" loading="lazy" decoding="async" /><span>4 седмици</span></div>
+              <div class="winter-details">
+                <p class="eyebrow">BECOME PRO WINTER PROGRAM</p>
+                <h3>16+ години</h3>
+                <p class="variant-description">Зимна подготовка за по-големи юноши и възрастни футболисти.</p>
+                <ul><li>Физическа работа</li><li>Бягане и кондиция</li><li>Футболна техника</li></ul>
+                <div class="variant-sale">
+                  <p class="variant-price">Цена предстои</p>
+                  <p class="variant-terms">Покупките ще бъдат отворени скоро.</p>
+                  <button class="btn" disabled aria-label="Купи програмата — 16+ години">КУПИ ПРОГРАМАТА</button>
+                </div>
+              </div>
+            </article>
           </div>
         </div>
       </section>
@@ -337,7 +321,7 @@
           <details>
             <summary>Как се избира възрастовата група?</summary>
             <p>
-              Избери според навършените години. До 11 години включително избери „Под 12 години“, от 12 до 15 включително — „12–15 години“, а от 16 нагоре — „16+ години“.
+              Избери според навършените години. До 11 години включително избери „До 12 години“, от 12 до 15 включително — „12–15 години“, а от 16 нагоре — „16+ години“.
             </p>
           </details>
           <details>
@@ -350,10 +334,7 @@
           </details>
           <details>
             <summary>Как получавам достъп?</summary>
-            <p id="delivery-answer">
-              В момента можеш да изпратиш заявка за интерес. Условията за покупка и достъп ще бъдат
-              публикувани преди началото на продажбите.
-            </p>
+            <p>Условията за достъп ще бъдат посочени в картата на избраната възрастова група преди покупка.</p>
           </details>
           <details>
             <summary>Мога ли да тренирам успоредно с отбора?</summary>
