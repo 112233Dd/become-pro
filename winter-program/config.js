@@ -1,12 +1,16 @@
-// Only enable a level after its price, terms, fulfilment and checkout have been verified.
-// priceMinor is the amount in euro cents. Each checkout URL must identify this exact level.
-// Purchase completion belongs to the verified payment webhook, never to a browser click.
+// One checkout for all players. Confirm the bands before enabling sales.
 window.winterProgram = {
-  productId: "winter-program-2026-27",
-  currency: "EUR",
-  levels: {
-    "01": { priceMinor: null, terms: "", delivery: "", checkoutUrl: "" },
-    "02": { priceMinor: null, terms: "", delivery: "", checkoutUrl: "" },
-    "03": { priceMinor: null, terms: "", delivery: "", checkoutUrl: "" },
-  },
+  productId: 'winter-program-2026-27',
+  currency: 'EUR',
+  priceMinor: 4499,
+  referencePriceMinor: 8999,
+  ageGroups: { u12: 'Под 12 години', youth: '12–15 години', senior: '16+ години' },
+  checkoutUrl: '', // Verified endpoint accepting age_group as order metadata.
+  salesEnabled: false,
+  delivery: '',
+  bonuses: [
+    { title: 'Ball Mastery', detail: 'Над 80 технически упражнения за работа с топката.' },
+    { title: 'Хранителен наръчник', detail: 'Насоки за спортно хранене преди и след физическо натоварване.' },
+    { title: 'Viber общност', detail: 'Ежедневни задачи за футболна интелигентност, игрово мислене и вземане на решения.' },
+  ],
 };
