@@ -30,6 +30,23 @@
     >
     <link rel="icon" href="/favicon.ico" />
     <link rel="stylesheet" href="/winter-program/winter.css" />
+    <style>
+      .hero-inner { padding-block: clamp(40px, 5vw, 82px); }
+      .hero-facts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 18px;
+        margin: 14px 0 0;
+        padding: 0;
+        list-style: none;
+        font-size: 0.9rem;
+        font-weight: 650;
+        color: var(--ice);
+      }
+      @media (max-width: 760px) {
+        .hero-inner { padding-block: 44px 36px; }
+      }
+    </style>
     <script defer src="/winter-program/config.js"></script>
     <script defer src="/winter-program/winter.js"></script>
   </head>
@@ -63,21 +80,20 @@
           <p class="tag"><i></i> WINTER PROGRAM <b>2026/27</b></p>
           <h1>СЕЗОНЪТ<br />СПИРА<span class="dot">.</span><br /><em>РАЗВИТИЕТО ТИ — НЕ.</em></h1>
           <p class="lead">
-            Използвай зимната пауза за целенасочена подготовка. 4 седмици физическа, бегова и техническа
-            работа, съобразена с твоята възраст.
+            Докато сезонът е в пауза, ти можеш да продължиш да се развиваш. 4 седмици структурирана
+            физическа, бегова и техническа подготовка, съобразена с твоята възраст и ниво.
           </p>
+          <ul class="hero-facts" aria-label="Характеристики на програмата">
+            <li>4 седмици</li>
+            <li>3 възрастови групи</li>
+            <li>Комплексна подготовка</li>
+          </ul>
           <div class="actions">
             <a class="btn" href="#levels">Избери своята програма <span aria-hidden="true">↗</span></a
             ><a class="sub" href="#contents">Виж какво включва <span aria-hidden="true">↓</span></a>
           </div>
         </div>
       </section>
-      <div class="specs">
-        <div class="wrap">
-          <span><b>04</b> седмици</span><span><b>03</b> възрастови групи</span
-          ><span>Комплексна футболна подготовка</span>
-        </div>
-      </div>
       <section class="wrap section">
         <h2>Зимната пауза не трябва да означава пауза в развитието.</h2>
         <p class="intro">
