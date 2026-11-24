@@ -100,9 +100,23 @@
       @media (max-width: 760px) {
         .hero-inner { padding-block: 44px 36px; }
       }
+      .hero h1, .hero h1 em, h2, h3 { letter-spacing: -.012em; font-weight: 740; }
+      .hero h1, .hero h1 em { line-height: 1; }
+      .hero-facts, .variant-terms, .winter-details li, .variant-description { font-size: 1.0625rem; line-height: 1.55; }
+      .variant-price { line-height: 1.35; }
+      #faq { width: min(1400px, calc(100% - 2.5rem)); display: grid; grid-template-columns: minmax(0, .48fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); align-items: start; padding-block: clamp(40px, 5vw, 76px); }
+      #faq h2 { font-size: clamp(2rem, 3.2vw, 3.4rem); line-height: 1.1; }
+      #faq summary { display: flex; gap: 1rem; justify-content: space-between; align-items: center; min-height: 54px; padding: 14px 4px; font-size: 1.125rem; line-height: 1.4; }
+      #faq summary:focus-visible, .final .btn:focus-visible { outline: 3px solid var(--ice); outline-offset: 3px; }
+      #faq details p { max-width: 65ch; font-size: 1.0625rem; line-height: 1.6; padding-bottom: 16px; }
+      .final h2 { line-height: 1.08; max-width: 23ch; }
+      .final .intro { font-size: 1.125rem; line-height: 1.55; }
+      .final .btn { min-height: 58px; padding: 12px 30px; font-size: 1rem; }
+      @media (max-width: 800px) { #faq { grid-template-columns: 1fr; } .winter-offers { grid-template-columns: 1fr; } }
+      @media (max-width: 480px) { .final .btn { width: 100%; } }
     </style>
     <script defer src="/winter-program/config.js"></script>
-    <script defer src="/winter-program/winter.js?v=offers"></script>
+    <script defer src="/winter-program/winter.js?v=winter-sale-2"></script>
   </head>
   <body>
     <a class="skip" href="#main">Към съдържанието</a>
@@ -114,7 +128,7 @@
           ></a
         >
         <nav aria-label="Основна навигация">
-          <a href="#contents">Подготовка</a><a href="#levels">Възрастови групи</a><a href="#coach">Треньор</a>
+          <a href="#contents">Подготовка</a><a href="#offer">Възрастови групи</a><a href="#coach">Треньор</a>
         </nav>
         <a class="nav-cta" href="#offer">Избери своята програма <span aria-hidden="true">↗</span></a>
       </div>
@@ -143,7 +157,7 @@
             <li>Комплексна подготовка</li>
           </ul>
           <div class="actions">
-            <a class="btn" href="#levels">Избери своята програма <span aria-hidden="true">↗</span></a
+            <a class="btn" href="#offer">Избери своята програма <span aria-hidden="true">↗</span></a
             ><a class="sub" href="#contents">Виж какво включва <span aria-hidden="true">↓</span></a>
           </div>
         </div>
@@ -267,8 +281,8 @@
                 <p class="variant-description">За млади футболисти до 11 години включително. Подготовка, съобразена с възрастта им.</p>
                 <ul><li>Физическа и силова работа</li><li>Бягане и кондиция</li><li>Футболна техника</li></ul>
                 <div class="variant-sale">
-                  <p class="variant-price">Цена предстои</p>
-                  <p class="variant-terms">Покупките ще бъдат отворени скоро.</p>
+                  <p class="variant-price">Цената предстои да бъде обявена</p>
+                  <p class="variant-terms"></p>
                   <button class="btn" disabled aria-label="Купи програмата — До 12 години">КУПИ ПРОГРАМАТА</button>
                 </div>
               </div>
@@ -281,8 +295,8 @@
                 <p class="variant-description">Структурирана зимна подготовка за подрастващи футболисти.</p>
                 <ul><li>Физическа подготовка</li><li>Бегова работа</li><li>Техническа подготовка</li></ul>
                 <div class="variant-sale">
-                  <p class="variant-price">Цена предстои</p>
-                  <p class="variant-terms">Покупките ще бъдат отворени скоро.</p>
+                  <p class="variant-price">Цената предстои да бъде обявена</p>
+                  <p class="variant-terms"></p>
                   <button class="btn" disabled aria-label="Купи програмата — 12–15 години">КУПИ ПРОГРАМАТА</button>
                 </div>
               </div>
@@ -295,8 +309,8 @@
                 <p class="variant-description">Зимна подготовка за по-големи юноши и възрастни футболисти.</p>
                 <ul><li>Физическа работа</li><li>Бягане и кондиция</li><li>Футболна техника</li></ul>
                 <div class="variant-sale">
-                  <p class="variant-price">Цена предстои</p>
-                  <p class="variant-terms">Покупките ще бъдат отворени скоро.</p>
+                  <p class="variant-price">Цената предстои да бъде обявена</p>
+                  <p class="variant-terms"></p>
                   <button class="btn" disabled aria-label="Купи програмата — 16+ години">КУПИ ПРОГРАМАТА</button>
                 </div>
               </div>
@@ -304,51 +318,53 @@
           </div>
         </div>
       </section>
-      <section class="wrap section faq">
+      <section id="faq" class="wrap section faq">
         <h2>Въпроси преди старта</h2>
         <div>
           <details>
             <summary>За кого е подходяща програмата?</summary>
-            <p>
-              За футболисти от различни възрасти и нива, които искат да работят целенасочено през зимната
-              пауза.
-            </p>
+            <p>За футболисти, които искат структурирана подготовка през зимната пауза. Има три възрастови варианта — до 12 години, 12–15 години и 16+ години.</p>
           </details>
           <details>
             <summary>Колко време продължава?</summary>
-            <p>Четири седмици — общо 28 дни.</p>
+            <p>Четири седмици.</p>
           </details>
           <details>
             <summary>Как се избира възрастовата група?</summary>
-            <p>
-              Избери според навършените години. До 11 години включително избери „До 12 години“, от 12 до 15 включително — „12–15 години“, а от 16 нагоре — „16+ години“.
-            </p>
+            <p>Избери според навършените години. „До 12 години“ е за играчи до 11 години включително. Ако си навършил 12, избери „12–15 години“, а ако си навършил 16 — „16+ години“.</p>
           </details>
           <details>
             <summary>Какви направления включва?</summary>
-            <p>Физическа и силова работа, бегова и кондиционна подготовка и работа с топка.</p>
+            <p>Физическа, бегова и техническа подготовка.</p>
+          </details>
+          <details>
+            <summary>Кога мога да започна програмата?</summary>
+            <p>Началната дата предстои да бъде обявена.</p>
+          </details>
+          <details>
+            <summary>Какво точно получавам след покупката?</summary>
+            <p>Получаваш четириседмичен план за избраната възрастова група. Форматът на плана и конкретните материали предстои да бъдат уточнени.</p>
+          </details>
+          <details>
+            <summary>Как получавам достъп?</summary>
+            <p>Начинът и срокът за получаване на достъп ще бъдат обявени преди началото на продажбите.</p>
           </details>
           <details>
             <summary>Необходимо ли е специално оборудване?</summary>
             <p>Списъкът с необходимото оборудване предстои да бъде обявен.</p>
           </details>
           <details>
-            <summary>Как получавам достъп?</summary>
-            <p>Условията за достъп ще бъдат посочени в картата на избраната възрастова група преди покупка.</p>
-          </details>
-          <details>
             <summary>Мога ли да тренирам успоредно с отбора?</summary>
-            <p>
-              Съвместяването с отборния график зависи от натоварването на играча. Въпросите за конкретен
-              график можеш да обсъдиш с Йордан преди покупка.
-            </p>
+            <p>Това зависи от отборния ти график и общото ти тренировъчно натоварване.</p>
           </details>
         </div>
       </section>
-      <section class="final">
+      <section id="final" class="final">
         <div class="wrap">
+          <p class="eyebrow">BECOME PRO · WINTER PROGRAM 2026/27</p>
           <h2>Пролетният полусезон започва с подготовката ти <em>днес.</em></h2>
-          <a class="btn" href="#levels">Избери своята програма <span aria-hidden="true">↗</span></a>
+          <p class="intro">4 седмици. 3 възрастови групи. Една цел — по-добра подготовка.</p>
+          <a class="btn" href="#offer">Избери своята програма <span aria-hidden="true">↗</span></a>
         </div>
       </section>
     </main>
@@ -363,7 +379,7 @@
         ><a href="/cookie-policy">Бисквитки</a>
       </nav>
     </footer>
-    <a href="#levels" class="dock btn" hidden>Избери своята програма <span aria-hidden="true">↗</span></a>
+    <a href="#offer" class="dock btn" hidden>Избери своята програма <span aria-hidden="true">↗</span></a>
     <script>
       document.querySelectorAll('.clip-poster').forEach(link => {
         link.addEventListener('click', event => {
