@@ -42,6 +42,17 @@
       .clip-poster img { width: 100%; height: 100%; object-fit: cover; }
       .clip-poster span { position: absolute; inset: 50% auto auto 50%; transform: translate(-50%, -50%); display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: #07121de6; border: 2px solid var(--ice); color: white; }
       .clip-poster:focus-visible { outline-offset: -4px; }
+      .purchase-steps { padding-left: 1.5rem; margin: 16px 0; }
+      .purchase-steps li::marker { color: var(--ice); }
+      .purchase-steps span { display: block; color: var(--muted); }
+      .reviews { width: min(1400px, calc(100% - 2.5rem)); }
+      .reviews h2 { max-width: 32ch; font-size: clamp(2rem, 3.6vw, 3.5rem); font-weight: 700; line-height: 1.14; letter-spacing: normal; }
+      .reviews .intro { font-size: 1.125rem; }
+      .review-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 24px; margin-top: 28px; }
+      .review-cards figure { display: flex; flex-direction: column; gap: 24px; padding: clamp(22px, 3vw, 40px); background: var(--panel); border: 1px solid var(--line); }
+      .review-cards blockquote { font-size: clamp(1.125rem, 1.6vw, 1.45rem); line-height: 1.5; }
+      .review-cards figcaption { margin-top: auto; font-size: 1rem; line-height: 1.5; }
+      .review-cards figcaption span { display: block; color: var(--muted); }
       #coach { width: min(1400px, calc(100% - 2.5rem)); gap: clamp(28px, 4vw, 64px); }
       #coach figure { max-width: none; }
       #coach img { height: auto; aspect-ratio: 1.12; }
@@ -213,47 +224,26 @@
           </ul>
         </div>
       </section>
-      <section class="band">
-        <div class="wrap section">
-          <h2>Как да започнеш</h2>
-          <ol class="steps">
-            <li>
-              <h3>Избери възрастова група</h3>
-              <p>Избери групата според навършените години на играча.</p>
-            </li>
-            <li>
-              <h3>Разгледай програмата</h3>
-              <p>Виж продължителността и трите направления за избраната възрастова група.</p>
-            </li>
-            <li>
-              <h3 id="start-action">Заяви интерес</h3>
-              <p id="start-description">
-                Остави контакт за подробности. Покупката и достъпът ще станат достъпни след обявяване на
-                условията.
-              </p>
-            </li>
-          </ol>
-        </div>
-      </section>
-      <section class="wrap section proof">
+      <section id="reviews" class="wrap section reviews" hidden>
         <div>
-          <p class="eyebrow">За индивидуалните тренировки в Become Pro</p>
-          <h2>От играчите<br />и родителите</h2>
+          <p class="eyebrow">Реални мнения за работата с Become Pro</p>
+          <h2>ДОВЕРИЕ, ИЗГРАДЕНО НА ТЕРЕНА.</h2>
+          <p class="intro">Виж какво споделят футболисти и родители за индивидуалните тренировки в Become Pro.</p>
         </div>
-        <div>
+        <div class="review-cards">
           <figure>
             <blockquote>
               „Най-много ми помогна това, че вече знам какво да тренирам сам, а не просто да правя случайни
               упражнения.“
             </blockquote>
-            <figcaption>Футболист, 16 г.</figcaption>
+            <figcaption><strong>Футболист, 16 г.</strong><span>Индивидуални тренировки</span></figcaption>
           </figure>
           <figure>
             <blockquote>
               „След тренировките Славчо започна да се чувства по-уверен с топката и да чака следващата
               тренировка с желание.“
             </blockquote>
-            <figcaption>Родител на Славчо · Стара Загора</figcaption>
+            <figcaption><strong>Родител на Славчо</strong><span>Стара Загора · Индивидуални тренировки</span></figcaption>
           </figure>
         </div>
       </section>
@@ -313,6 +303,11 @@
               <button class="btn" type="submit">Изпрати заявката <span aria-hidden="true">↗</span></button>
             </form>
             <div id="checkout" hidden>
+              <ol class="purchase-steps" aria-label="Стъпки за покупка">
+                <li>Избери възрастовата група</li>
+                <li id="start-action">Закупи програмата</li>
+                <li>Получи достъп <span id="start-description"></span></li>
+              </ol>
               <p id="price"></p>
               <p id="terms"></p>
               <a class="btn" id="buy">Купи програмата ↗</a>
