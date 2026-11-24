@@ -160,7 +160,13 @@ footer a { font-size: .82rem; }
 .comparison, .session-copy { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; }
 .comparison article { padding: clamp(20px,3vw,38px); background: #f3f7f1; border-radius: 15px; }
 .comparison article + article { background: var(--mint); border-left: 4px solid var(--green); }
-.comparison p, .session-copy p { color: var(--muted); margin-top: 10px; }
+.session-stages { margin: 0; padding: 0; list-style: none; display: grid; gap: 16px; }
+.session-stages li { display: grid; grid-template-columns: 24px minmax(0,1fr); gap: 12px; }
+.session-stages svg { width: 24px; height: 24px; color: var(--green); }
+.session-stages p { color: var(--muted); margin-top: 3px; }
+.session-parent-note { margin: 16px 0 0 36px; font-size: .94rem; color: var(--muted); }
+#first-session { padding-block: clamp(32px,4vw,56px); }
+.comparison p { color: var(--muted); margin-top: 10px; }
 #why-individual { background: #f4f9f4; padding-bottom: 72px; }
 #why-individual .comparison article:first-child { background: white; }
 #why-individual .center { margin-top: 20px; }
@@ -200,7 +206,7 @@ footer a { font-size: .82rem; }
 @media (max-width: 700px) {
   .comparison, .session-copy, .landing-form { grid-template-columns: minmax(0,1fr); }
   .coach-portrait { max-width: 360px; }
-  .session-copy { gap: 8px; }
+  .session-copy { gap: 20px; }
   .brand { flex-shrink: 0; }
   header .button { min-height: 44px; }
   .landing-form select { min-width: 0; }
