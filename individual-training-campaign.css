@@ -154,7 +154,7 @@ footer a { font-size: .82rem; }
 .comparison, .session-copy { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; }
 .comparison article { padding: clamp(20px,3vw,38px); background: #f3f7f1; border-radius: 15px; }
 .comparison article + article { background: var(--mint); border-left: 4px solid var(--green); }
-.comparison p, .coach h3 + p, .session-copy p { color: var(--muted); margin-top: 10px; }
+.comparison p, .session-copy p { color: var(--muted); margin-top: 10px; }
 #why-individual { background: #f4f9f4; padding-bottom: 72px; }
 #why-individual .comparison article:first-child { background: white; }
 #why-individual .center { margin-top: 20px; }
@@ -166,19 +166,10 @@ footer a { font-size: .82rem; }
 @media (max-width: 620px) {
   header { position: static; }
 }
-.coach-photos { display: grid; width: 100%; grid-template-columns: minmax(0,1.35fr) minmax(0,1fr); align-items: start; gap: 10px; }
-.coach-photos figcaption { margin-bottom: 8px; color: var(--green); font-size: .88rem; font-weight: 700; }
-.coach-photos video { display: block; width: 100%; height: auto; border-radius: 14px; background: #15261e; }
-.coach-experience { display: grid; gap: 8px; margin: 16px 0 0; }
-.coach-experience > div { display: grid; grid-template-columns: minmax(8.5rem, .8fr) 1.4fr; gap: 10px; }
-.coach-experience dt { font-weight: 700; }
-.coach-experience dd { margin: 0; color: var(--muted); }
-.coach-motto + .button { margin-top: 20px; }
-@media (max-width: 410px) {
-  .coach-experience > div { grid-template-columns: 1fr; gap: 0; }
-}
-.coach-photos img { width: 100%; height: auto; border-radius: 14px; }
-.coach h3 { margin-top: 22px; }
+#coach-proof { padding-block: clamp(28px, 3vw, 46px); }
+.coach-portrait { width: min(100%, 460px); height: auto; justify-self: center; border-radius: 16px; }
+.coach .kicker { margin-bottom: 8px; }
+.coach-motto + .button { margin-top: 18px; }
 .coach .coach-motto { padding-left: 15px; border-left: 3px solid var(--green); color: var(--green); font-weight: 700; }
 .training-video-card h3 { padding-bottom: 6px; }
 .training-video-card > p { margin: 0 20px 20px; font-size: .92rem; color: var(--muted); }
@@ -201,7 +192,7 @@ footer a { font-size: .82rem; }
 .last-call p { margin-bottom: 22px; color: var(--muted); }
 @media (max-width: 700px) {
   .comparison, .session-copy, .landing-form { grid-template-columns: minmax(0,1fr); }
-  .coach-photos { max-width: 420px; margin-inline: auto; }
+  .coach-portrait { max-width: 360px; }
   .session-copy { gap: 8px; }
   .brand { flex-shrink: 0; }
   header .button { min-height: 44px; }
