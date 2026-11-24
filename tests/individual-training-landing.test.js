@@ -96,18 +96,18 @@ test("landing page uses real training media, player proof, FAQ, and compact lega
   assert.match(html, /training-video-card-grid/);
   assert.match(html, /assets\/videos\/individual-tech-first-touch\.mp4/);
   assert.match(html, /assets\/videos\/individual-speed-explosiveness\.mp4/);
-  assert.match(html, /assets\/videos\/individual-decisions-game-situations\.mp4/);
+  assert.match(html, /assets\/videos\/partner-control\.mp4/);
   assert.match(html, /assets\/videos\/individual-tech-first-touch-poster\.webp/);
   assert.match(html, /assets\/videos\/individual-speed-explosiveness-poster\.webp/);
-  assert.match(html, /assets\/videos\/individual-decisions-game-situations-poster\.webp/);
-  assert.equal((html.match(/<video controls muted playsinline preload="none"/g) || []).length, 3);
+  assert.match(html, /assets\/videos\/partner-control-poster\.webp/);
+  assert.equal((html.match(/<button type="button" data-video-play/g) || []).length, 3);
   assert.match(html, /yordan-zhelev-match-dribble\.webp/);
   for (const [, asset] of html.matchAll(/(?:src|poster)="(\/assets\/[^"?]+)/g)) {
     assert.ok(fs.existsSync(path.join(root, asset)), asset);
   }
   assert.match(html, /Техника и първо докосване/);
   assert.match(html, /Скорост и експлозивност/);
-  assert.match(html, /Решения и игрови ситуации/);
+  assert.match(html, /Контрол с външната част на ходилото/);
   assert.match(html, /За каква възраст са тренировките\?/);
   assert.match(html, /Къде се провеждат\?/);
   assert.match(html, /Колко продължава една тренировка\?/);
