@@ -1,56 +1,121 @@
 (() => {
-  'use strict';
+  "use strict";
   const config = window.winterProgram;
-  const form = document.querySelector('#winter-purchase');
-  if (config && form) {
-    const formatter = new Intl.NumberFormat('bg-BG', {style: 'currency', currency: config.currency});
-    const money = cents => formatter.format(cents / 100);
-    document.querySelector('#current-price').textContent = money(config.priceMinor);
-    if (config.referencePriceMinor > config.priceMinor) {
-      document.querySelector('#previous-price').textContent = money(config.referencePriceMinor);
-      document.querySelector('#saving').textContent = 'Спестяваш ' + money(config.referencePriceMinor - config.priceMinor);
-    }
-    const cards = document.querySelectorAll('.bonus-card');
-    config.bonuses.forEach((bonus, index) => {
-      cards[index].querySelector('h4').textContent = bonus.title;
-      cards[index].querySelector('p').textContent = bonus.detail;
+  const byId = id => document.getElementById(id);
+  function node(tag, text, className) {
+    const el = document.createElement(tag);
+    if (text) el.textContent = text;
+    if (className) el.className = className;
+    return el;
+  }
+  config.tracks.forEach((track, index) => {
+    const card = node("article");
+    const link = node("a", "", "clip");
+    link.href = track.video;
+    link.setAttribute("aria-label", "Пусни видеото — " + track.exercise);
+    const img = node("img");
+    img.src = track.poster;
+    img.alt = "";
+    img.loading = "lazy";
+    img.decoding = "async";
+    const icon = node("span", "▶", "play");
+    icon.setAttribute("aria-hidden", "true");
+    link.append(img, icon);
+    link.addEventListener("click", event => {
+      if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      const video = node("video");
+      video.controls = true;
+      video.playsInline = true;
+      video.poster = track.poster;
+      video.src = track.video;
+      video.tabIndex = 0;
+      video.setAttribute("aria-label", track.exercise);
+      video.addEventListener("play", () => document.querySelectorAll(".tracks video").forEach(other => {
+        if (other !== video) other.pause();
+      }));
+      video.addEventListener("error", () => { video.replaceWith(link); link.focus(); }, {once:true});
+      link.replaceWith(video);
+      video.focus({preventScroll:true});
+      video.play().catch(() => {});
     });
-    document.querySelector('#included-extras').textContent = config.bonuses.map(b => b.title).join(' · ');
-    const group = form.elements.age_group;
-    for (const [value, label] of Object.entries(config.ageGroups)) group.add(new Option(label, value));
-    let checkout;
-    if (config.checkoutUrl) {
-      try { checkout = new URL(config.checkoutUrl, location.origin); } catch { /* Sales stay closed. */ }
-    }
-    if (config.salesEnabled && config.delivery && checkout?.protocol === 'https:') {
-      form.querySelector('label').hidden = false;
-      group.disabled = false;
-      form.querySelector('button').disabled = false;
-      document.querySelector('#sale-status').textContent = config.delivery;
-      form.addEventListener('submit', event => {
-        event.preventDefault();
-        if (!Object.hasOwn(config.ageGroups, group.value)) return;
-        checkout.searchParams.set('age_group', group.value);
-        document.dispatchEvent(new CustomEvent('bp:commerce', {detail: {
-          event: 'begin_checkout', productId: config.productId, ageGroup: group.value,
-          priceMinor: config.priceMinor, currency: config.currency,
-        }}));
-        location.assign(checkout.href);
+    const copy = node("div", "", "track-copy");
+    copy.append(node("small", "0" + (index + 1)), node("h3", track.title), node("p", track.description));
+    card.append(link, copy);
+    byId("tracks").append(card);
+    byId("offer-tracks").append(node("li", track.title));
+  });
+  config.bonuses.forEach(bonus => {
+    const card = node("article", "", "bonus");
+    card.append(node("span", bonus.mark, "bonus-mark"), node("h3", bonus.title), node("p", bonus.detail));
+    byId("bonuses").append(card);
+    byId("offer-bonuses").append(node("li", bonus.title));
+  });
+  const zoom = byId("zoom");
+  config.previews.forEach(sample => {
+    const button = node("button");
+    button.type = "button";
+    button.setAttribute("aria-label", "Увеличи — " + sample.title);
+    const img = node("img");
+    img.src = sample.src;
+    img.alt = sample.alt;
+    img.loading = "lazy";
+    button.append(img, node("span", sample.title));
+    byId("samples").append(button);
+    button.addEventListener("click", () => {
+      byId("sample-title").textContent = sample.title;
+      zoom.querySelector("img").src = sample.src;
+      zoom.querySelector("img").alt = sample.alt;
+      zoom.showModal();
+    });
+  });
+  byId("inside").hidden = !config.previews.length;
+  const questions = [
+    ["За кого е подходяща програмата?", "За футболисти, които планират самостоятелна подготовка през зимната пауза, както и за родители, които търсят план за детето си."],
+    ["Колко седмици продължава?", config.weeks + " седмици."],
+    ["Как се адаптира според възрастта?", "При покупка избираш възрастовата група на футболиста. Подготовката е съобразена с нея."],
+    ["Какво точно включва?", config.tracks.map(t => t.title).join(", ") + ". Към плана са включени и трите бонуса от офертата."],
+    ["Кога мога да започна?", config.startInfo || "Началната дата предстои да бъде обявена."],
+    ["Как получавам достъп?", config.delivery || "Начинът за получаване на материалите ще бъде уточнен преди отваряне на продажбите."],
+    ["Необходимо ли е оборудване?", config.equipmentInfo || "Точният списък с необходимото оборудване предстои да бъде обявен."],
+    ["Мога ли да я комбинирам с клубни тренировки?", "Съгласувай заниманията с клубния си треньор според графика на отбора и времето за възстановяване."],
+    ["Какво включва Viber общността?", config.bonuses[2].detail],
+    ["Еднократно ли е плащането?", config.salesEnabled ? "Да. Плащането е еднократно за целия пакет." : "Условията за плащане ще бъдат публикувани с крайната цена."]
+  ];
+  for (const [question, answer] of questions) {
+    const details = node("details");
+    details.append(node("summary", question), node("p", answer));
+    byId("questions").append(details);
+  }
+  const priced = Number.isSafeInteger(config.priceMinor) && config.priceMinor > 0;
+  if (priced) {
+    const price = new Intl.NumberFormat("bg-BG", {style:"currency", currency:config.currency}).format(config.priceMinor / 100);
+    document.querySelectorAll("[data-price]").forEach(el => { el.textContent = price; el.hidden = false; });
+  }
+  if (!priced || !config.salesEnabled || !config.delivery || !Object.keys(config.ageGroups).length) return;
+  const form = byId("winter-purchase");
+  const status = byId("sale-status");
+  const button = form.querySelector("button");
+  for (const [key,label] of Object.entries(config.ageGroups)) form.elements.age_group.add(new Option(label,key));
+  form.hidden = false;
+  status.textContent = config.delivery;
+  document.querySelectorAll("[data-offer-link]").forEach(link => {link.textContent = "ВЗЕМИ ЗИМНАТА ПРОГРАМА ↗";});
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
+    if (button.disabled || !form.reportValidity()) return;
+    button.disabled = true;
+    try {
+      const response = await fetch("/api/create-checkout-session", {
+        method: "POST", headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({programId:config.productId, ageGroup:form.elements.age_group.value})
       });
+      if (!response.ok) throw new Error();
+      const checkout = new URL((await response.json()).url);
+      if (checkout.origin !== "https://checkout.stripe.com") throw new Error();
+      location.assign(checkout.href);
+    } catch {
+      status.textContent = "Плащането не се отвори. Опитай отново.";
+      button.disabled = false;
     }
-  }
-  const dock = document.querySelector(".dock");
-  if ("IntersectionObserver" in window) {
-    const visible = new Set();
-    const hero = document.querySelector(".hero");
-    const observer = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) visible.add(entry.target);
-        else visible.delete(entry.target);
-      }
-      dock.hidden = visible.size > 0 || hero.getBoundingClientRect().bottom > 0;
-    });
-    for (const section of [hero, ...document.querySelectorAll("#offer, .final, footer")])
-      observer.observe(section);
-  }
+  });
 })();

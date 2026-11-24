@@ -1,3 +1,4 @@
+const {config: winterConfig, winterOrder} = require("../../winter-program/server.cjs");
 const {
   getProgramsByIds,
   getProgramsFromCheckoutLineItems,
@@ -76,6 +77,7 @@ const attributionFromMetadata = (metadata = {}) => ({
 });
 
 const programsFromMetadata = (metadata = {}) => {
+  if (metadata.programId === winterConfig.productId) return [winterOrder(metadata)];
   const ids = String(metadata.programId || "")
     .split(",")
     .map((id) => id.trim())
@@ -509,6 +511,7 @@ module.exports = async (req, res) => {
 
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
+      if (session.metadata?.programId === winterConfig.productId && session.payment_status !== "paid") return sendJson(res, 200, { received: true });
       const programs = await programsFromSession(session);
       const customer = customerFromSession(session);
 

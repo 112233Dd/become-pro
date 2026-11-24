@@ -1,4 +1,6 @@
+const { config: winterConfig, winterSelection } = require("../winter-program/server.cjs");
 const {
+  stripeRequest,
   createStripeCheckoutSession,
   getOrigin,
   getProgramsByIds,
@@ -18,12 +20,14 @@ module.exports = async (req, res) => {
 
   try {
     const body = await readJsonBody(req);
-    const programs = getProgramsByIds(Array.isArray(body.items) ? body.items : [body.programId]);
+    const ids = Array.isArray(body.items) ? body.items : [body.programId];
+    const winter = ids.length === 1 && ids[0] === winterConfig.productId;
+    const programs = winter ? [await winterSelection(body.ageGroup, stripeRequest)] : getProgramsByIds(ids);
     const attribution = body.attribution || {};
     const checkoutAttribution = {
       landingSessionId: cleanText(attribution.sessionId, 100),
-      landingPageUrl: cleanText(attribution.landingPageUrl, 500),
-      pageVariant: cleanText(attribution.pageVariant, 160),
+      landingPageUrl: winter ? getOrigin(req) + "/winter-program" : cleanText(attribution.landingPageUrl, 500),
+      pageVariant: winter ? winterConfig.productId : cleanText(attribution.pageVariant, 160),
       utm_source: cleanText(attribution.utm_source, 160),
       utm_medium: cleanText(attribution.utm_medium, 160),
       utm_campaign: cleanText(attribution.utm_campaign, 160),
@@ -37,7 +41,7 @@ module.exports = async (req, res) => {
       customerEmail: String(body.customer?.customerEmail || "").trim(),
       customerPhone: String(body.customer?.customerPhone || "").trim(),
       playerName: String(body.customer?.playerName || "").trim(),
-      playerAge: String(body.customer?.playerAge || "").trim(),
+      playerAge: winter ? winterConfig.ageGroups[body.ageGroup] : String(body.customer?.playerAge || "").trim(),
     };
 
     ["STRIPE_SECRET_KEY"].forEach((name) => {

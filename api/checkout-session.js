@@ -1,3 +1,4 @@
+const {config: winterConfig, winterOrder} = require("../winter-program/server.cjs");
 const { STRIPE_API_VERSION, getProgramsByIds, sendJson } = require("./_shared");
 
 module.exports = async (req, res) => {
@@ -27,7 +28,8 @@ module.exports = async (req, res) => {
         .split(",")
         .map((id) => id.trim())
         .filter(Boolean);
-      if (programIds.length === 1) [program] = getProgramsByIds(programIds);
+      if (session.metadata?.programId === winterConfig.productId && paymentStatus === "paid") program = winterOrder(session.metadata);
+      else if (programIds.length === 1) [program] = getProgramsByIds(programIds);
     } catch (_) {
       program = null;
     }

@@ -1,3 +1,4 @@
+const {config: winterConfig, winterOrder} = require("../winter-program/server.cjs");
 const crypto = require("crypto");
 const tls = require("tls");
 const publicProductCatalog = require("../program-catalog");
@@ -77,6 +78,7 @@ const getProgramsByNames = (names) => {
 
 const createStripeCheckoutSession = async ({ programs, customer, origin, attribution = {} }) => {
   const metadata = {
+    ...(programs[0]?.winterAgeGroup ? {winterAgeGroup: programs[0].winterAgeGroup, winterPriceMinor: String(programs[0].priceCents)} : {}),
     programId: programs.map((program) => program.id).join(","),
     programName: programs.map((program) => program.name).join(", "),
     customerName: customer.customerName,
@@ -113,6 +115,10 @@ const createStripeCheckoutSession = async ({ programs, customer, origin, attribu
 
   programs.forEach((program, index) => {
     body.append(`line_items[${index}][quantity]`, "1");
+    if (program.stripePriceId) {
+      body.append(`line_items[${index}][price]`, program.stripePriceId);
+      return;
+    }
     body.append(`line_items[${index}][price_data][currency]`, "eur");
     body.append(`line_items[${index}][price_data][unit_amount]`, String(program.priceCents));
     body.append(`line_items[${index}][price_data][product_data][name]`, program.name);
@@ -278,14 +284,14 @@ const listStripeOrders = async () => {
     let programs = [];
 
     try {
-      programs = getProgramsByIds(String(metadata.programId || "").split(","));
+      programs = metadata.programId === winterConfig.productId ? [winterOrder(metadata)] : getProgramsByIds(String(metadata.programId || "").split(","));
     } catch (error) {
       programs = [
         {
           id: metadata.programId || "unknown",
           name: metadata.programName || "Unknown program",
           price: Number(session.amount_total || 0) / 100,
-          programLink: PROGRAM_LINK,
+          programLink: metadata.programId === winterConfig.productId ? "" : PROGRAM_LINK,
         },
       ];
     }
@@ -584,6 +590,7 @@ const getCookie = (req, name) => {
 };
 
 module.exports = {
+  stripeRequest,
   productCatalog,
   PROGRAM_LINK,
   PROGRAM_LINKS,

@@ -1,266 +1,40 @@
 <!doctype html>
 <html lang="bg">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Зимна футболна програма 2026/27 · Become Pro</title>
-    <meta
-      name="description"
-      content="4 седмици физическа, бегова и техническа подготовка с Become Pro. Разгледай зимната футболна програма 2026/27 със силови, скоростни и технически тренировки."
-    />
-    <link rel="canonical" href="https://becomeprofootball.com/winter-program" />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="bg_BG" />
-    <meta property="og:title" content="BECOME PRO — WINTER PROGRAM 2026/27" />
-    <meta
-      property="og:description"
-      content="Сезонът спира. Развитието ти — не. Четири седмици футболна подготовка според възрастта."
-    />
-    <meta property="og:url" content="https://becomeprofootball.com/winter-program" />
-    <meta property="og:image" content="https://becomeprofootball.com/winter-program/media/stadium.webp" />
-    <meta name="theme-color" content="#091218" />
-    <link rel="icon" href="/favicon.ico" />
-    <link rel="stylesheet" href="/winter-program/winter.css" />
-    <style>
-      #contents > .wrap { width: min(1200px, calc(100% - 2.5rem)); }
-      #contents h2 { max-width: 30ch; font-size: clamp(2rem, 3.7vw, 3.75rem); line-height: 1.08; }
-      .demo-note { margin-top: 18px; color: var(--ice); }
-      #contents .tracks { margin-top: 20px; }
-      #contents .tracks h3 { font-size: clamp(1.15rem, 1.65vw, 1.5rem); letter-spacing: normal; line-height: 1.22; }
-      .tracks h3 small { color: var(--ice); font-size: .8em; }
-      #contents .tracks p { font-size: 1.0625rem; }
-      .tracks .clip-poster, #contents .tracks video { display: block; position: relative; width: 100%; aspect-ratio: 9 / 16; max-height: none; }
-      .clip-poster img { width: 100%; height: 100%; object-fit: cover; }
-      .clip-poster span { position: absolute; inset: 50% auto auto 50%; transform: translate(-50%, -50%); display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: #07121de6; border: 2px solid var(--ice); color: white; }
-      .clip-poster:focus-visible { outline-offset: -4px; }
-      #contents > .wrap, #offer > .wrap { width: min(1520px, calc(100% - 2.5rem)); }
-      #contents .tracks p, .bonus-card p, .offer-panel p { font-size: 1.125rem; line-height: 1.55; }
-      .bonus-heading { margin: 3rem 0 1rem; font-size: clamp(1.35rem, 2.4vw, 2rem); }
-      .extras { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1rem; }
-      .bonus-card { padding:clamp(16px,2vw,28px); background:#0b1923; border-top:2px solid #6795ab; }
-      .bonus-card svg { width:28px; height:28px; stroke:var(--ice); fill:none; stroke-width:1.6; }
-      .bonus-card h4 { margin:12px 0 6px; font-size:1.35rem; }
-      .offer-panel { display:grid; grid-template-columns:minmax(0, .92fr) minmax(0, 1fr); background:#10212d; border:1px solid #395464; }
-      .campaign-photo { width:100%; height:auto; aspect-ratio:1; object-fit:contain; align-self:center; display:block; }
-      .offer-copy { padding:clamp(22px,4vw,68px); }
-      #offer h2 { font-size:clamp(2.2rem,4vw,4.6rem); line-height:1.02; max-width:15ch; }
-      #offer h2 em { display:block; }
-      .offer-copy h3 { margin:1.45rem 0 .35rem; font-size:1.25rem; }
-      .price-row { display:flex; flex-wrap:wrap; gap:8px 18px; align-items:baseline; margin-top:24px; border-top:1px solid #47606e; padding-top:18px; }
-      #current-price { font-size:clamp(2.4rem,4vw,4rem); line-height:1.1; color:var(--ice); }
-      #previous-price { color:#c1cdd4; font-size:1.35rem; }
-      #saving { color:var(--ice); font-weight:650; }
-      #winter-purchase { background:transparent; border:0; padding:0; margin:18px 0 8px; }
-      #winter-purchase .btn { width:100%; min-height:56px; font-size:1rem; }
-      #winter-purchase .btn:disabled { background:#283b47; color:#c5d0d7; cursor:not-allowed; opacity:1; }
-      #winter-purchase [hidden] { display:none; }
-      @media(max-width:800px){ .offer-panel,.extras {grid-template-columns:minmax(0,1fr);} }
-      .reviews { width: min(1400px, calc(100% - 2.5rem)); }
-      .reviews h2 { max-width: 32ch; font-size: clamp(2rem, 3.6vw, 3.5rem); font-weight: 700; line-height: 1.14; letter-spacing: normal; }
-      .reviews .intro { font-size: 1.125rem; }
-      .review-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 24px; margin-top: 28px; }
-      .review-cards figure { display: flex; flex-direction: column; gap: 24px; padding: clamp(22px, 3vw, 40px); background: var(--panel); border: 1px solid var(--line); }
-      .review-cards blockquote { font-size: clamp(1.125rem, 1.6vw, 1.45rem); line-height: 1.5; }
-      .review-cards figcaption { margin-top: auto; font-size: 1rem; line-height: 1.5; }
-      .review-cards figcaption span { display: block; color: var(--muted); }
-      #coach { width: min(1400px, calc(100% - 2.5rem)); gap: clamp(28px, 4vw, 64px); }
-      #coach figure { max-width: none; }
-      #coach img { height: auto; aspect-ratio: 1.12; }
-      #coach h2 { font-size: clamp(2rem, 3.35vw, 3.4rem); line-height: 1.12; letter-spacing: normal; font-weight: 700; }
-      #coach .eyebrow { font-size: .875rem; }
-      #coach p:not(.eyebrow) { font-size: clamp(1.125rem, 1.45vw, 1.3rem); line-height: 1.55; max-width: 55ch; }
-      .coach-facts { display: flex; flex-wrap: wrap; gap: 8px 24px; list-style: none; margin: 24px 0 0; padding: 14px 0 0; border-top: 1px solid var(--line); color: var(--ice); }
-      .problem-title {
-        max-width: 100%;
-        font-size: clamp(1.95rem, 3.8vw, 3.75rem);
-        line-height: 1.08;
-        letter-spacing: -.025em;
-      }
-      .problems article {
-        background: linear-gradient(145deg, #152833, #0d1922 80%);
-        border-color: #364f5c;
-      }
-      .problems h3 {
-        font-size: clamp(1.13rem, 1.6vw, 1.5rem);
-        font-weight: 700;
-        line-height: 1.24;
-        letter-spacing: normal;
-        text-wrap: balance;
-      }
-      .problems p { margin-top: 16px; }
-      .hero-inner { padding-block: clamp(40px, 5vw, 82px); }
-      .hero-facts {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px 18px;
-        margin: 14px 0 0;
-        padding: 0;
-        list-style: none;
-        font-size: 0.9rem;
-        font-weight: 650;
-        color: var(--ice);
-      }
-      @media (max-width: 760px) {
-        .hero-inner { padding-block: 44px 36px; }
-      }
-      .hero h1, .hero h1 em, h2, h3 { letter-spacing: -.012em; font-weight: 740; }
-      .hero h1, .hero h1 em { line-height: 1; }
-      .hero-facts, .variant-terms, .winter-details li, .variant-description { font-size: 1.0625rem; line-height: 1.55; }
-      .variant-price { line-height: 1.35; }
-      #faq { width: min(1400px, calc(100% - 2.5rem)); display: grid; grid-template-columns: minmax(0, .48fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); align-items: start; padding-block: clamp(40px, 5vw, 76px); }
-      #faq h2 { font-size: clamp(2rem, 3.2vw, 3.4rem); line-height: 1.1; }
-      #faq summary { display: flex; gap: 1rem; justify-content: space-between; align-items: center; min-height: 54px; padding: 14px 4px; font-size: 1.125rem; line-height: 1.4; }
-      #faq summary:focus-visible, .final .btn:focus-visible { outline: 3px solid var(--ice); outline-offset: 3px; }
-      #faq details p { max-width: 65ch; font-size: 1.0625rem; line-height: 1.6; padding-bottom: 16px; }
-      .final h2 { line-height: 1.08; max-width: 23ch; }
-      .final .intro { font-size: 1.125rem; line-height: 1.55; }
-      .final .btn { min-height: 58px; padding: 12px 30px; font-size: 1rem; }
-      @media (max-width: 800px) { #faq { grid-template-columns: 1fr; } .winter-offers { grid-template-columns: 1fr; } }
-      @media (max-width: 480px) { .final .btn { width: 100%; } }
-    </style>
-    <script defer src="/winter-program/config.js?v=single"></script>
-    <script defer src="/winter-program/winter.js?v=single"></script>
-  </head>
-  <body>
-    <a class="skip" href="#main">Към съдържанието</a>
-    <header>
-      <div class="wrap bar">
-        <a href="/" class="brand" aria-label="Become Pro, начало"
-          ><img src="/winter-program/media/logo.webp" alt="" width="36" height="36" /><strong
-            >BECOME PRO</strong
-          ></a
-        >
-        <nav aria-label="Основна навигация">
-          <a href="#contents">Подготовка</a><a href="#offer">Оферта</a><a href="#coach">Треньор</a>
-        </nav>
-        <a class="nav-cta" href="#offer">Виж зимната програма <span aria-hidden="true">↗</span></a>
-      </div>
-    </header>
-    <main id="main">
-      <section class="hero">
-        <picture class="scenery"
-          ><source media="(max-width:650px)" srcset="/winter-program/media/stadium-mobile.webp" />
-          <img
-            src="/winter-program/media/stadium.webp"
-            fetchpriority="high"
-            alt=""
-            width="1536"
-            height="1024"
-        /></picture>
-        <div class="wrap hero-inner">
-          <p class="tag"><i></i> WINTER PROGRAM <b>2026/27</b></p>
-          <h1>СЕЗОНЪТ<br />СПИРА<span class="dot">.</span><br /><em>РАЗВИТИЕТО ТИ — НЕ.</em></h1>
-          <p class="lead">
-            Докато сезонът е в пауза, ти можеш да продължиш да се развиваш. Работи по план за
-            физическа, бегова и техническа подготовка, съобразена с твоята възраст и ниво.
-          </p>
-          <ul class="hero-facts" aria-label="Характеристики на програмата">
-            <li>4 седмици</li>
-            <li>Адаптирана за три възрастови групи</li>
-            <li>Комплексна подготовка</li>
-          </ul>
-          <div class="actions">
-            <a class="btn" href="#offer">Виж зимната програма <span aria-hidden="true">↗</span></a
-            ><a class="sub" href="#contents">Виж какво включва <span aria-hidden="true">↓</span></a>
-          </div>
-        </div>
-      </section>
-      <section class="wrap section">
-        <h2 class="problem-title">ЗИМНАТА ПАУЗА НЕ Е ПРОБЛЕМ.<br /> ЛИПСАТА НА ПЛАН Е.</h2>
-        <p class="intro">
-          Почивката е важна. Но когато дойде време за подготовка, тренировките без ясна структура могат да те оставят без посока.
-        </p>
-        <div class="problems">
-          <article>
-            <span class="icon" aria-hidden="true">▦</span>
-            <h3>НЕ ЗНАЕШ ОТКЪДЕ ДА ЗАПОЧНЕШ?</h3>
-            <p>Искаш да използваш зимната пауза, но не знаеш кои тренировки да включиш и как да ги подредиш.</p>
-          </article>
-          <article>
-            <span class="icon" aria-hidden="true">≋</span>
-            <h3>НЕ ЗНАЕШ КОЛКО ДА ТРЕНИРАШ?</h3>
-            <p>Редуваш тежки тренировки и дни без активност, без да си сигурен дали натоварването е подходящо.</p>
-          </article>
-          <article>
-            <span class="icon" aria-hidden="true">◐</span>
-            <h3>ПРОПУСКАШ ВАЖНИ ЕЛЕМЕНТИ?</h3>
-            <p>Фокусираш се върху бягането или фитнеса, а техническата работа с топка остава на заден план.</p>
-          </article>
-        </div>
-      </section>
-      <section id="contents" class="band">
-        <div class="wrap section">
-          <h2>ТРИ НАПРАВЛЕНИЯ.<br /><em>ЕДНА ЦЕЛ — ПО-ДОБРА ПОДГОТОВКА.</em></h2>
-          <p class="intro">В един план съчетаваш работата за сила и скорост с упражнения с топка.</p>
-          <p class="demo-note">Демонстрационни кадри от индивидуални тренировки на Become Pro.</p>
-          <div class="tracks">
-            <article>
-              <a class="clip-poster" href="/winter-program/media/hurdles.mp4" aria-label="Пусни видеото: Координация с препятствия и пас">
-                <img src="/winter-program/media/hurdles.jpg" alt="" loading="lazy" width="540" height="960" />
-                <span aria-hidden="true">▶</span>
-              </a>
-              <div>
-                <h3><small>01 /</small> СИЛОВА И ФИЗИЧЕСКА ПОДГОТОВКА</h3>
-                <p>Работи върху силата, издръжливостта и двигателните качества с упражнения, съобразени с възрастта ти.</p>
-              </div>
-            </article>
-            <article>
-              <a class="clip-poster" href="/assets/videos/individual-speed-explosiveness.mp4" aria-label="Пусни видеото: Първи крачки и ускорение">
-                <img src="/assets/videos/individual-speed-explosiveness-poster.webp" alt="" loading="lazy" width="540" height="960" />
-                <span aria-hidden="true">▶</span>
-              </a>
-              <div>
-                <h3><small>02 /</small> СКОРОСТНА И БЕГОВА ПОДГОТОВКА</h3>
-                <p>Тренирай първите крачки, ускорението и експлозивността чрез целенасочена бегова работа.</p>
-              </div>
-            </article>
-            <article>
-              <a class="clip-poster" href="/winter-program/media/finish.mp4" aria-label="Пусни видеото: Завършващ удар под ъгъл">
-                <img src="/winter-program/media/finish.jpg" alt="" loading="lazy" width="540" height="960" />
-                <span aria-hidden="true">▶</span>
-              </a>
-              <div>
-                <h3><small>03 /</small> ТЕХНИЧЕСКА ПОДГОТОВКА</h3>
-                <p>Тренирай контрола на топката, първото докосване, подаванията и завършващия удар с целенасочени упражнения.</p>
-              </div>
-            </article>
-          </div>
-          <h3 class="bonus-heading">ПОВЕЧЕ ОТ ТРЕНИРОВЪЧНА ПРОГРАМА</h3>
-          <div class="extras">
-              <article class="bonus-card"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m12 8 4 3-2 5h-4l-2-5zM12 8V3m4 8 5-1m-7 6 3 4m-7-4-3 4m1-9-5-1"/></svg><h4></h4><p></p></article>
-              <article class="bonus-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6q4-2 8 1 4-3 8-1v13q-4-2-8 1-4-3-8-1zM12 7v13"/></svg><h4></h4><p></p></article>
-              <article class="bonus-card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v12H9l-5 4v-4H3zM7 10h10m-10 3h7"/></svg><h4></h4><p></p></article>
-          </div>
-        </div>
-      </section>
-      <section id="coach" class="wrap section coach">
-        <figure>
-          <img
-            src="/winter-program/media/coach.webp"
-            alt="Йордан Желев води топката в мач"
-            loading="lazy"
-            decoding="async"
-          />
-        </figure>
-        <div>
-          <p class="eyebrow">Йордан Желев · Основател на Become Pro</p>
-          <h2>СЪЗДАДЕНО ОТ ФУТБОЛИСТ.<br /><em>ЗА ФУТБОЛИСТИ.</em></h2>
-          <p>Като бивш професионален футболист знам колко важна е правилната подготовка — не само по време на сезона, но и в паузите между полусезоните.</p>
-          <p>Създадох Become Pro с една цел: да помагам на футболистите да развиват качествата си чрез целенасочени и структурирани тренировки.</p>
-          <p>Зимната програма следва същата идея — <strong>ясен план, съобразен с възрастта и нуждите на футболиста.</strong></p>
-          <ul class="coach-facts" aria-label="Опит на треньора">
-            <li>Дебют в Първа лига на 16 години</li>
-            <li>Индивидуална работа с футболисти</li>
-          </ul>
-        </div>
-      </section>
-      <section id="reviews" class="wrap section reviews">
-        <div>
-          <p class="eyebrow">Реални мнения за работата с Become Pro</p>
-          <h2>ДОВЕРИЕ, ИЗГРАДЕНО НА ТЕРЕНА.</h2>
-          <p class="intro">Виж какво споделят футболисти и родители за индивидуалните тренировки в Become Pro.</p>
-        </div>
-        <div class="review-cards">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Зимна футболна програма 2026/27 | Become Pro</title>
+  <meta name="description" content="Четири седмици силова, скоростна и техническа подготовка за футболисти. Виж упражненията и бонусите към Winter Program 2026/27 от Йордан Желев.">
+  <meta name="theme-color" content="#09131c"><link rel="canonical" href="https://becomeprofootball.com/winter-program">
+  <meta property="og:type" content="website"><meta property="og:title" content="Become Pro — Winter Program 2026/27">
+  <meta property="og:description" content="Четири седмици зимна футболна подготовка, съобразена с възрастта ти."><meta property="og:url" content="https://becomeprofootball.com/winter-program"><meta property="og:image" content="https://becomeprofootball.com/winter-program/media/winter-program-poster.png">
+  <link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/winter-program/winter.css?v=edition27">
+  <script defer src="/winter-program/config.js?v=edition27"></script><script defer src="/winter-program/winter.js?v=edition27"></script>
+</head>
+<body>
+<a class="skip" href="#main">Към съдържанието</a>
+<header><div class="wrap bar"><a class="brand" href="/"><img width="36" height="36" src="/winter-program/media/logo.webp" alt="">BECOME PRO</a><nav aria-label="Зимна програма"><a href="#contents">Подготовка</a><a href="#coach">Треньор</a><a href="#faq">Въпроси</a></nav><a href="#offer" class="nav-action">Към програмата ↗</a></div></header>
+<main id="main">
+<section class="hero"><div class="wrap hero-grid">
+  <div class="hero-copy"><p class="kicker">BECOME PRO <span>/</span> ЗИМЕН СЕЗОН 2026/27</p>
+  <h1>СЕЗОНЪТ СПИРА.<br><em>РАЗВИТИЕТО ТИ — НЕ.</em></h1>
+  <p class="lead">Използвай зимната пауза за целенасочена футболна подготовка. 4 седмици силови, скоростни и технически тренировки, съобразени с възрастта ти.</p>
+  <p data-price hidden></p><div class="actions"><a class="btn" href="#offer" data-offer-link>РАЗГЛЕДАЙ ПРОГРАМАТА ↗</a><a class="secondary" href="#contents">ВИЖ КАКВО ВКЛЮЧВА ↓</a></div></div>
+  <div class="cover" aria-label="Winter Program 2026/27, четириседмична футболна програма">
+    <picture><source media="(max-width:600px)" srcset="/winter-program/media/stadium-mobile.webp"><img src="/winter-program/media/stadium.webp" alt="" width="1536" height="1024" fetchpriority="high"></picture>
+    <div class="cover-top"><b>BECOME PRO</b><span>2026 / 27</span></div>
+    <div class="cover-title" lang="en">WINTER<br><i>PROGRAM</i></div><div class="cover-foot"><span>ФУТБОЛНА ПОДГОТОВКА</span><strong>4 СЕДМИЦИ</strong></div>
+  </div>
+</div></section>
+<section class="wrap section"><h2>ЗИМНАТА ПАУЗА НЕ Е ПРОБЛЕМ.<br><em>ЛИПСАТА НА ПЛАН Е.</em></h2>
+  <p class="intro">След почивката идва въпросът как да подредиш работата до първата отборна тренировка.</p>
+  <div class="three problems"><article><h3>Не знаеш откъде да започнеш.</h3><p>Имаш време и желание, но още избираш между бягане, упражнения с топка и работа за сила.</p></article><article><h3>Не знаеш колко да тренираш.</h3><p>Трудно е сам да намериш място и за натоварването, и за възстановяването.</p></article><article><h3>Пропускаш важни елементи.</h3><p>Когато цялото внимание отива в едно качество, за останалите лесно не остава време.</p></article></div>
+</section>
+<section class="band" id="contents"><div class="wrap section"><p class="kicker">ТРЕНИРОВЪЧЕН ПЛАН</p><h2>ТРИ НАПРАВЛЕНИЯ.<br><em>ЕДНА ЦЕЛ — ПО-ДОБРА ПОДГОТОВКА.</em></h2><p class="intro">Кадри от индивидуалните тренировки на Become Pro.</p><div class="three tracks" id="tracks"></div></div></section>
+<section id="inside" class="wrap section" hidden><h2>ВИЖ КАК ИЗГЛЕЖДА ТВОЯТА ЗИМНА ПОДГОТОВКА.</h2><div class="three" id="samples"></div></section>
+<dialog id="zoom" aria-labelledby="sample-title"><form method="dialog"><button aria-label="Затвори прегледа">Затвори ×</button></form><h3 id="sample-title"></h3><img alt=""></dialog>
+<section class="wrap section"><p class="kicker">ВКЛЮЧЕНИ БОНУСИ</p><h2>ПОВЕЧЕ ОТ <em>ТРЕНИРОВЪЧНА ПРОГРАМА.</em></h2><div class="three bonuses" id="bonuses"></div></section>
+<section id="coach" class="band"><div class="wrap section coach"><img src="/winter-program/media/coach.webp" alt="Йордан Желев с топката по време на професионален мач" width="520" height="600" loading="lazy"><div><p class="kicker">ЙОРДАН ЖЕЛЕВ · BECOME PRO</p><h2>СЪЗДАДЕНО ОТ ФУТБОЛИСТ.<br><em>ЗА ФУТБОЛИСТИ.</em></h2><p>Дебютирах в Първа лига с „Ботев“ (Враца), участвах в лагери на юношеския проектонационален отбор и бях на проби в „Нотингам Форест“.</p><p>Днес работя индивидуално с футболисти. В зимната програма събирам работата за сила, скорост и техника в един план за паузата между полусезоните.</p></div></div></section>
+<section id="reviews" class="wrap section"><h2>ДОВЕРИЕ, ИЗГРАДЕНО <em>НА ТЕРЕНА.</em></h2><p class="intro">Играч и родител споделят за индивидуалните тренировки с Become Pro.</p><div class="review-cards">
           <figure>
             <blockquote>
               „Най-много ми помогна това, че вече знам какво да тренирам сам, а не просто да правя случайни
@@ -275,113 +49,10 @@
             </blockquote>
             <figcaption><strong>Родител на Славчо</strong><span>Стара Загора · Индивидуални тренировки</span></figcaption>
           </figure>
-        </div>
-      </section>
-      <section id="offer" class="offer">
-        <div class="wrap section" id="levels">
-          <article class="offer-panel">
-            <img class="campaign-photo" src="/winter-program/media/winter-program-poster.png" width="1080" height="1080" alt="Постер на Зимна програма — Йордан Желев с топка на зимен стадион" loading="lazy" />
-            <div class="offer-copy">
-              <p class="eyebrow">ЗИМЕН СЕЗОН 2026/27</p>
-              <h2>BECOME PRO <em>WINTER PROGRAM</em></h2>
-              <p class="intro">Цялостна 4-седмична зимна подготовка, съобразена с възрастта и нивото на футболиста.</p>
-              <h3>Твоят тренировъчен план</h3>
-              <p>Силова и физическа подготовка, скоростна и бегова работа и техника с топка.</p>
-              <h3>Бонуси към програмата</h3>
-              <p id="included-extras"></p>
-              <div class="price-row" aria-label="Цена на програмата"><strong id="current-price"></strong><del id="previous-price"></del></div>
-              <p id="saving"></p>
-              <form id="winter-purchase"><label hidden>Възрастова група на футболиста<select name="age_group" required disabled><option value="">Избери група</option></select></label>
-                <button class="btn" type="submit" disabled aria-describedby="sale-status">КУПИ ЗИМНАТА ПРОГРАМА</button>
-              </form>
-              <p id="sale-status">Продажбите още не са отворени.</p>
-            </div>
-          </article>
-        </div>
-      </section>
-      <section id="faq" class="wrap section faq">
-        <h2>Въпроси преди старта</h2>
-        <div>
-          <details>
-            <summary>За кого е подходяща програмата?</summary>
-            <p>За футболисти, които искат да тренират по план през зимната пауза, и за родители, които търсят организирана подготовка за детето си.</p>
-          </details>
-          <details>
-            <summary>Колко време продължава?</summary>
-            <p>Четири седмици.</p>
-          </details>
-          <details>
-            <summary>Как се избира възрастовата група?</summary>
-            <p>При покупка ще посочиш възрастовата група на футболиста. Тя определя подготовката в рамките на програмата. Точните граници ще бъдат публикувани преди отваряне на продажбите.</p>
-          </details>
-          <details>
-            <summary>Какви направления включва?</summary>
-            <p>Физическа, бегова и техническа подготовка.</p>
-          </details>
-          <details>
-            <summary>Кога мога да започна програмата?</summary>
-            <p>Началната дата предстои да бъде обявена.</p>
-          </details>
-          <details>
-            <summary>Какво точно получавам след покупката?</summary>
-            <p>Получаваш тренировъчния план за възрастта на футболиста и бонусите, описани в офертата. Броят на тренировките и форматът на материалите ще бъдат уточнени преди продажбите.</p>
-          </details>
-          <details>
-            <summary>Как получавам достъп?</summary>
-            <p>Начинът и срокът за получаване на достъп ще бъдат обявени преди началото на продажбите.</p>
-          </details>
-          <details>
-            <summary>Необходимо ли е специално оборудване?</summary>
-            <p>Списъкът с необходимото оборудване предстои да бъде обявен.</p>
-          </details>
-          <details>
-            <summary>Мога ли да тренирам успоредно с отбора?</summary>
-            <p>Това зависи от отборния ти график и общото ти тренировъчно натоварване.</p>
-          </details>
-        </div>
-      </section>
-      <section id="final" class="final">
-        <div class="wrap">
-          <p class="eyebrow">BECOME PRO · WINTER PROGRAM 2026/27</p>
-          <h2>Пролетният полусезон започва с подготовката ти <em>днес.</em></h2>
-          <p class="intro">Влез в зимната пауза с ясен план за терена.</p>
-          <a class="btn" href="#offer">Виж зимната програма <span aria-hidden="true">↗</span></a>
-        </div>
-      </section>
-    </main>
-    <footer class="wrap">
-      <a href="/" class="brand" aria-label="Become Pro, начало"
-        ><img src="/winter-program/media/logo.webp" alt="" width="36" height="36" /><strong
-          >BECOME PRO</strong
-        ></a
-      >
-      <nav aria-label="Правна информация">
-        <a href="/privacy-policy">Поверителност</a><a href="/terms">Общи условия</a
-        ><a href="/cookie-policy">Бисквитки</a>
-      </nav>
-    </footer>
-    <a href="#offer" class="dock btn" hidden>Виж зимната програма <span aria-hidden="true">↗</span></a>
-    <script>
-      document.querySelectorAll('.clip-poster').forEach(link => {
-        link.addEventListener('click', event => {
-          if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-          event.preventDefault();
-          const video = document.createElement('video');
-          video.controls = true;
-          video.playsInline = true;
-          video.poster = link.querySelector('img').src;
-          video.setAttribute('aria-label', link.getAttribute('aria-label'));
-          video.tabIndex = 0;
-          video.src = link.href;
-          video.addEventListener('play', () => {
-            document.querySelectorAll('.tracks video').forEach(other => { if (other !== video) other.pause(); });
-          });
-          video.addEventListener('error', () => { video.replaceWith(link); link.focus(); }, { once: true });
-          link.replaceWith(video);
-          video.focus({ preventScroll: true });
-          video.play().catch(() => { /* Native controls allow another play attempt. */ });
-        });
-      });
-    </script>
-  </body>
-</html>
+        </div></section>
+<section id="offer" class="offer-bg"><div class="wrap section"><h2>ЕДНА ПРОГРАМА.<br><em>ЦЯЛОСТНА ЗИМНА ПОДГОТОВКА.</em></h2><article class="offer"><img class="poster" src="/winter-program/media/campaign.webp" loading="lazy" width="660" height="660" alt="Йордан Желев на оригиналния рекламен постер на зимната програма"><div><p class="kicker">СЕЗОН 2026/27</p><h3 lang="en">BECOME PRO<br>WINTER PROGRAM</h3><p>4 седмици подготовка, адаптирана според възрастта.</p><div class="included"><div><h4>Тренировъчен план</h4><ul id="offer-tracks"></ul></div><div><h4>Включени бонуси</h4><ul id="offer-bonuses"></ul></div></div><p data-price hidden></p><p id="sale-status" role="status">Продажбите предстоят. Цената и начинът за достъп ще бъдат обявени тук.</p><form id="winter-purchase" hidden><label>Възрастова група на футболиста<select required name="age_group"><option value="">Избери група</option></select></label><button class="btn">ВЗЕМИ ЗИМНАТА ПРОГРАМА ↗</button></form></div></article></div></section>
+<section id="faq" class="wrap section faq"><h2>ВЪПРОСИ <em>ПРЕДИ СТАРТА.</em></h2><div id="questions"></div></section>
+<section class="final"><div class="wrap section"><p class="kicker">WINTER PROGRAM 2026/27</p><h2>ПРОЛЕТНИЯТ ПОЛУСЕЗОН ЗАПОЧВА С ПОДГОТОВКАТА ТИ ДНЕС.</h2><p>Сила, скорост и работа с топка в една четириседмична програма.</p><a class="btn" href="#offer" data-offer-link>РАЗГЛЕДАЙ ПРОГРАМАТА ↗</a></div></section>
+</main>
+<footer class="wrap"><a class="brand" href="/">BECOME PRO</a><nav aria-label="Правна информация"><a href="/privacy-policy">Поверителност</a><a href="/terms">Общи условия</a><a href="/cookie-policy">Бисквитки</a><a href="/refund-policy">Възстановяване на суми</a></nav></footer>
+</body></html>
