@@ -17,7 +17,7 @@
     <meta property="og:type" content="website" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="preload" as="image" imagesrcset="/assets/individual-session-small.webp 560w, /assets/individual-session.webp 960w" imagesizes="(max-width: 700px) 94vw, 48vw" />
+    <link rel="preload" as="image" type="image/avif" fetchpriority="high" imagesrcset="/assets/session-400.avif 400w, /assets/session-640.avif 640w, /assets/session-960.avif 960w" imagesizes="(max-width: 700px) calc(100vw - 32px), (max-width: 1224px) 46vw, 554px" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -38,7 +38,7 @@
   <body id="top" data-page-variant="individual-training">
     <a class="skip" href="#main">Към съдържанието</a>
     <header><div class="wrap header-row">
-      <a class="brand" aria-label="Become Pro – начало" href="/"><span><img src="/assets/becomepro-logo.png" alt=""></span>BECOME PRO</a>
+      <a class="brand" aria-label="Become Pro – начало" href="/"><span><img width="30" height="30" src="/assets/training-brand.webp" alt=""></span>BECOME PRO</a>
       <a class="button" href="#training-form" data-primary-cta data-cta-location="header">Заяви безплатна тренировка<span aria-hidden="true">↗</span></a>
     </div></header>
     <main id="main">
@@ -55,7 +55,7 @@
             <li>Проби в Нотингам Форест</li>
           </ul>
         </div>
-        <figure class="hero-photo"><img src="/assets/individual-session.webp" srcset="/assets/individual-session-small.webp 560w, /assets/individual-session.webp 960w" sizes="(max-width: 700px) 94vw, 48vw" width="960" height="540" alt="Йордан подава топката на млад футболист по време на индивидуална тренировка" fetchpriority="high">
+        <figure class="hero-photo"><picture><source type="image/avif" srcset="/assets/session-400.avif 400w, /assets/session-640.avif 640w, /assets/session-960.avif 960w" sizes="(max-width: 700px) calc(100vw - 32px), (max-width: 1224px) 46vw, 554px"><img src="/assets/individual-session.webp" srcset="/assets/individual-session-small.webp 560w, /assets/individual-session.webp 960w" sizes="(max-width: 700px) calc(100vw - 32px), (max-width: 1224px) 46vw, 554px" width="960" height="540" alt="Йордан подава топката на млад футболист по време на индивидуална тренировка" fetchpriority="high"></picture>
           <figcaption><span></span>На терена с Become Pro</figcaption>
         </figure>
       </div></section>
@@ -114,8 +114,8 @@
       <section id="player-results" class="section stories"><div class="wrap">
         <div class="section-intro"><h2>Какво споделят играчите и родителите</h2><p>Впечатления от индивидуалните тренировки на Become Pro.</p></div>
         <div class="quotes"><figure class="quote"><blockquote>„Преди губеше топката при първото докосване. След няколко тренировки започна да овладява по-спокойно и да играе по-бързо.“</blockquote><figcaption><span><strong>Родител на играч, 13 г.</strong></span></figcaption></figure>
-              <figure class="quote"><blockquote>„Започнах да играя с по-голяма увереност и повече самочувствие.“</blockquote><figcaption><img src="/assets/albena-georgieva.jpg" alt="" loading="lazy"><span><strong>Албена, 16 г.</strong>София</span></figcaption></figure>
-              <figure class="quote"><blockquote>„Подобрих концентрацията и решенията си на терена.“</blockquote><figcaption><img src="/assets/ivan-trifonov.jpg" alt="" loading="lazy"><span><strong>Иван, 17 г.</strong>Пловдив</span></figcaption></figure></div>
+              <figure class="quote"><blockquote>„Започнах да играя с по-голяма увереност и повече самочувствие.“</blockquote><figcaption><img width="48" height="48" src="/assets/training-albena.webp" alt="" loading="lazy"><span><strong>Албена, 16 г.</strong>София</span></figcaption></figure>
+              <figure class="quote"><blockquote>„Подобрих концентрацията и решенията си на терена.“</blockquote><figcaption><img width="48" height="48" src="/assets/training-ivan.webp" alt="" loading="lazy"><span><strong>Иван, 17 г.</strong>Пловдив</span></figcaption></figure></div>
 
         <div class="center"><a class="button" href="#training-form" data-primary-cta data-cta-location="after_reviews">Заяви безплатна тренировка<span aria-hidden="true">↗</span></a></div>
       </div></section>
