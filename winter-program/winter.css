@@ -144,3 +144,44 @@ dialog form { position:sticky; top:0; }
   .offer { gap:24px; }
   .offer-visual img { max-width:240px; }
 }
+
+/* Room for the training footage; retain shorter measures for editorial copy. */
+@media (min-width:801px) {
+  #contents .wrap { width:min(1570px,calc(100% - 48px)); }
+  #contents .tracks { max-width:none; }
+  #inside,.bonus-section,#coach .wrap,#reviews { width:min(1320px,calc(100% - 64px)); }
+  #coach .coach { grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); }
+  .faq { max-width:1150px; }
+}
+.track-copy p,.bonus-copy p,.coach p:not(.kicker),details p { font-size:clamp(1.04rem,1.35vw,1.18rem); line-height:1.55; }
+#samples button { padding:10px; }
+#samples span { padding:14px 7px 6px; }
+.bonus-excerpt { padding:12px; }
+.bonus-excerpt img { height:auto; }
+.review-cards blockquote { max-width:43ch; font-size:clamp(1.14rem,1.7vw,1.44rem); }
+#zoom { padding:0; overflow:hidden; border-radius:10px; width:min(1150px,96vw); }
+#zoom[open] { display:flex; flex-direction:column; height:92dvh; }
+.reader-bar { padding:12px 16px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+.reader-bar small { color:var(--ice); }
+.reader-bar h3 { font-size:1.08rem; }
+.reader-actions { display:flex; flex-wrap:wrap; gap:6px; }
+.reader-actions button { min-height:44px; border-radius:4px; }
+.reader-page { min-height:0; flex:1; overflow:auto; background:#050d13; overscroll-behavior:contain; }
+.reader-page img { margin:auto; height:100%; width:100%; object-fit:contain; }
+.reader-page.magnified img { height:auto; width:1250px; max-width:none; }
+#offer .offer { padding:0; overflow:hidden; gap:0; background:#112330; align-items:stretch; }
+.offer > div { padding:clamp(22px,3.5vw,56px); align-self:center; }
+.offer-visual { display:grid; align-content:center; gap:10px; border-radius:0; background:linear-gradient(155deg,#132b3dc9,#06101bf0),url('/winter-program/media/stadium.webp') center/cover; }
+.offer-visual img { width:min(100%,430px); max-width:100%; border:7px solid #0a141d; }
+.offer-duration { display:flex; align-items:center; flex-wrap:wrap; gap:10px 16px; }
+.offer-duration strong { border:1px solid #64879a; padding:5px 13px; border-radius:20px; color:var(--ice); white-space:nowrap; }
+.offer-duration span { max-width:26ch; }
+.offer .included { padding-block:24px; }
+.included li { margin-block:6px; }
+#winter-purchase .btn,.final .btn { font-size:1rem; min-height:57px; }
+.final .btn { min-width:min(100%,320px); }
+.faq summary { font-size:clamp(1.08rem,1.55vw,1.32rem); padding-block:20px; }
+@media (max-width:580px) {
+  .reader-bar { display:grid; }
+  .offer-visual img { width:min(100%,310px); }
+}

@@ -60,6 +60,15 @@
     byId("offer-bonuses").append(node("li", bonus.title));
   });
   const zoom = byId("zoom");
+  const magnify = byId("magnify");
+  const page = zoom.querySelector(".reader-page");
+  function setMagnified(on) {
+    page.classList.toggle("magnified", on);
+    magnify.setAttribute("aria-pressed", String(on));
+    magnify.textContent = on ? "Цяла страница" : "Увеличи";
+    page.scrollTo(0, 0);
+  }
+  magnify.addEventListener("click", () => setMagnified(!page.classList.contains("magnified")));
   config.previews.forEach(sample => {
     const button = node("button");
     button.type = "button";
@@ -74,6 +83,7 @@
       byId("sample-title").textContent = sample.title;
       zoom.querySelector("img").src = sample.src;
       zoom.querySelector("img").alt = sample.alt;
+      setMagnified(false);
       zoom.showModal();
     });
   });
