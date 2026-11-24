@@ -155,7 +155,17 @@ footer a { font-size: .82rem; }
 .comparison article { padding: clamp(20px,3vw,38px); background: #f3f7f1; border-radius: 15px; }
 .comparison article + article { background: var(--mint); border-left: 4px solid var(--green); }
 .comparison p, .coach h3 + p, .session-copy p { color: var(--muted); margin-top: 10px; }
-#training-fit { padding-top: 0; }
+#why-individual { background: #f4f9f4; padding-bottom: 72px; }
+#why-individual .comparison article:first-child { background: white; }
+#why-individual .center { margin-top: 20px; }
+#training-fit { background: white; padding-top: 38px; }
+@media (max-width: 700px) {
+  #why-individual { padding-bottom: 36px; }
+  #training-fit { padding-top: 28px; }
+}
+@media (max-width: 620px) {
+  header { position: static; }
+}
 .coach-photos { display: grid; grid-template-columns: 1.35fr 1fr; align-items: end; gap: 10px; }
 .coach-photos img { width: 100%; height: auto; border-radius: 14px; }
 .coach h3 { margin-top: 22px; }
