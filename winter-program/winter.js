@@ -47,7 +47,15 @@
   });
   config.bonuses.forEach(bonus => {
     const card = node("article", "", "bonus");
-    card.append(node("span", bonus.mark, "bonus-mark"), node("h3", bonus.title), node("p", bonus.detail));
+    const excerpt = node("figure", "", "bonus-excerpt");
+    const image = node("img");
+    image.src = bonus.excerpt;
+    image.alt = "";
+    image.loading = "lazy";
+    excerpt.append(image, node("figcaption", "Откъс от изданието за 2025 г."));
+    const copy = node("div", "", "bonus-copy");
+    copy.append(node("span", bonus.mark, "bonus-mark"), node("h3", bonus.title), node("p", bonus.detail));
+    card.append(copy, excerpt);
     byId("bonuses").append(card);
     byId("offer-bonuses").append(node("li", bonus.title));
   });
@@ -57,10 +65,10 @@
     button.type = "button";
     button.setAttribute("aria-label", "Увеличи — " + sample.title);
     const img = node("img");
-    img.src = sample.src;
+    img.src = sample.thumb || sample.src;
     img.alt = sample.alt;
     img.loading = "lazy";
-    button.append(img, node("span", sample.title));
+    button.append(img, node("span", sample.title + " ↗"));
     byId("samples").append(button);
     button.addEventListener("click", () => {
       byId("sample-title").textContent = sample.title;
