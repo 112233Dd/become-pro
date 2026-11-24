@@ -5,9 +5,6 @@
     const level = card.dataset.variant;
     const variant = config?.levels?.[level];
     if (!variant || !Number.isSafeInteger(variant.priceMinor) || variant.priceMinor <= 0) continue;
-    card.querySelector('.variant-price').textContent = new Intl.NumberFormat('bg-BG', {
-      style: 'currency', currency: config.currency,
-    }).format(variant.priceMinor / 100);
     if (!variant.terms || !variant.delivery || !variant.checkoutUrl) continue;
     let checkout;
     try {
@@ -16,6 +13,10 @@
       continue;
     }
     if (checkout.protocol !== 'https:') continue;
+    if (!/^[A-Z]{3}$/.test(config.currency || '')) continue;
+    card.querySelector('.variant-price').textContent = new Intl.NumberFormat('bg-BG', {
+      style: 'currency', currency: config.currency,
+    }).format(variant.priceMinor / 100);
     const button = card.querySelector('button');
     const link = document.createElement('a');
     link.className = button.className;
@@ -43,7 +44,7 @@
       }
       dock.hidden = visible.size > 0 || hero.getBoundingClientRect().bottom > 0;
     });
-    for (const section of [hero, ...document.querySelectorAll("#levels, #offer, .final, footer")])
+    for (const section of [hero, ...document.querySelectorAll("#offer, .final, footer")])
       observer.observe(section);
   }
 })();
