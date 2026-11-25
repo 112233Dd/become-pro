@@ -110,6 +110,21 @@ test("landing page uses real training media, player proof, FAQ, and compact lega
   assert.match(html, /assets\/coach-yordan-zhelev\.webp/);
   assert.doesNotMatch(html, /yordan-zhelev-match-dribble\.webp/);
   assert.match(html, /Йордан Желев — от професионалния футбол до твоето развитие\./);
+  assert.match(html, /<section id="coach-proof" class="training-coach-grid">/);
+  assert.doesNotMatch(html, /id="coach-proof"[^>]*>[\s\S]{0,80}<div class="wrap/);
+  assert.match(html, /padding: clamp\(76px,9vw,124px\) max\(18px,calc\(\(100vw - 1180px\)\/2\)\)/);
+  assert.match(html, /background: #fff8e2;/);
+  assert.match(html, /\.training-coach-copy h2 \{[^}]*color: #172d26;/);
+  assert.match(html, /\.training-coach-copy > p:not\(\.training-coach-eyebrow\) \{ color: #344d40;/);
+  assert.match(html, /\.training-coach-eyebrow \{[^}]*color: #00664c;/);
+  assert.match(html, /\.training-coach-copy li::before \{[^}]*color: #00664c;/);
+  assert.match(html, /\.training-coach-cta \{[^}]*color: #fff; background: #00664c;/);
+  assert.doesNotMatch(html, /#coach-proof[\s\S]{0,300}radial-gradient/);
+  assert.match(html, /grid-template-columns: minmax\(340px,\.76fr\) minmax\(0,1fr\)/);
+  assert.match(html, /\.training-coach-media img \{ width: 100%; height: 600px/);
+  assert.match(html, /font-size: clamp\(38px,5vw,66px\)/);
+  assert.match(html, /min-height: 50px; padding: 14px 22px/);
+  assert.match(html, /#coach-proof \{ padding: 70px 18px; \}/);
   assert.equal((html.match(/<li>/g) || []).length >= 4, true);
   for (const [, asset] of html.matchAll(/(?:src|poster)="(\/assets\/[^"?]+)/g)) {
     assert.ok(fs.existsSync(path.join(root, asset)), asset);
