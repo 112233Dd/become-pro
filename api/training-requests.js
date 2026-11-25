@@ -170,8 +170,8 @@ module.exports = async (req, res) => {
     if (playerAge.length < 1) return sendJson(res, 400, { error: "Моля, въведи възраст." });
     if (attributionRow.page_variant === "individual-training") {
       const age = Number(playerAge);
-      if (!Number.isInteger(age) || age < 8 || age > 24) {
-        return sendJson(res, 400, { error: "Възрастта на играча трябва да е от 8 до 24 години." });
+      if (!Number.isInteger(age) || age < 7 || age > 24) {
+        return sendJson(res, 400, { error: "Възрастта на играча трябва да е от 7 до 24 години." });
       }
       if (!INDIVIDUAL_CITIES.has(city)) return sendJson(res, 400, { error: "Моля, избери град от списъка." });
       if (!/^[+\d\s().-]+$/.test(phone) || (phone.match(/\d/g) || []).length < 6) {

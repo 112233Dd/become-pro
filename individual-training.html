@@ -6,12 +6,12 @@
     <title>Индивидуални футболни тренировки | Become Pro</title>
     <meta
       name="description"
-      content="Индивидуални футболни тренировки за играчи от 8 до 24 години в София, Пловдив и Стара Загора. Развий уменията си с Become Pro. Първа тренировка безплатно."
+      content="Индивидуални футболни тренировки за играчи от 7 до 24 години в София, Пловдив и Стара Загора. Развий техниката, скоростта и решенията си с Become Pro. Първа тренировка безплатно."
     />
     <meta name="theme-color" content="#fff8df" />
     <link rel="canonical" href="https://becomeprofootball.com/individual-training" />
     <meta property="og:title" content="Индивидуални футболни тренировки | Become Pro" />
-    <meta property="og:description" content="Индивидуални футболни тренировки за играчи от 8 до 24 години в София, Пловдив и Стара Загора. Развий уменията си с Become Pro. Първа тренировка безплатно." />
+    <meta property="og:description" content="Индивидуални футболни тренировки за играчи от 7 до 24 години в София, Пловдив и Стара Загора. Развий техниката, скоростта и решенията си с Become Pro. Първа тренировка безплатно." />
     <meta property="og:image" content="https://becomeprofootball.com/assets/brand-thumb-field-session.jfif" />
     <meta property="og:url" content="https://becomeprofootball.com/individual-training" />
     <meta property="og:type" content="website" />
@@ -23,7 +23,7 @@
         "@context": "https://schema.org",
         "@type": "Service",
         "name": "Индивидуални футболни тренировки",
-        "description": "Индивидуални футболни тренировки за играчи от 8 до 24 години в София, Пловдив и Стара Загора. Развий уменията си с Become Pro. Първа тренировка безплатно.",
+        "description": "Индивидуални футболни тренировки за играчи от 7 до 24 години в София, Пловдив и Стара Загора. Развий техниката, скоростта и решенията си с Become Pro. Първа тренировка безплатно.",
         "provider": {
           "@type": "Organization",
           "name": "Become Pro",
@@ -71,6 +71,11 @@ header { position: sticky; top: 0; z-index: 5; background: white; border-bottom:
 }
 .button:hover, .landing-button:hover, .training-sticky-cta:hover { background: #004d39; }
 .button span { font-size: 1.2em; line-height: 1; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.hero-actions .button { gap: 10px; padding-inline: 18px; font-size: .9rem; }
+.button-secondary { background: transparent; color: var(--green); border: 2px solid var(--green); box-shadow: none; }
+.button-secondary:hover { background: #dff1e3; color: #004d39; }
+.button-secondary svg { width: 18px; height: 18px; flex: 0 0 auto; }
 header .button { background: var(--sun); color: var(--ink); min-height: 42px; }
 header .button:hover { background: #ffcf2c; }
 .hero { background: var(--cream); }
@@ -193,6 +198,8 @@ footer a { font-size: .82rem; }
 #training-fit { background: white; }
 @media (max-width: 620px) {
   header { position: static; }
+  .hero-actions { align-items: stretch; flex-direction: column; }
+  .hero-actions .button { width: 100%; }
 }
 #coach-proof { padding-block: clamp(28px, 3vw, 46px); }
 .coach-portrait { width: min(100%, 460px); height: auto; justify-self: center; border-radius: 16px; }
@@ -238,9 +245,12 @@ footer a { font-size: .82rem; }
       <section class="hero"><div class="wrap hero-grid">
         <div class="hero-copy">
           <p class="kicker">Индивидуални футболни тренировки</p>
-          <h1>По-уверен с топката. <em>Още от първото докосване.</em></h1>
-          <p class="lead">Тренирай с Йордан Желев върху ситуациите, които те затрудняват в мач. За играчи от <strong>8 до 24 години</strong> в София, Пловдив и Стара Загора.</p>
-          <a class="button" href="#training-form" data-primary-cta data-cta-location="hero">Заяви безплатна тренировка<span aria-hidden="true">↗</span></a>
+          <h1>Тренираш с отбора. <em>Но кой работи върху твоите слабости?</em></h1>
+          <p class="lead">Индивидуални футболни тренировки за играчи от <strong>7 до 24 години.</strong> Развиваме техниката, скоростта и решенията ти в игрови ситуации, съобразени с твоите цели.</p>
+          <div class="hero-actions">
+            <a class="button" href="#training-form" data-primary-cta data-cta-location="hero">Заяви безплатна тренировка<span aria-hidden="true">↗</span></a>
+            <a class="button button-secondary" href="#training-video" data-secondary-cta><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 5 11 7-11 7V5Z"/></svg>Виж как тренираме</a>
+          </div>
           <p class="booking-note">Свързваме се с теб до 24 часа</p>
           <p class="locations">София <i>·</i> Пловдив <i>·</i> Стара Загора</p>
           <ul class="experience" aria-label="Футболен опит на Йордан Желев">
@@ -312,7 +322,7 @@ footer a { font-size: .82rem; }
       <section id="training-form" class="section offer"><div class="wrap booking">
         <div class="offer-copy"><p class="kicker">Първа индивидуална тренировка</p><h2>Заяви безплатна тренировка</h2>
           <p class="price">0 €</p><p class="price-note">за първото занимание</p>
-          <ul><li>60–90 минути според възрастта</li><li>За играчи от 8 до 24 години</li><li>София, Пловдив и Стара Загора</li></ul>
+          <ul><li>60–90 минути според възрастта</li><li>За играчи от 7 до 24 години</li><li>София, Пловдив и Стара Загора</li></ul>
           <p>Ще се свържа с теб до 24 часа, за да уточним удобен ден и час.</p>
         </div>
         <div class="form-panel" tabindex="-1" aria-labelledby="booking-heading" role="region"><h3 id="booking-heading">Данни за връзка</h3><p class="required-note">Всички полета са задължителни.</p><form class="landing-form" data-training-landing-form method="post" action="/api/training-requests">
@@ -321,7 +331,7 @@ footer a { font-size: .82rem; }
               <label><input type="radio" name="applicant_type" value="Себе си" required> За мен</label>
             </fieldset>
             <label>Име<input type="text" name="name" autocomplete="name" minlength="2" required /></label>
-            <label>Възраст на играча<input type="number" name="player_age" inputmode="numeric" min="8" max="24" required /></label>
+            <label>Възраст на играча<input type="number" name="player_age" inputmode="numeric" min="7" max="24" required /></label>
             <label class="location-picker">Град и терен<select name="city" required>
               <option value="">Избери град</option>
               <option value="София">София — спортен комплекс „Олемаспорт“, Младост</option>
@@ -340,7 +350,7 @@ footer a { font-size: .82rem; }
       </div></section>
       <section id="training-faq" class="section"><div class="wrap faq">
         <h2>Преди първата тренировка</h2><div class="landing-faq">
-            <details><summary>За каква възраст са тренировките?</summary><p>Подходящи са за футболисти между 8 и 24 години, като натоварването се адаптира към възрастта и нивото.</p></details>
+            <details><summary>За каква възраст са тренировките?</summary><p>Подходящи са за футболисти между 7 и 24 години, като натоварването се адаптира към възрастта и нивото.</p></details>
             <details><summary>Къде се провеждат?</summary><p>София — спортен комплекс „Олемаспорт“, Младост. Пловдив — спортен комплекс „Оптимум Спорт“, Тракия. Стара Загора — терен „Завод Берое“.</p></details>
             <details><summary>Колко продължава една тренировка?</summary><p>Обикновено 60–90 минути според възрастта, целта и натоварването.</p></details>
             <details><summary>Може ли родителят да присъства?</summary><p>Да. Родителят може да наблюдава и да получи обратна връзка за работата и следващите стъпки.</p></details>

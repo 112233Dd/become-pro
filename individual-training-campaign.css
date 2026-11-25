@@ -35,6 +35,11 @@ header { position: sticky; top: 0; z-index: 5; background: white; border-bottom:
 }
 .button:hover, .landing-button:hover, .training-sticky-cta:hover { background: #004d39; }
 .button span { font-size: 1.2em; line-height: 1; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.hero-actions .button { gap: 10px; padding-inline: 18px; font-size: .9rem; }
+.button-secondary { background: transparent; color: var(--green); border: 2px solid var(--green); box-shadow: none; }
+.button-secondary:hover { background: #dff1e3; color: #004d39; }
+.button-secondary svg { width: 18px; height: 18px; flex: 0 0 auto; }
 header .button { background: var(--sun); color: var(--ink); min-height: 42px; }
 header .button:hover { background: #ffcf2c; }
 .hero { background: var(--cream); }
@@ -157,6 +162,8 @@ footer a { font-size: .82rem; }
 #training-fit { background: white; }
 @media (max-width: 620px) {
   header { position: static; }
+  .hero-actions { align-items: stretch; flex-direction: column; }
+  .hero-actions .button { width: 100%; }
 }
 #coach-proof { padding-block: clamp(28px, 3vw, 46px); }
 .coach-portrait { width: min(100%, 460px); height: auto; justify-self: center; border-radius: 16px; }

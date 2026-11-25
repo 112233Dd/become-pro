@@ -51,6 +51,8 @@ test("campaign keeps one concise journey and links each booking CTA to the form"
     "training-fit", "coach-proof", "training-video", "how-it-works", "training-form", "training-faq",
   ]);
   assert.match(html, /data-cta-location="hero">Заяви безплатна тренировка/);
+  assert.match(html, /href="#training-video" data-secondary-cta/);
+  assert.match(html, /Виж как тренираме/);
   assert.match(html, /Свързваме се с теб до 24 часа/);
   assert.match(html, /0 €/);
   assert.match(html, /data-page-variant="individual-training"/);
@@ -74,7 +76,7 @@ test("landing form contains only the compact approved fields and success message
     assert.match(form, new RegExp(`name="${name}"`));
   });
   assert.doesNotMatch(form, /novalidate/);
-  assert.match(form, /min="8" max="24"/);
+  assert.match(form, /min="7" max="24"/);
   assert.match(form, /<select name="city" required>/);
   assert.match(form, /data-landing-form-status[^>]*><\/p>/);
   assert.match(form, /type="number" name="player_age"/);
