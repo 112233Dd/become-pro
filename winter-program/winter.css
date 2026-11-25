@@ -106,7 +106,7 @@ dialog button,#samples button { cursor:pointer; padding:12px; color:inherit; bac
 }
 @media(max-width:580px) {
  :root { font-size:16px; } .bar { min-height:60px; } .bar,.bar .brand { gap:8px; }
- .brand img { width:30px;height:30px; } .nav-action { padding:8px 10px; font-size:.86rem; }
+ .brand img { width:auto;height:30px; } .nav-action { padding:8px 10px; font-size:.86rem; }
  .three,.review-cards,.included { grid-template-columns:1fr; }
  .cover-foot,.cover-top {font-size:.66rem;} .cover-foot {margin-top:12px;padding-top:8px;}
  .clip,.tracks video {aspect-ratio:9/16;} .actions {gap:6px;align-items:stretch;flex-direction:column;}

@@ -30,9 +30,9 @@ const winterProgram = {
   }
 ],
   tracks: [
-    { title: "Силова и физическа подготовка", description: "Развиваш сила, издръжливост и координация за движенията на терена.", video: "/winter-program/media/hurdles.mp4", poster: "/winter-program/media/hurdles.jpg", exercise: "Координация с препятствия и пас" },
+    { title: "Силова и физическа подготовка", description: "Развиваш сила, издръжливост и координация за движенията на терена.", video: "/winter-program/media/hurdles.mp4", poster: "/winter-program/media/hurdles.webp", exercise: "Координация с препятствия и пас" },
     { title: "Скоростна и бегова подготовка", description: "Работиш върху първите крачки, ускорението и експлозивността при смяна на темпото.", video: "/assets/videos/individual-speed-explosiveness.mp4", poster: "/assets/videos/individual-speed-explosiveness-540.webp", exercise: "Първи крачки и ускорение" },
-    { title: "Техническа подготовка", description: "Свързваш първото докосване със следващото действие — подаване или завършващ удар.", video: "/winter-program/media/finish.mp4", poster: "/winter-program/media/finish.jpg", exercise: "Завършващ удар под ъгъл" }
+    { title: "Техническа подготовка", description: "Свързваш първото докосване със следващото действие — подаване или завършващ удар.", video: "/winter-program/media/finish.mp4", poster: "/winter-program/media/finish.webp", exercise: "Завършващ удар под ъгъл" }
   ],
   bonuses: [
     { mark: "80+", excerpt: "/winter-program/media/excerpt-2025-mastery.webp", title: "Ball Mastery", detail: "Над 80 упражнения за контрол на топката, включително тренировки с над 1000 докосвания." },
