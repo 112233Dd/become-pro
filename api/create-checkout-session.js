@@ -1,6 +1,5 @@
 const { config: winterConfig, winterSelection } = require("../winter-program/server.cjs");
 const {
-  stripeRequest,
   createStripeCheckoutSession,
   getOrigin,
   getProgramsByIds,
@@ -22,7 +21,7 @@ module.exports = async (req, res) => {
     const body = await readJsonBody(req);
     const ids = Array.isArray(body.items) ? body.items : [body.programId];
     const winter = ids.length === 1 && ids[0] === winterConfig.productId;
-    const programs = winter ? [await winterSelection(body.ageGroup, stripeRequest, body.expectedPriceMinor)] : getProgramsByIds(ids);
+    const programs = winter ? [winterSelection(body.playerAge, body.expectedPriceMinor)] : getProgramsByIds(ids);
     const attribution = body.attribution || {};
     const checkoutAttribution = {
       landingSessionId: cleanText(attribution.sessionId, 100),
@@ -41,7 +40,7 @@ module.exports = async (req, res) => {
       customerEmail: String(body.customer?.customerEmail || "").trim(),
       customerPhone: String(body.customer?.customerPhone || "").trim(),
       playerName: String(body.customer?.playerName || "").trim(),
-      playerAge: winter ? winterConfig.ageGroups[body.ageGroup] : String(body.customer?.playerAge || "").trim(),
+      playerAge: winter ? programs[0].winterAgeGroup : String(body.customer?.playerAge || "").trim(),
     };
 
     ["STRIPE_SECRET_KEY"].forEach((name) => {

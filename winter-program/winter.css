@@ -81,7 +81,7 @@ figcaption span { font-size:.88rem; }
 .included ul { padding-left:1.1em; margin:8px 0 0; }
 .included li::marker { color:var(--ice); }
 [data-price] { font-size:2rem; color:var(--ice); font-weight:750; }
-form select { display:block; width:100%; padding:10px; margin:8px 0 16px; }
+form input[name="player_age"] { display:block; width:100%; padding:10px; margin:8px 0 16px; }
 .faq { grid-template-columns: .8fr 1.2fr; align-items:start; }
 details { border-bottom:1px solid var(--line); }
 summary { padding:16px 0; font-weight:650; cursor:pointer; }

@@ -17,9 +17,8 @@ const winterProgram = {
     const sessionWindow = !launch || until - now > 1801000;
     return {launch, until, price: priced ? price : null, sessionWindow};
   },
-  salesEnabled: false,
-  delivery: "",
-  ageGroups: {},
+  salesEnabled: true,
+  delivery: "След потвърдено плащане получаваш линк към PDF файла „ЗИМНА ПРОГРАМА 2025“ на екрана и по имейл.",
   // Approved sample images only: { title, src, alt }.
   previews: [
   {
