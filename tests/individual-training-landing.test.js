@@ -55,6 +55,12 @@ test("campaign keeps one concise journey and links each booking CTA to the form"
   assert.match(html, /Виж как тренираме/);
   assert.match(html, /Свързваме се с теб до 24 часа/);
   assert.match(html, /0 €/);
+  assert.match(html, /60–90 минути според възрастта и целите/);
+  assert.match(html, /Упражнения, съобразени с нивото на играча/);
+  assert.match(html, /Лична обратна връзка след тренировката/);
+  assert.match(html, /Без предварително плащане · Уточняваме ден и час по телефона/);
+  assert.match(html, /Индивидуални футболни тренировки за играчи от 7 до 24 години/);
+  assert.doesNotMatch(html, /8 до 24 години|Потвърждение по телефона/);
   assert.match(html, /data-page-variant="individual-training"/);
   assert.match(html, /<style>[\s\S]*\.training-video-detail/);
   assert.match(html, /individual-training\.min\.js/);
@@ -67,7 +73,13 @@ test("campaign keeps one concise journey and links each booking CTA to the form"
   assert.match(html, /Игра на скорост/);
   assert.doesNotMatch(html, /Дрибъл и скорост/);
   assert.doesNotMatch(html, /class="quote"|Родител на играч|training-albena|training-ivan/);
-  assert.match(html, /От заявката до ясна следваща стъпка/);
+  assert.match(html, /Какво се случва след заявката\?/);
+  assert.match(html, /От първия разговор до обратната връзка след тренировката — ето как започваме\./);
+  assert.match(html, /Попълваш формата\. До 24 часа се свързвам с теб/);
+  assert.match(html, /Запознавам се с нивото ти и работим върху упражнения/);
+  assert.match(html, /<h3>Обратна връзка<\/h3>/);
+  assert.match(html, /<\/ol>\s*<p class="steps-parent-note">Родителите могат да присъстват на тренировката и да задават въпроси\.<\/p>/);
+  assert.doesNotMatch(html, /Ясен следващ фокус|наблюдаваме конкретни действия/);
   assert.equal((html.match(/class="training-video-detail"/g) || []).length, 3);
 });
 

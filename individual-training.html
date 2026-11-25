@@ -121,6 +121,7 @@ h3 { font-size: 1.21rem; line-height: 1.26; letter-spacing: -.025em; }
 .steps { list-style: none; padding: 0; margin: 0; counter-reset: steps; }
 .steps li { counter-increment: steps; padding: 0 8px; text-align: center; }
 .steps li::before { content: counter(steps); display: grid; place-items: center; width: 44px; height: 44px; margin: 0 auto 17px; border-radius: 50%; background: var(--sun); color: var(--ink); font-weight: 800; }
+.steps-parent-note { max-width: 700px; margin: 28px auto 0; color: var(--muted); font-size: .95rem; text-align: center; }
 .center { text-align: center; margin-top: 32px; }
 .booking { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px,6vw,84px); align-items: center; }
 
@@ -337,17 +338,18 @@ footer a { font-size: .82rem; }
         <div class="center"><a class="button" href="#training-form" data-primary-cta data-cta-location="after_videos">Заяви безплатна тренировка<span aria-hidden="true">↗</span></a></div>
       </div></section>
       <section id="how-it-works" class="section"><div class="wrap">
-        <div class="section-intro"><h2>От заявката до ясна следваща стъпка</h2><p>Един кратък процес от първия разговор до фокуса след тренировката.</p></div>
+        <div class="section-intro"><h2>Какво се случва след заявката?</h2><p>От първия разговор до обратната връзка след тренировката — ето как започваме.</p></div>
         <ol class="steps">
-          <li><h3>Заявка и разговор</h3><p>Попълваш кратката форма. До 24 часа уточняваме ден, час, терен и какво искаш да подобриш.</p></li>
-          <li><h3>Първа тренировка</h3><p>На терена наблюдаваме конкретни действия — от първото докосване до решенията под напрежение.</p></li>
-          <li><h3>Ясен следващ фокус</h3><p>Посочваме какво вече се получава и върху какво да работиш следващо. Родителят може да присъства и да задава въпроси.</p></li>
+          <li><h3>Заявка и разговор</h3><p>Попълваш формата. До 24 часа се свързвам с теб, за да уточним удобен ден, час и място.</p></li>
+          <li><h3>Първа тренировка</h3><p>Запознавам се с нивото ти и работим върху упражнения, съобразени с твоите нужди и цели.</p></li>
+          <li><h3>Обратна връзка</h3><p>Обсъждаме какво се получава добре и върху какво да работим занапред.</p></li>
         </ol>
+        <p class="steps-parent-note">Родителите могат да присъстват на тренировката и да задават въпроси.</p>
       </div></section>
       <section id="training-form" class="section offer"><div class="wrap booking">
         <div class="offer-copy"><p class="kicker">Първа индивидуална тренировка</p><h2>Заяви безплатна тренировка</h2>
           <p class="price">0 €</p><p class="price-note">за първото занимание</p>
-          <ul><li>60–90 минути според възрастта</li><li>За играчи от 7 до 24 години</li><li>София, Пловдив и Стара Загора</li></ul>
+          <ul><li>60–90 минути според възрастта и целите</li><li>Упражнения, съобразени с нивото на играча</li><li>Лична обратна връзка след тренировката</li></ul>
           <p>Ще се свържа с теб до 24 часа, за да уточним удобен ден и час.</p>
         </div>
         <div class="form-panel" tabindex="-1" aria-labelledby="booking-heading" role="region"><h3 id="booking-heading">Данни за връзка</h3><p class="required-note">Всички полета са задължителни.</p><form class="landing-form" data-training-landing-form method="post" action="/api/training-requests">
@@ -369,7 +371,7 @@ footer a { font-size: .82rem; }
               <span>Съгласявам се предоставените от мен данни да бъдат използвани за връзка с мен относно индивидуалните тренировки. <a href="/privacy-policy">Политика за поверителност</a></span>
             </label>
             <button class="landing-button" type="submit">Заяви безплатна тренировка</button>
-            <p class="booking-note">Без предварително плащане · Потвърждение по телефона</p>
+            <p class="booking-note">Без предварително плащане · Уточняваме ден и час по телефона</p>
             <p class="landing-form-status" data-landing-form-status data-success-message="Благодарим! Получихме заявката ти. Ще се свържем с теб, за да уточним подходящ ден и час." role="status" aria-live="polite" aria-atomic="true"></p>
           </form></div>
       </div></section>

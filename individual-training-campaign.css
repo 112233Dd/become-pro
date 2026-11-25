@@ -85,6 +85,7 @@ h3 { font-size: 1.21rem; line-height: 1.26; letter-spacing: -.025em; }
 .steps { list-style: none; padding: 0; margin: 0; counter-reset: steps; }
 .steps li { counter-increment: steps; padding: 0 8px; text-align: center; }
 .steps li::before { content: counter(steps); display: grid; place-items: center; width: 44px; height: 44px; margin: 0 auto 17px; border-radius: 50%; background: var(--sun); color: var(--ink); font-weight: 800; }
+.steps-parent-note { max-width: 700px; margin: 28px auto 0; color: var(--muted); font-size: .95rem; text-align: center; }
 .center { text-align: center; margin-top: 32px; }
 .booking { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px,6vw,84px); align-items: center; }
 
