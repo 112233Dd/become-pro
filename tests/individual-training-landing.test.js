@@ -48,7 +48,7 @@ test("campaign keeps one concise journey and links each booking CTA to the form"
   const html = read("individual-training.html");
   const sections = [...html.matchAll(/<section id="([^"]+)"/g)].map((match) => match[1]);
   assert.deepEqual(sections, [
-    "training-fit", "coach-proof", "training-video", "how-it-works", "training-form", "training-faq",
+    "training-fit", "coach-proof", "training-video", "player-results", "how-it-works", "training-form", "training-faq",
   ]);
   assert.match(html, /data-cta-location="hero">Заяви безплатна тренировка/);
   assert.match(html, /href="#training-video" data-secondary-cta/);
@@ -72,7 +72,14 @@ test("campaign keeps one concise journey and links each booking CTA to the form"
   assert.match(html, /Не просто повтаряме упражнения/);
   assert.match(html, /Игра на скорост/);
   assert.doesNotMatch(html, /Дрибъл и скорост/);
-  assert.doesNotMatch(html, /class="quote"|Родител на играч|training-albena|training-ivan/);
+  assert.match(html, /Какво споделят играчите и родителите/);
+  assert.equal((html.match(/class="quote"/g) || []).length, 3);
+  assert.match(html, /Родител на играч, 13 г\./);
+  assert.match(html, /Албена Георгиева, 16 г\./);
+  assert.match(html, /Иван Трифонов, 17 г\./);
+  assert.match(html, /data-cta-location="after_reviews"/);
+  assert.ok(html.indexOf('id="player-results"') > html.indexOf('id="training-video"'));
+  assert.ok(html.indexOf('id="player-results"') < html.indexOf('id="how-it-works"'));
   assert.match(html, /Какво се случва след заявката\?/);
   assert.match(html, /От първия разговор до обратната връзка след тренировката — ето как започваме\./);
   assert.match(html, /Попълваш формата\. До 24 часа се свързвам с теб/);
