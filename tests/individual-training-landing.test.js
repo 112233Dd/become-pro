@@ -68,7 +68,7 @@ test("campaign keeps one concise journey and links each booking CTA to the form"
   assert.doesNotMatch(html, /Дрибъл и скорост/);
   assert.doesNotMatch(html, /class="quote"|Родител на играч|training-albena|training-ivan/);
   assert.match(html, /От заявката до ясна следваща стъпка/);
-  assert.equal((html.match(/class="training-video-detail"/g) || []).length, 6);
+  assert.equal((html.match(/class="training-video-detail"/g) || []).length, 3);
 });
 
 test("landing form contains only the compact approved fields and success message", () => {
@@ -102,10 +102,10 @@ test("landing page uses real training media, player proof, FAQ, and compact lega
   assert.match(html, /training-video-card-grid/);
   assert.match(html, /assets\/videos\/individual-tech-first-touch\.mp4/);
   assert.match(html, /assets\/videos\/individual-speed-explosiveness\.mp4/);
-  assert.match(html, /assets\/videos\/partner-control\.mp4/);
+  assert.match(html, /assets\/videos\/individual-decisions-game-situations\.mp4/);
   assert.match(html, /assets\/videos\/individual-tech-first-touch-poster\.webp/);
   assert.match(html, /assets\/videos\/individual-speed-explosiveness-poster\.webp/);
-  assert.match(html, /assets\/videos\/partner-control-poster\.webp/);
+  assert.match(html, /assets\/videos\/individual-decisions-game-situations-poster\.webp/);
   assert.equal((html.match(/<button type="button" data-video-play/g) || []).length, 3);
   assert.match(html, /assets\/coach-yordan-zhelev\.webp/);
   assert.doesNotMatch(html, /yordan-zhelev-match-dribble\.webp/);
@@ -118,12 +118,16 @@ test("landing page uses real training media, player proof, FAQ, and compact lega
   assert.match(html, /\.training-coach-copy > p:not\(\.training-coach-eyebrow\) \{ color: #344d40;/);
   assert.match(html, /\.training-coach-eyebrow \{[^}]*color: #00664c;/);
   assert.match(html, /\.training-coach-copy li::before \{[^}]*color: #00664c;/);
-  assert.match(html, /\.training-coach-cta \{[^}]*color: #fff; background: #00664c;/);
+  assert.match(html, /class="button training-coach-cta"/);
+  assert.match(html, /\.hero-actions \.button, \.training-coach-cta \{ gap: 10px; padding-inline: 18px; font-size: \.9rem; \}/);
+  assert.match(html, /\.training-coach-copy ul \{ display: grid; gap: 16px;/);
+  assert.match(html, /\.training-coach-copy li \{[^}]*font-size: 16px;/);
+  assert.match(html, /\.training-coach-copy > p:not\(\.training-coach-eyebrow\) \{ font-size: 17px; \}/);
   assert.doesNotMatch(html, /#coach-proof[\s\S]{0,300}radial-gradient/);
   assert.match(html, /grid-template-columns: minmax\(340px,\.76fr\) minmax\(0,1fr\)/);
   assert.match(html, /\.training-coach-media img \{ width: 100%; height: 600px/);
   assert.match(html, /font-size: clamp\(38px,5vw,66px\)/);
-  assert.match(html, /min-height: 50px; padding: 14px 22px/);
+  assert.match(html, /\.button, \.landing-button, \.training-sticky-cta \{[\s\S]{0,160}min-height: 48px;/);
   assert.match(html, /#coach-proof \{ padding: 70px 18px; \}/);
   assert.equal((html.match(/<li>/g) || []).length >= 4, true);
   for (const [, asset] of html.matchAll(/(?:src|poster)="(\/assets\/[^"?]+)/g)) {
@@ -131,7 +135,12 @@ test("landing page uses real training media, player proof, FAQ, and compact lega
   }
   assert.match(html, /Техника и първо докосване/);
   assert.match(html, /Скорост и експлозивност/);
-  assert.match(html, /Контрол с външната част на ходилото/);
+  assert.match(html, /Виж как тренираме/);
+  assert.match(html, /Реални кадри от индивидуалните тренировки\. Всяко упражнение има конкретна цел\./);
+  assert.match(html, /Решения в игрови ситуации/);
+  assert.equal((html.match(/class="training-video-detail"/g) || []).length, 3);
+  assert.doesNotMatch(html, /<strong>Следим:<\/strong>|<strong>Корекция:<\/strong>/);
+  assert.doesNotMatch(html, /class="training-video-note"/);
   assert.match(html, /За каква възраст са тренировките\?/);
   assert.match(html, /Къде се провеждат\?/);
   assert.match(html, /Колко продължава една тренировка\?/);
