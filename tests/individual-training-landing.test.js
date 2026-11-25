@@ -121,7 +121,9 @@ test("landing page uses real training media, player proof, FAQ, and compact lega
   assert.equal((html.match(/<button type="button" data-video-play/g) || []).length, 3);
   assert.match(html, /assets\/coach-yordan-zhelev\.webp/);
   assert.doesNotMatch(html, /yordan-zhelev-match-dribble\.webp/);
-  assert.match(html, /Йордан Желев — от професионалния футбол до твоето развитие\./);
+  assert.match(html, /<h2>Йордан Желев<\/h2>/);
+  assert.match(html, /<h3 class="training-coach-subtitle">От професионалния футбол до твоето развитие\.<\/h3>/);
+  assert.match(html, /помагам на играчите да развиват своите качества чрез индивидуални тренировки/);
   assert.match(html, /<section id="coach-proof" class="training-coach-grid">/);
   assert.doesNotMatch(html, /id="coach-proof"[^>]*>[\s\S]{0,80}<div class="wrap/);
   assert.match(html, /padding: clamp\(76px,9vw,124px\) max\(18px,calc\(\(100vw - 1180px\)\/2\)\)/);
