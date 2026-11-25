@@ -123,9 +123,9 @@ h3 { font-size: 1.21rem; line-height: 1.26; letter-spacing: -.025em; }
 .steps li { counter-increment: steps; padding: 0 8px; text-align: center; }
 .steps li::before { content: counter(steps); display: grid; place-items: center; width: 44px; height: 44px; margin: 0 auto 17px; border-radius: 50%; background: var(--sun); color: var(--ink); font-weight: 800; }
 .center { text-align: center; margin-top: 32px; }
-.coach, .booking { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px,6vw,84px); align-items: center; }
+.booking { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px,6vw,84px); align-items: center; }
 
-.coach h2 ~ p, .offer-copy > p:last-child { margin-top: 16px; color: var(--muted); }
+.offer-copy > p:last-child { margin-top: 16px; color: var(--muted); }
 .offer { background: var(--mint); }
 .price { font-size: clamp(3.5rem,6vw,5.1rem); line-height: 1; margin-top: 26px; font-weight: 800; letter-spacing: -.06em; color: var(--green); }
 .price-note { font-size: .94rem; font-weight: 700; }
@@ -169,7 +169,7 @@ footer a { font-size: .82rem; }
   .brand span { width: 32px; height: 32px; }
   .brand img { width: 25px; height: 25px; }
   header .button { font-size: .82rem; padding: 10px 14px; gap: 8px; }
-  .hero-grid, .booking, .coach, .training-video-card-grid { grid-template-columns: 1fr; }
+  .hero-grid, .booking, .training-video-card-grid { grid-template-columns: 1fr; }
   .hero-grid { padding-block: 18px 26px; gap: 20px; }
   h1 { font-size: clamp(2.22rem,8vw,3.3rem); }
   .hero-photo img { aspect-ratio: 1.75; }
@@ -201,10 +201,32 @@ footer a { font-size: .82rem; }
   .hero-actions { align-items: stretch; flex-direction: column; }
   .hero-actions .button { width: 100%; }
 }
-#coach-proof { padding-block: clamp(28px, 3vw, 46px); }
-.coach-portrait { width: min(100%, 460px); height: auto; justify-self: center; border-radius: 16px; }
-.coach .kicker { margin-bottom: 8px; }
-#coach-proof .button { margin-top: 18px; }
+#coach-proof { color: #f7f5ee; background: #10251e; }
+.training-coach-grid { display: grid; grid-template-columns: minmax(340px,.76fr) minmax(0,1fr); gap: clamp(40px,7vw,96px); align-items: center; }
+.training-coach-media { min-height: 600px; overflow: hidden; border: 1px solid rgba(255,219,85,.34); border-radius: 26px; background: #0b1814; box-shadow: 0 34px 90px rgba(0,0,0,.32); }
+.training-coach-media img { width: 100%; height: 600px; object-fit: cover; object-position: center top; }
+.training-coach-eyebrow { margin: 0 0 14px; color: var(--sun); font-size: 12px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.training-coach-copy h2 { margin-bottom: 18px; color: #f7f5ee; font-size: clamp(38px,5vw,66px); line-height: 1.01; letter-spacing: -.035em; }
+.training-coach-copy > p:not(.training-coach-eyebrow) { color: #c9d1cd; font-size: 18px; }
+.training-coach-copy ul { display: grid; gap: 12px; margin: 24px 0 30px; padding: 0; list-style: none; }
+.training-coach-copy li { position: relative; padding-left: 26px; color: #eef2ef; line-height: 1.5; }
+.training-coach-copy li::before { content: "✓"; position: absolute; left: 0; color: var(--sun); font-weight: 900; }
+.training-coach-cta { display: inline-flex; align-items: center; justify-content: center; gap: 14px; min-height: 48px; padding: 14px 22px; border-radius: 10px; color: #17231f; background: var(--sun); box-shadow: 0 18px 48px rgba(255,219,85,.16); font-weight: 900; line-height: 1.15; text-decoration: none; transition: transform .18s ease, filter .18s ease; }
+.training-coach-cta:hover { transform: translateY(-2px); filter: brightness(1.04); }
+.training-coach-cta:focus-visible { outline-color: #fff; }
+.training-coach-cta span { font-size: 1.15em; line-height: 1; }
+@media (max-width: 980px) {
+  .training-coach-grid { grid-template-columns: 1fr; }
+  .training-coach-media { width: min(100%,520px); justify-self: center; }
+  .training-coach-media, .training-coach-media img { height: 560px; min-height: 560px; }
+}
+@media (max-width: 720px) {
+  .training-coach-grid { gap: 34px; }
+  .training-coach-copy h2 { font-size: clamp(33px,10vw,44px); }
+  .training-coach-copy > p:not(.training-coach-eyebrow) { font-size: 16px; }
+  .training-coach-media, .training-coach-media img { height: 520px; min-height: 520px; }
+  .training-coach-cta { width: 100%; }
+}
 #how-it-works { padding-block: clamp(44px,6vw,76px); background: var(--cream); }
 #how-it-works .section-intro { margin-bottom: 22px; }
 #how-it-works .steps li::before { width: 34px; height: 34px; margin-bottom: 9px; }
@@ -223,7 +245,6 @@ footer a { font-size: .82rem; }
 .last-call p { margin-bottom: 22px; color: var(--muted); }
 @media (max-width: 700px) {
   .landing-form { grid-template-columns: minmax(0,1fr); }
-  .coach-portrait { max-width: 360px; }
   .brand { flex-shrink: 0; }
   header .button { min-height: 44px; }
   .landing-form select { min-width: 0; }
@@ -269,13 +290,21 @@ footer a { font-size: .82rem; }
             <article class="skill"><span class="skill-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19V6h18v13M3 9h18M7 6v6m5-6v5m5-5v4"/><circle cx="13" cy="17" r="3"/></svg></span><h3>Завършващ удар</h3><p>Работим върху точността, силата и техниката на удара от различни позиции.</p></article>
             <article class="skill"><span class="skill-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12s3.4-6 9-6 9 6 9 6-3.4 6-9 6-9-6-9-6Z"/><circle cx="12" cy="12" r="2.5"/></svg></span><h3>Поглед върху играта</h3><p>Развиваме навика да се оглеждаш и да вземаш решения още преди топката да е стигнала до теб.</p></article></div>
       </div></section>
-      <section id="coach-proof" class="section"><div class="wrap coach">
-        <picture class="coach-portrait"><source type="image/avif" srcset="/assets/match-360.avif 360w, /assets/match-540.avif 540w, /assets/match-720.avif 720w, /assets/match-920.avif 920w" sizes="(max-width: 700px) min(360px, 92vw), (max-width: 1024px) 44vw, 460px"><img style="width:100%;height:auto;border-radius:inherit" decoding="async" src="/assets/yordan-zhelev-match-dribble.webp" width="920" height="980" alt="Йордан Желев води топката в професионален мач" loading="lazy"></picture>
-        <div><p class="kicker">Твоят треньор</p><h2>Йордан Желев</h2>
-          <p><strong>От професионалния футбол до индивидуалната работа с играчи.</strong></p>
-          <p>Дебютирах в Първа лига с „Ботев“ (Враца), участвах в лагери на юношеския проектонационален отбор и бях на проби в „Нотингам Форест“.</p>
-          <p>На терена наблюдавам конкретното действие, показвам корекцията и я повтаряме в ситуация, близка до мача.</p>
-          <a class="button" href="#training-form" data-primary-cta data-cta-location="coach">Заяви безплатна тренировка<span aria-hidden="true">↗</span></a>
+      <section id="coach-proof" class="section"><div class="wrap training-coach-grid">
+        <div class="training-coach-media">
+          <img src="/assets/coach-yordan-zhelev.webp" alt="Треньорът Йордан Желев" loading="lazy" width="449" height="1119" />
+        </div>
+        <div class="training-coach-copy">
+          <p class="training-coach-eyebrow">ТВОЯТ ТРЕНЬОР</p>
+          <h2>Йордан Желев — от професионалния футбол до твоето развитие.</h2>
+          <p>Използвам опита си като футболист, за да помагам на играчи да развиват своите качества чрез индивидуални тренировки.</p>
+          <ul>
+            <li>Дебют в Първа лига на 16 години.</li>
+            <li>Участие в лагери на юношеския проектонационален отбор.</li>
+            <li>Проби в „Нотингам Форест“.</li>
+            <li>Индивидуален подход според нивото и целите на играча.</li>
+          </ul>
+          <a class="training-coach-cta" href="#training-form" data-primary-cta data-cta-location="coach">Заяви безплатна тренировка <span aria-hidden="true">↗</span></a>
         </div>
       </div></section>
       <section id="training-video" class="section video-band"><div class="wrap">

@@ -107,7 +107,10 @@ test("landing page uses real training media, player proof, FAQ, and compact lega
   assert.match(html, /assets\/videos\/individual-speed-explosiveness-poster\.webp/);
   assert.match(html, /assets\/videos\/partner-control-poster\.webp/);
   assert.equal((html.match(/<button type="button" data-video-play/g) || []).length, 3);
-  assert.match(html, /yordan-zhelev-match-dribble\.webp/);
+  assert.match(html, /assets\/coach-yordan-zhelev\.webp/);
+  assert.doesNotMatch(html, /yordan-zhelev-match-dribble\.webp/);
+  assert.match(html, /Йордан Желев — от професионалния футбол до твоето развитие\./);
+  assert.equal((html.match(/<li>/g) || []).length >= 4, true);
   for (const [, asset] of html.matchAll(/(?:src|poster)="(\/assets\/[^"?]+)/g)) {
     assert.ok(fs.existsSync(path.join(root, asset)), asset);
   }
