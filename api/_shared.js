@@ -78,7 +78,7 @@ const getProgramsByNames = (names) => {
 
 const createStripeCheckoutSession = async ({ programs, customer, origin, attribution = {} }) => {
   const metadata = {
-    ...(programs[0]?.winterAgeGroup ? {winterAgeGroup: programs[0].winterAgeGroup, winterPriceMinor: String(programs[0].priceCents)} : {}),
+    ...(programs[0]?.id === winterConfig.productId ? {winterPriceMinor: String(programs[0].priceCents)} : {}),
     programId: programs.map((program) => program.id).join(","),
     programName: programs.map((program) => program.name).join(", "),
     customerName: customer.customerName,

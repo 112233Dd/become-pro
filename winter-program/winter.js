@@ -91,7 +91,7 @@
   const questions = [
     ["За кого е подходяща програмата?", "За футболисти, които планират самостоятелна подготовка през зимната пауза, както и за родители, които търсят план за детето си."],
     ["Колко седмици продължава?", config.weeks + " седмици."],
-    ["Как се адаптира според възрастта?", "При покупка посочваш възрастта на футболиста. Получаваш PDF програмата с указания за подготовката."],
+    ["Как се адаптира според възрастта?", "При необходимост уточняваме възрастта отделно. Получаваш PDF програмата с указания за подготовката."],
     ["Какво точно включва?", config.tracks.map(t => t.title).join(", ") + ". Към плана са включени и трите бонуса от офертата."],
     ["Кога мога да започна?", config.startInfo || "Началната дата предстои да бъде обявена."],
     ["Как получавам достъп?", config.delivery || "Начинът за получаване на материалите ще бъде уточнен преди отваряне на продажбите."],
@@ -106,16 +106,16 @@
     byId("questions").append(details);
   }
   const form = byId("winter-purchase");
-  const playerAge = form.elements.player_age;
+
   const buy = form.querySelector("button");
   const status = byId("sale-status");
+  const offerDescription = status.textContent;
   const clock = form.querySelector(".countdown");
   const digits = clock.querySelectorAll("b");
   const sticky = document.querySelector(".sticky-offer");
   const priceText = document.querySelector("[data-price]");
   const date = new Intl.DateTimeFormat("bg-BG", { day:"numeric", month:"long", timeZone:config.timeZone }).format(new Date(config.launchEndsAt));
-  const deadline = new Intl.DateTimeFormat("bg-BG", {hour:"2-digit",minute:"2-digit",second:"2-digit",timeZone:config.timeZone}).format(new Date(config.launchEndsAt));
-  byId("deadline-label").textContent = "Стартова цена до " + date + ", " + deadline + " ч. (София)";
+  byId("deadline-label").textContent = "Стартовата цена приключва на " + date + ".";
   const configured = config.salesEnabled && config.delivery;
   let lastState = "";
   let seenOffer = false;
@@ -170,9 +170,9 @@
       sticky.querySelector("strong").textContent = "WINTER PROGRAM" + (price ? " · " + price : "");
       clock.hidden = !offer.launch;
       const available = Boolean(configured && price && offer.sessionWindow);
-      buy.hidden = playerAge.parentElement.hidden = !available;
+      buy.hidden = !available;
       buy.textContent = price ? "КУПИ ЗИМНАТА ПРОГРАМА — " + price + " →" : "";
-      status.textContent = available ? config.delivery : !offer.launch && !price ? "Стартовата оферта приключи. Новата цена предстои да бъде обявена." :
+      status.textContent = available ? offerDescription : !offer.launch && !price ? "Стартовата оферта приключи. Новата цена предстои да бъде обявена." :
         configured && !offer.sessionWindow ? "Вече отворените плащания могат да се завършат до края на срока." : "Покупките все още не са отворени.";
     }
     if (offer.launch) {
@@ -192,12 +192,12 @@
     event.preventDefault();
     const shown = lastState;
     const offer = renderOffer();
-    if (shown !== lastState || buy.hidden || buy.disabled || !form.reportValidity()) return;
+    if (shown !== lastState || buy.hidden || buy.disabled) return;
     buy.disabled = true;
     try {
       const response = await fetch("/api/create-checkout-session", {
         method:"POST",headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({programId:config.productId,playerAge:playerAge.value,expectedPriceMinor:offer.price,attribution})
+        body:JSON.stringify({programId:config.productId,expectedPriceMinor:offer.price,attribution})
       });
       if (!response.ok) throw new Error();
       const checkout = new URL((await response.json()).url);
