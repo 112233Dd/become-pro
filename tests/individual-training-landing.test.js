@@ -44,25 +44,26 @@ test("individual training campaign route and page exist", () => {
   });
 });
 
-test("campaign explains the first session and links each booking CTA to the form", () => {
+test("campaign keeps one concise journey and links each booking CTA to the form", () => {
   const html = read("individual-training.html");
   const sections = [...html.matchAll(/<section id="([^"]+)"/g)].map((match) => match[1]);
   assert.deepEqual(sections, [
-    "why-individual", "training-fit", "coach-proof", "training-video", "player-results",
-    "first-session", "how-it-works", "training-form", "training-faq",
+    "training-fit", "coach-proof", "training-video", "how-it-works", "training-form", "training-faq",
   ]);
   assert.match(html, /data-cta-location="hero">Заяви безплатна тренировка/);
   assert.match(html, /Свързваме се с теб до 24 часа/);
   assert.match(html, /0 €/);
   assert.match(html, /data-page-variant="individual-training"/);
-  assert.match(html, /individual-training-campaign\.css/);
+  assert.match(html, /<style>[\s\S]*\.training-video-detail/);
   assert.match(html, /individual-training\.min\.js/);
   const buttons = [...html.matchAll(/<a [^>]*data-primary-cta[^>]*>/g)];
   assert.ok(buttons.length >= 4);
   for (const [button] of buttons) assert.match(button, /href="#training-form"/);
   assert.match(html, /data-mobile-sticky-cta/);
   assert.equal((html.match(/class="skill"/g) || []).length, 4);
-  assert.equal((html.match(/class="quote"/g) || []).length, 3);
+  assert.doesNotMatch(html, /class="quote"|Родител на играч|training-albena|training-ivan/);
+  assert.match(html, /От заявката до ясна следваща стъпка/);
+  assert.equal((html.match(/class="training-video-detail"/g) || []).length, 6);
 });
 
 test("landing form contains only the compact approved fields and success message", () => {

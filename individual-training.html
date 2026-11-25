@@ -93,7 +93,7 @@ h2 { font-size: clamp(1.88rem,3.1vw,2.85rem); }
 h3 { font-size: 1.21rem; line-height: 1.26; letter-spacing: -.025em; }
 .section-intro { margin: 0 auto 34px; max-width: 780px; text-align: center; }
 .section-intro p { margin: 14px auto 0; color: var(--muted); max-width: 65ch; }
-.skills, .quotes, .steps, .training-video-card-grid { display: grid; gap: 20px; }
+.skills, .steps, .training-video-card-grid { display: grid; gap: 20px; }
 .skills { grid-template-columns: repeat(4,1fr); }
 .skill { padding: 24px 20px; border-radius: 15px; background: #f3f7f1; }
 .skill:nth-child(even) { background: #fcf6df; }
@@ -101,7 +101,7 @@ h3 { font-size: 1.21rem; line-height: 1.26; letter-spacing: -.025em; }
 .skill-icon svg { width: 28px; height: 28px; }
 .skill p, .steps p { font-size: .95rem; color: var(--muted); margin-top: 8px; }
 .video-band { background: var(--mint); }
-.training-video-card-grid, .quotes, .steps { grid-template-columns: repeat(3,1fr); }
+.training-video-card-grid, .steps { grid-template-columns: repeat(3,1fr); }
 .training-video-card { min-width: 0; background: white; border-radius: 15px; overflow: hidden; }
 .training-video-card-grid { width: min(100%, 930px); margin-inline: auto; }
 .training-video-card-media { position: relative; aspect-ratio: 9 / 16; background: #17261f; }
@@ -110,17 +110,14 @@ h3 { font-size: 1.21rem; line-height: 1.26; letter-spacing: -.025em; }
 .training-video-card-media > button:focus-visible { outline: 4px solid #ffda50; outline-offset: 3px; }
 .training-video-card-media > video ~ button { display: none; }
 .training-video-note { margin: 10px 0 0; color: var(--muted); font-size: .9rem; }
-.training-video-card h3 { padding: 17px 20px 20px; }
+.training-video-card h3 { padding: 17px 20px 8px; }
+.training-video-detail { margin: 0 20px 10px; font-size: .91rem; color: var(--muted); }
+.training-video-detail strong { color: var(--ink); }
+.training-video-detail:last-child { margin-bottom: 20px; }
 .steps { list-style: none; padding: 0; margin: 0; counter-reset: steps; }
 .steps li { counter-increment: steps; padding: 0 8px; text-align: center; }
 .steps li::before { content: counter(steps); display: grid; place-items: center; width: 44px; height: 44px; margin: 0 auto 17px; border-radius: 50%; background: var(--sun); color: var(--ink); font-weight: 800; }
 .center { text-align: center; margin-top: 32px; }
-.stories { background: var(--cream); }
-.quote { background: white; border-radius: 15px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; gap: 24px; }
-.quote blockquote { font-size: 1.12rem; font-weight: 600; }
-.quote figcaption { margin-top: auto; min-height: 48px; display: flex; gap: 12px; align-items: center; color: var(--muted); font-size: .85rem; }
-.quote figcaption img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; object-position: 50% 29%; }
-.quote strong { display: block; color: var(--ink); font-size: .97rem; }
 .coach, .booking { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px,6vw,84px); align-items: center; }
 
 .coach h2 ~ p, .offer-copy > p:last-child { margin-top: 16px; color: var(--muted); }
@@ -167,7 +164,7 @@ footer a { font-size: .82rem; }
   .brand span { width: 32px; height: 32px; }
   .brand img { width: 25px; height: 25px; }
   header .button { font-size: .82rem; padding: 10px 14px; gap: 8px; }
-  .hero-grid, .booking, .coach, .quotes, .training-video-card-grid { grid-template-columns: 1fr; }
+  .hero-grid, .booking, .coach, .training-video-card-grid { grid-template-columns: 1fr; }
   .hero-grid { padding-block: 18px 26px; gap: 20px; }
   h1 { font-size: clamp(2.22rem,8vw,3.3rem); }
   .hero-photo img { aspect-ratio: 1.75; }
@@ -193,37 +190,15 @@ footer a { font-size: .82rem; }
 .booking-note { margin-top: 8px; }
 .experience { display: flex; flex-wrap: wrap; gap: 6px 8px; margin: 12px 0 0; padding: 0; list-style: none; }
 .experience li { padding: 4px 11px; border: 1px solid #c2d8c7; border-radius: 8px; background: #edf5eb; color: #214737; font-size: .93rem; font-weight: 700; }
-.comparison, .session-copy { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; }
-.comparison article { padding: clamp(20px,3vw,38px); background: #f3f7f1; border-radius: 15px; }
-.comparison article + article { background: var(--mint); border-left: 4px solid var(--green); }
-.session-stages { margin: 0; padding: 0; list-style: none; display: grid; gap: 16px; }
-.session-stages li { display: grid; grid-template-columns: 24px minmax(0,1fr); gap: 12px; }
-.session-stages svg { width: 24px; height: 24px; color: var(--green); }
-.session-stages p { color: var(--muted); margin-top: 3px; }
-.session-parent-note { margin: 16px 0 0 36px; font-size: .94rem; color: var(--muted); }
-#first-session { padding-block: clamp(32px,4vw,56px); }
-.comparison p { color: var(--muted); margin-top: 10px; }
-#why-individual { background: #f4f9f4; padding-bottom: 72px; }
-#why-individual .comparison article:first-child { background: white; }
-#why-individual .center { margin-top: 20px; }
-#training-fit { background: white; padding-top: 38px; }
-@media (max-width: 700px) {
-  #why-individual { padding-bottom: 36px; }
-  #training-fit { padding-top: 28px; }
-}
+#training-fit { background: white; }
 @media (max-width: 620px) {
   header { position: static; }
 }
 #coach-proof { padding-block: clamp(28px, 3vw, 46px); }
 .coach-portrait { width: min(100%, 460px); height: auto; justify-self: center; border-radius: 16px; }
 .coach .kicker { margin-bottom: 8px; }
-.coach-motto + .button { margin-top: 18px; }
-.coach .coach-motto { padding-left: 15px; border-left: 3px solid var(--green); color: var(--green); font-weight: 700; }
-.training-video-card h3 { padding-bottom: 6px; }
-.training-video-card > p { margin: 0 20px 20px; font-size: .92rem; color: var(--muted); }
-.stories .center { margin-top: 36px; }
-.stories .quotes { grid-auto-rows: 1fr; }
-#how-it-works { padding-block: 30px 40px; background: #f5f8f3; }
+#coach-proof .button { margin-top: 18px; }
+#how-it-works { padding-block: clamp(44px,6vw,76px); background: var(--cream); }
 #how-it-works .section-intro { margin-bottom: 22px; }
 #how-it-works .steps li::before { width: 34px; height: 34px; margin-bottom: 9px; }
 .form-panel h3 { margin-bottom: 4px; }
@@ -240,9 +215,8 @@ footer a { font-size: .82rem; }
 .last-call h2 { margin-bottom: 10px; }
 .last-call p { margin-bottom: 22px; color: var(--muted); }
 @media (max-width: 700px) {
-  .comparison, .session-copy, .landing-form { grid-template-columns: minmax(0,1fr); }
+  .landing-form { grid-template-columns: minmax(0,1fr); }
   .coach-portrait { max-width: 360px; }
-  .session-copy { gap: 20px; }
   .brand { flex-shrink: 0; }
   header .button { min-height: 44px; }
   .landing-form select { min-width: 0; }
@@ -264,8 +238,8 @@ footer a { font-size: .82rem; }
       <section class="hero"><div class="wrap hero-grid">
         <div class="hero-copy">
           <p class="kicker">Индивидуални футболни тренировки</p>
-          <h1>Тренираш с отбора. <em>Но кой работи върху твоите слабости?</em></h1>
-          <p class="lead">Индивидуални футболни тренировки за играчи от <strong>8 до 24 години.</strong> Работим върху твоите слабости, развиваме силните ти страни и подготвяме уменията ти за реалните ситуации на терена.</p>
+          <h1>По-уверен с топката. <em>Още от първото докосване.</em></h1>
+          <p class="lead">Тренирай с Йордан Желев върху ситуациите, които те затрудняват в мач. За играчи от <strong>8 до 24 години</strong> в София, Пловдив и Стара Загора.</p>
           <a class="button" href="#training-form" data-primary-cta data-cta-location="hero">Заяви безплатна тренировка<span aria-hidden="true">↗</span></a>
           <p class="booking-note">Свързваме се с теб до 24 часа</p>
           <p class="locations">София <i>·</i> Пловдив <i>·</i> Стара Загора</p>
@@ -278,16 +252,8 @@ footer a { font-size: .82rem; }
           <figcaption><span></span>На терена с Become Pro</figcaption>
         </figure>
       </div></section>
-      <section id="why-individual" class="section"><div class="wrap">
-        <div class="section-intro"><h2>В отбора тренирате заедно. Тук работим върху теб.</h2></div>
-        <div class="comparison">
-          <article><h3>С отбора</h3><p>Работите върху тактика, игрови ситуации и взаимодействия между съотборниците. Треньорът трябва да обръща внимание на развитието на целия отбор.</p></article>
-          <article><h3>На индивидуална тренировка</h3><p>Фокусираме се върху това, което те затруднява в мач — първо докосване, дрибъл, завършващ удар или решения под напрежение. Упражненията са съобразени с твоите нужди и получаваш лична обратна връзка.</p></article>
-        </div>
-        <p class="center"><small><strong>Индивидуалните тренировки не заместват отборните. Те ги допълват.</strong></small></p>
-      </div></section>
       <section id="training-fit" class="section"><div class="wrap" id="player-benefits">
-        <div class="section-intro"><h2>Какво искаш да подобриш?</h2><p>Всеки футболист има различни силни и слаби страни. Затова всяка тренировка се адаптира към твоето ниво, позиция и цели.</p></div>
+        <div class="section-intro"><h2>Какво искаш да подобриш?</h2><p>Избери ситуацията, която най-често те спира в мач. От нея започваме на терена.</p></div>
         <div class="skills"><article class="skill"><span class="skill-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></span><h3>Първо докосване</h3><p>Губиш топката още при поемането? Работим върху контрола и подготовката за следващото действие.</p></article>
             <article class="skill"><span class="skill-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 20 5-5-4-4 6-6m-1 0h3v3m1 12 6-6-4-4 4-5"/></svg></span><h3>Дрибъл и скорост</h3><p>Трудно преодоляваш защитник? Тренираме смяна на посоката, ускорение и контрол на топката.</p></article>
             <article class="skill"><span class="skill-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19V6h18v13M3 9h18M7 6v6m5-6v5m5-5v4"/><circle cx="13" cy="17" r="3"/></svg></span><h3>Завършващ удар</h3><p>Стигаш до положение, но пропускаш? Работим върху подготовката и изпълнението на удара.</p></article>
@@ -298,78 +264,55 @@ footer a { font-size: .82rem; }
         <div><p class="kicker">Твоят треньор</p><h2>Йордан Желев</h2>
           <p><strong>От професионалния футбол до индивидуалната работа с играчи.</strong></p>
           <p>Дебютирах в Първа лига с „Ботев“ (Враца), участвах в лагери на юношеския проектонационален отбор и бях на проби в „Нотингам Форест“.</p>
-          <p>Днес използвам опита си, за да помагам на футболистите да развиват силните си страни и да работят върху слабостите си чрез индивидуални тренировки, съобразени с тяхното ниво и цели.</p>
-          <p class="coach-motto">„Не се адаптирай към тренировките. Нека тренировките се адаптират към теб.“</p>
+          <p>На терена наблюдавам конкретното действие, показвам корекцията и я повтаряме в ситуация, близка до мача.</p>
           <a class="button" href="#training-form" data-primary-cta data-cta-location="coach">Заяви безплатна тренировка<span aria-hidden="true">↗</span></a>
         </div>
       </div></section>
       <section id="training-video" class="section video-band"><div class="wrap">
-        <div class="section-intro"><h2>Виж как тренираме</h2><p>Всяко упражнение има конкретна цел. Виж как работим върху уменията, които правят разлика на терена.</p></div>
+        <div class="section-intro"><h2>Виж упражнението. И корекцията зад него.</h2><p>Видеата са от реални занимания. Под всяко виждаш какво наблюдаваме и каква промяна търсим.</p></div>
         <div class="training-video-card-grid" aria-label="Видео примери от индивидуални тренировки">
           <article class="training-video-card">
             <div class="training-video-card-media deferred-video-shell" data-deferred-video-src="/assets/videos/individual-tech-first-touch.mp4" data-video-label="Техника и първо докосване">
               <img src="/assets/videos/individual-tech-first-touch-poster.webp" srcset="/assets/videos/individual-tech-first-touch-350.webp 350w, /assets/videos/individual-tech-first-touch-540.webp 540w" sizes="(max-width: 700px) min(350px, 92vw), (max-width: 1000px) 29vw, 297px" width="540" height="960" loading="lazy" decoding="async" alt="" data-video-poster />
               <button type="button" data-video-play aria-label="Пусни видеото – Техника и първо докосване"><span aria-hidden="true">▶</span></button>
             </div>
-            <h3>Техника и първо докосване</h3><p>Работим върху контрола на топката и подготовката за следващото действие.</p>
+            <h3>Техника и първо докосване</h3>
+            <p class="training-video-detail"><strong>Следим:</strong> посоката на първото докосване и готовността за следващото движение.</p>
+            <p class="training-video-detail"><strong>Корекция:</strong> отваряне на тялото преди приема, за да остане топката в следващата игрова линия.</p>
           </article>
           <article class="training-video-card">
             <div class="training-video-card-media deferred-video-shell" data-deferred-video-src="/assets/videos/individual-speed-explosiveness.mp4" data-video-label="Скорост и експлозивност">
               <img src="/assets/videos/individual-speed-explosiveness-poster.webp" srcset="/assets/videos/individual-speed-explosiveness-350.webp 350w, /assets/videos/individual-speed-explosiveness-540.webp 540w" sizes="(max-width: 700px) min(350px, 92vw), (max-width: 1000px) 29vw, 297px" width="540" height="960" loading="lazy" decoding="async" alt="" data-video-poster />
               <button type="button" data-video-play aria-label="Пусни видеото – Скорост и експлозивност"><span aria-hidden="true">▶</span></button>
             </div>
-            <h3>Скорост и експлозивност</h3><p>Развиваме първите крачки и ускорението при смяна на темпото.</p>
+            <h3>Скорост и експлозивност</h3>
+            <p class="training-video-detail"><strong>Следим:</strong> първите крачки, баланса и контрола при смяна на темпото.</p>
+            <p class="training-video-detail"><strong>Корекция:</strong> нисък старт и кратки първи стъпки за ускорение без загуба на топката.</p>
           </article>
           <article class="training-video-card">
             <div class="training-video-card-media deferred-video-shell" data-deferred-video-src="/assets/videos/partner-control.mp4" data-video-label="Контрол с външната част на ходилото">
               <img src="/assets/videos/partner-control-poster.webp" srcset="/assets/videos/partner-control-350.webp 350w, /assets/videos/partner-control-540.webp 540w" sizes="(max-width: 700px) min(350px, 92vw), (max-width: 1000px) 29vw, 297px" width="540" height="960" loading="lazy" decoding="async" alt="" data-video-poster />
               <button type="button" data-video-play aria-label="Пусни видеото – Контрол с външната част на ходилото"><span aria-hidden="true">▶</span></button>
             </div>
-            <h3>Контрол с външната част на ходилото</h3><p>Двама играчи работят с топка между конуси. Целта е с едно докосване да насочиш топката покрай препятствието.</p>
+            <h3>Контрол с външната част на ходилото</h3>
+            <p class="training-video-detail"><strong>Следим:</strong> ъгъла на ходилото и посоката на топката след контакта.</p>
+            <p class="training-video-detail"><strong>Корекция:</strong> едно докосване покрай конуса, което подготвя следващото действие.</p>
           </article>
         </div>
         <div class="center"><a class="button" href="#training-form" data-primary-cta data-cta-location="after_videos">Заяви безплатна тренировка<span aria-hidden="true">↗</span></a><p class="training-video-note">Първата тренировка е безплатна.</p></div>
       </div></section>
-      <section id="player-results" class="section stories"><div class="wrap">
-        <div class="section-intro"><h2>Какво споделят играчите и родителите</h2><p>Впечатления от индивидуалните тренировки на Become Pro.</p></div>
-        <div class="quotes"><figure class="quote"><blockquote>„Преди губеше топката при първото докосване. След няколко тренировки започна да овладява по-спокойно и да играе по-бързо.“</blockquote><figcaption><span><strong>Родител на играч, 13 г.</strong></span></figcaption></figure>
-              <figure class="quote"><blockquote>„Започнах да играя с по-голяма увереност и повече самочувствие.“</blockquote><figcaption><img width="48" height="48" src="/assets/training-albena.webp" alt="" loading="lazy"><span><strong>Албена, 16 г.</strong>София</span></figcaption></figure>
-              <figure class="quote"><blockquote>„Подобрих концентрацията и решенията си на терена.“</blockquote><figcaption><img width="48" height="48" src="/assets/training-ivan.webp" alt="" loading="lazy"><span><strong>Иван, 17 г.</strong>Пловдив</span></figcaption></figure></div>
-
-        <div class="center"><a class="button" href="#training-form" data-primary-cta data-cta-location="after_reviews">Заяви безплатна тренировка<span aria-hidden="true">↗</span></a></div>
-      </div></section>
-      <section id="first-session" class="section"><div class="wrap session-copy">
-        <h2>Как протича първата тренировка?</h2>
-        <div>
-          <ul class="session-stages">
-            <li>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11a8 8 0 0 1-8 8H8l-5 3 1.5-6A8 8 0 0 1 3 11a9 8 0 0 1 18 0Z"/><path d="M8 10h8m-8 4h5"/></svg>
-              <div><h3>Запознаваме се</h3><p>Разговаряме за твоя опит, позиция, силни страни и нещата, които искаш да подобриш.</p></div>
-            </li>
-            <li>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M12 5v14"/><circle cx="12" cy="12" r="3"/></svg>
-              <div><h3>Излизаме на терена</h3><p>Преминаваме през загрявка и упражнения, съобразени с възрастта, нивото и конкретните ти цели.</p></div>
-            </li>
-            <li>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h14v18H5z"/><path d="m8 10 2 2 5-5m-7 9h8"/></svg>
-              <div><h3>Получаваш обратна връзка</h3><p>Обсъждаме какво се е получило добре и върху кои качества можем да работим занапред.</p></div>
-            </li>
-          </ul>
-          <p class="session-parent-note">Родителите могат да присъстват и да задават въпроси.</p>
-        </div>
-      </div></section>
       <section id="how-it-works" class="section"><div class="wrap">
-        <div class="section-intro"><h2>От заявката до терена в три стъпки</h2></div>
+        <div class="section-intro"><h2>От заявката до ясна следваща стъпка</h2><p>Един кратък процес от първия разговор до фокуса след тренировката.</p></div>
         <ol class="steps">
-          <li><h3>Изпращаш заявка</h3><p>Попълваш кратката форма за себе си или детето си.</p></li>
-          <li><h3>Уточняваме детайлите</h3><p>Свързвам се с теб до 24 часа, за да изберем удобен ден, час и терен.</p></li>
-          <li><h3>Излизаме на терена</h3><p>Провеждаме първата безплатна тренировка и обсъждаме следващите стъпки.</p></li>
+          <li><h3>Заявка и разговор</h3><p>Попълваш кратката форма. До 24 часа уточняваме ден, час, терен и какво искаш да подобриш.</p></li>
+          <li><h3>Първа тренировка</h3><p>На терена наблюдаваме конкретни действия — от първото докосване до решенията под напрежение.</p></li>
+          <li><h3>Ясен следващ фокус</h3><p>Посочваме какво вече се получава и върху какво да работиш следващо. Родителят може да присъства и да задава въпроси.</p></li>
         </ol>
       </div></section>
       <section id="training-form" class="section offer"><div class="wrap booking">
         <div class="offer-copy"><p class="kicker">Първа индивидуална тренировка</p><h2>Заяви безплатна тренировка</h2>
           <p class="price">0 €</p><p class="price-note">за първото занимание</p>
-          <ul><li>60–90 минути според възрастта и целта</li><li>Упражнения, подбрани за играча</li><li>Обратна връзка след тренировката</li></ul>
+          <ul><li>60–90 минути според възрастта</li><li>За играчи от 8 до 24 години</li><li>София, Пловдив и Стара Загора</li></ul>
           <p>Ще се свържа с теб до 24 часа, за да уточним удобен ден и час.</p>
         </div>
         <div class="form-panel" tabindex="-1" aria-labelledby="booking-heading" role="region"><h3 id="booking-heading">Данни за връзка</h3><p class="required-note">Всички полета са задължителни.</p><form class="landing-form" data-training-landing-form method="post" action="/api/training-requests">
