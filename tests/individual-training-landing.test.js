@@ -63,6 +63,9 @@ test("campaign keeps one concise journey and links each booking CTA to the form"
   for (const [button] of buttons) assert.match(button, /href="#training-form"/);
   assert.match(html, /data-mobile-sticky-cta/);
   assert.equal((html.match(/class="skill"/g) || []).length, 4);
+  assert.match(html, /Не просто повтаряме упражнения/);
+  assert.match(html, /Игра на скорост/);
+  assert.doesNotMatch(html, /Дрибъл и скорост/);
   assert.doesNotMatch(html, /class="quote"|Родител на играч|training-albena|training-ivan/);
   assert.match(html, /От заявката до ясна следваща стъпка/);
   assert.equal((html.match(/class="training-video-detail"/g) || []).length, 6);
