@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
     const body = await readJsonBody(req);
     const ids = Array.isArray(body.items) ? body.items : [body.programId];
     const winter = ids.length === 1 && ids[0] === winterConfig.productId;
-    const programs = winter ? [await winterSelection(body.ageGroup, stripeRequest)] : getProgramsByIds(ids);
+    const programs = winter ? [await winterSelection(body.ageGroup, stripeRequest, body.expectedPriceMinor)] : getProgramsByIds(ids);
     const attribution = body.attribution || {};
     const checkoutAttribution = {
       landingSessionId: cleanText(attribution.sessionId, 100),

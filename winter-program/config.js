@@ -4,7 +4,19 @@ const winterProgram = {
   name: "Become Pro — Winter Program 2026/27",
   weeks: 4,
   currency: "EUR",
-  priceMinor: null,
+  priceMinor: 4499,
+  regularPriceMinor: null,
+  launchEndsAt: "2026-12-15T23:59:59+02:00",
+  timeZone: "Europe/Sofia",
+  offerAt(now = Date.now()) {
+    const until = Date.parse(this.launchEndsAt) + 1000;
+    const launch = now < until;
+    const price = launch ? this.priceMinor : this.regularPriceMinor;
+    const priced = Number.isSafeInteger(price) && price > 0 && (launch || price > this.priceMinor);
+    // Hosted Stripe sessions require at least 30 minutes until expiry.
+    const sessionWindow = !launch || until - now > 1801000;
+    return {launch, until, price: priced ? price : null, sessionWindow};
+  },
   salesEnabled: false,
   delivery: "",
   ageGroups: {},

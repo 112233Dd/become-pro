@@ -98,42 +98,117 @@
     ["Необходимо ли е оборудване?", config.equipmentInfo || "Точният списък с необходимото оборудване предстои да бъде обявен."],
     ["Мога ли да я комбинирам с клубни тренировки?", "Съгласувай заниманията с клубния си треньор според графика на отбора и времето за възстановяване."],
     ["Какво включва Viber общността?", config.bonuses[2].detail],
-    ["Еднократно ли е плащането?", config.salesEnabled ? "Да. Плащането е еднократно за целия пакет." : "Условията за плащане ще бъдат публикувани с крайната цена."]
+    ["Еднократно ли е плащането?", config.salesEnabled ? "Да. Плащането е еднократно за целия пакет." : "Условията за плащане ще бъдат публикувани при отваряне на продажбите."]
   ];
   for (const [question, answer] of questions) {
     const details = node("details");
     details.append(node("summary", question), node("p", answer));
     byId("questions").append(details);
   }
-  const priced = Number.isSafeInteger(config.priceMinor) && config.priceMinor > 0;
-  if (priced) {
-    const price = new Intl.NumberFormat("bg-BG", {style:"currency", currency:config.currency}).format(config.priceMinor / 100);
-    document.querySelectorAll("[data-price]").forEach(el => { el.textContent = price; el.hidden = false; });
-  }
-  if (!priced || !config.salesEnabled || !config.delivery || !Object.keys(config.ageGroups).length) return;
   const form = byId("winter-purchase");
+  const select = form.elements.age_group;
+  const buy = form.querySelector("button");
   const status = byId("sale-status");
-  const button = form.querySelector("button");
-  for (const [key,label] of Object.entries(config.ageGroups)) form.elements.age_group.add(new Option(label,key));
-  form.hidden = false;
-  status.textContent = config.delivery;
-  document.querySelectorAll("[data-offer-link]").forEach(link => {link.textContent = "ВЗЕМИ ЗИМНАТА ПРОГРАМА ↗";});
+  const clock = form.querySelector(".countdown");
+  const digits = clock.querySelectorAll("b");
+  const sticky = document.querySelector(".sticky-offer");
+  const priceText = document.querySelector("[data-price]");
+  const date = new Intl.DateTimeFormat("bg-BG", { day:"numeric", month:"long", timeZone:config.timeZone }).format(new Date(config.launchEndsAt));
+  const deadline = new Intl.DateTimeFormat("bg-BG", {hour:"2-digit",minute:"2-digit",second:"2-digit",timeZone:config.timeZone}).format(new Date(config.launchEndsAt));
+  byId("deadline-label").textContent = "Стартова цена до " + date + ", " + deadline + " ч. (София)";
+  for (const [key,label] of Object.entries(config.ageGroups)) select.add(new Option(label,key));
+  const configured = config.salesEnabled && config.delivery && select.options.length > 1;
+  let lastState = "";
+  let seenOffer = false;
+  let inOffer = false;
+  let pastHero = false;
+  const mobile = matchMedia("(max-width: 767px)");
+  const sessionKey = config.productId + "-session";
+  let sessionId = crypto.randomUUID();
+  try {
+    sessionId = sessionStorage.getItem(sessionKey) || sessionId;
+    sessionStorage.setItem(sessionKey,sessionId);
+  } catch {}
+  const attribution = {sessionId, landingPageUrl:location.origin + location.pathname, pageVariant:config.productId,
+    deviceType:mobile.matches ? "mobile" : "desktop"};
+  for (const key of ["utm_source","utm_medium","utm_campaign","utm_content","utm_term"]) attribution[key] = new URLSearchParams(location.search).get(key) || "";
+  function track(eventName) {
+    if (navigator.doNotTrack === "1") return;
+    fetch("/api/landing-analytics",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({...attribution,eventName}),keepalive:true}).catch(()=>{});
+  }
+  document.querySelectorAll("[data-cta]").forEach(link=>link.addEventListener("click",()=>track(link.dataset.cta === "sticky" ? "click_sticky_cta" : "click_primary_cta")));
+  function updateSticky() {
+    sticky.hidden = !mobile.matches || !pastHero || inOffer || !!document.querySelector("dialog[open]");
+  }
+  const observer = new IntersectionObserver(entries=>{
+    for (const entry of entries) {
+      if (entry.target.id === "offer") {
+        inOffer = entry.isIntersecting;
+        if (inOffer && !seenOffer) { seenOffer = true; track("view_price"); }
+      } else pastHero = entry.boundingClientRect.bottom <= 0;
+    }
+    updateSticky();
+  });
+  observer.observe(byId("offer"));
+  observer.observe(document.querySelector(".hero"));
+  mobile.addEventListener("change",updateSticky);
+  new MutationObserver(updateSticky).observe(zoom,{attributes:true,attributeFilter:["open"]});
+  function renderOffer() {
+    const now = Date.now();
+    const offer = config.offerAt(now);
+    const key = [offer.launch,offer.price,offer.sessionWindow].join("/");
+    if (lastState !== key) {
+      lastState = key;
+      const price = offer.price && (offer.price/100).toLocaleString("bg-BG",{minimumFractionDigits:2,maximumFractionDigits:2}) + " €";
+      priceText.hidden = !price;
+      priceText.textContent = price ? (offer.launch ? "Стартова цена " : "Цена ") + price : "";
+      const note = byId("launch-note");
+      note.hidden = !offer.launch;
+      note.textContent = offer.launch ? "Стартова цена " + price + " до " + date + "." : "";
+      document.querySelector('[data-cta="bonus"]').textContent = "ВЗЕМИ ЦЕЛИЯ ПАКЕТ" + (price ? " ЗА " + price : "") + " →";
+      document.querySelector('[data-cta="final"]').textContent = "ВЗЕМИ ПРОГРАМАТА" + (offer.launch ? " НА СТАРТОВА ЦЕНА" : "") + " →";
+      sticky.querySelector("strong").textContent = "WINTER PROGRAM" + (price ? " · " + price : "");
+      clock.hidden = !offer.launch;
+      const available = Boolean(configured && price && offer.sessionWindow);
+      buy.hidden = select.parentElement.hidden = !available;
+      buy.textContent = price ? "КУПИ ЗИМНАТА ПРОГРАМА — " + price + " →" : "";
+      status.textContent = available ? config.delivery : !offer.launch && !price ? "Стартовата оферта приключи. Новата цена предстои да бъде обявена." :
+        configured && !offer.sessionWindow ? "Вече отворените плащания могат да се завършат до края на срока." : "Покупките все още не са отворени.";
+    }
+    if (offer.launch) {
+      const seconds = Math.max(0,Math.ceil((offer.until-now)/1000));
+      [Math.floor(seconds/86400),Math.floor(seconds/3600)%24,Math.floor(seconds/60)%60,seconds%60].forEach((value,i)=>{
+        const next = String(value).padStart(2,"0");
+        if (digits[i].textContent !== next) digits[i].textContent = next;
+      });
+    }
+    return offer;
+  }
+  function tick() { if (renderOffer().launch) setTimeout(tick,1000-Date.now()%1000); }
+  tick();
+  window.addEventListener("pageshow",renderOffer);
+  document.addEventListener("visibilitychange",renderOffer);
   form.addEventListener("submit", async event => {
     event.preventDefault();
-    if (button.disabled || !form.reportValidity()) return;
-    button.disabled = true;
+    const shown = lastState;
+    const offer = renderOffer();
+    if (shown !== lastState || buy.hidden || buy.disabled || !form.reportValidity()) return;
+    buy.disabled = true;
     try {
       const response = await fetch("/api/create-checkout-session", {
-        method: "POST", headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({programId:config.productId, ageGroup:form.elements.age_group.value})
+        method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({programId:config.productId,ageGroup:select.value,expectedPriceMinor:offer.price,attribution})
       });
       if (!response.ok) throw new Error();
       const checkout = new URL((await response.json()).url);
       if (checkout.origin !== "https://checkout.stripe.com") throw new Error();
+      track("checkout_started");
       location.assign(checkout.href);
     } catch {
-      status.textContent = "Плащането не се отвори. Опитай отново.";
-      button.disabled = false;
+      renderOffer();
+      if (!buy.hidden) status.textContent = "Плащането не се отвори. Провери цената и опитай отново.";
+      buy.disabled = false;
     }
   });
 })();

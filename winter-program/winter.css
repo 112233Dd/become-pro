@@ -199,3 +199,22 @@ dialog form { position:sticky; top:0; }
   .reader-bar { display:grid; }
   .offer-visual img { width:min(100%,310px); }
 }
+
+#offer { scroll-margin-top: 78px; }
+.offer-link { gap:.35em; min-height:44px; }
+.section > .offer-link { margin-top:24px; }
+.bar .offer-link { padding:10px 16px; }
+#launch-note { color:var(--muted); margin-top:8px; font-size:.95rem; }
+.countdown { margin:18px 0; }
+.countdown p { font-size:.95rem; }
+.clock { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:7px; max-width:420px; margin-top:8px; }
+.clock span { text-align:center; border:1px solid var(--line); border-radius:6px; padding:5px; font-size:.82rem; color:var(--muted); }
+.clock b { display:block; font-size:1.48rem; font-variant-numeric:tabular-nums; line-height:1.25; color:var(--ice); }
+.sticky-offer { display:none; }
+@media(max-width:767px){
+ .sticky-offer:not([hidden]) { position:fixed; z-index:3; bottom:max(8px,env(safe-area-inset-bottom)); inset-inline:8px; max-width:480px; margin:auto; display:flex; gap:8px; justify-content:space-between; align-items:center; padding:7px 9px; background:#0e202e; border:1px solid var(--line); border-radius:8px; }
+ .sticky-offer strong { font-size:.81rem; }
+ .sticky-offer .btn,.bar .offer-link { font-size:.84rem; padding:9px 11px; }
+ footer { padding-bottom:calc(85px + env(safe-area-inset-bottom)); }
+ html { scroll-padding-bottom:80px; }
+}

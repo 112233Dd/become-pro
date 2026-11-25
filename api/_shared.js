@@ -100,6 +100,7 @@ const createStripeCheckoutSession = async ({ programs, customer, origin, attribu
 
   const body = new URLSearchParams();
   body.append("mode", "payment");
+  if (programs[0]?.winterExpiresAt) body.set("expires_at", String(programs[0].winterExpiresAt));
   body.append("success_url", `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`);
   body.append("cancel_url", `${origin}/checkout/cancel?session_id={CHECKOUT_SESSION_ID}`);
   if (customer.customerEmail) body.append("customer_email", customer.customerEmail);
