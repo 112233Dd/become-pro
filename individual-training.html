@@ -120,9 +120,14 @@ h3 { font-size: 1.21rem; line-height: 1.26; letter-spacing: -.025em; }
 .training-video-detail:last-child { margin-bottom: 20px; }
 .testimonials-section { background: var(--cream); border-bottom: 1px solid #e7dec2; }
 .quotes { grid-template-columns: repeat(3,1fr); align-items: stretch; }
-.quote { display: flex; min-height: 265px; flex-direction: column; justify-content: space-between; gap: 28px; padding: 28px; border: 1px solid #e5e9df; border-radius: 15px; background: white; box-shadow: 0 18px 48px rgba(23,45,38,.07); }
-.quote blockquote { color: var(--ink); font-size: 1.08rem; font-weight: 650; line-height: 1.65; }
-.quote figcaption { margin-top: auto; color: var(--muted); font-size: .88rem; line-height: 1.45; }
+.quote { display: flex; min-height: 560px; overflow: hidden; flex-direction: column; border: 1px solid #e5e9df; border-radius: 15px; background: white; box-shadow: 0 18px 48px rgba(23,45,38,.07); }
+.quote-media { width: 100%; height: 280px; flex: 0 0 280px; object-fit: cover; background: #e8eee8; }
+.quote:nth-child(1) .quote-media { object-position: center 30%; }
+.quote:nth-child(2) .quote-media { object-position: center 45%; }
+.quote:nth-child(3) .quote-media { object-position: center 28%; }
+.quote-copy { display: flex; flex: 1; flex-direction: column; padding: 24px 26px 26px; }
+.quote blockquote { margin-top: 18px; color: var(--ink); font-size: 1.04rem; font-weight: 600; line-height: 1.6; }
+.quote figcaption { color: var(--muted); font-size: .88rem; line-height: 1.45; }
 .quote strong { display: block; color: var(--ink); font-size: .98rem; }
 .steps { list-style: none; padding: 0; margin: 0; counter-reset: steps; }
 .steps li { counter-increment: steps; padding: 0 8px; text-align: center; }
@@ -176,6 +181,7 @@ footer a { font-size: .82rem; }
   .brand img { width: 25px; height: 25px; }
   header .button { font-size: .82rem; padding: 10px 14px; gap: 8px; }
   .hero-grid, .booking, .quotes, .training-video-card-grid { grid-template-columns: 1fr; }
+  .quote-media { height: 260px; flex-basis: 260px; }
   .hero-grid { padding-block: 18px 26px; gap: 20px; }
   h1 { font-size: clamp(2.22rem,8vw,3.3rem); }
   .hero-photo img { aspect-ratio: 1.75; }
@@ -349,9 +355,9 @@ footer a { font-size: .82rem; }
       <section id="player-results" class="section testimonials-section"><div class="wrap">
         <div class="section-intro"><h2>Какво споделят играчите и родителите</h2><p>Впечатления от индивидуалните тренировки на Become Pro.</p></div>
         <div class="quotes">
-          <figure class="quote"><blockquote>„Преди губеше топката при първото докосване. След няколко тренировки започна да овладява по-спокойно и да играе по-бързо.“</blockquote><figcaption><strong>Родител на играч, 13 г.</strong></figcaption></figure>
-          <figure class="quote"><blockquote>„Започнах да играя с по-голяма увереност и повече самочувствие.“</blockquote><figcaption><strong>Албена Георгиева, 16 г.</strong>София</figcaption></figure>
-          <figure class="quote"><blockquote>„Подобрих концентрацията и решенията си на терена.“</blockquote><figcaption><strong>Иван Трифонов, 17 г.</strong>Пловдив</figcaption></figure>
+          <figure class="quote"><img class="quote-media" src="/assets/slavcho-ahmedov.jpg" width="900" height="1600" loading="lazy" decoding="async" alt="Славчо на футболния терен" /><div class="quote-copy"><figcaption><strong>Славчо, 7 г.</strong>Стара Загора</figcaption><blockquote>„След тренировките започна да се чувства по-уверен с топката.“</blockquote></div></figure>
+          <figure class="quote"><img class="quote-media" src="/assets/albena-georgieva.jpg" width="588" height="390" loading="lazy" decoding="async" alt="Албена по време на футболен мач" /><div class="quote-copy"><figcaption><strong>Албена, 16 г.</strong>София</figcaption><blockquote>„Започнах да играя с по-голяма увереност.“</blockquote></div></figure>
+          <figure class="quote"><img class="quote-media" src="/assets/ivan-trifonov.jpg" width="1180" height="1180" loading="lazy" decoding="async" alt="Иван на футболния терен" /><div class="quote-copy"><figcaption><strong>Иван, 17 г.</strong>Пловдив</figcaption><blockquote>„Подобрих концентрацията и решенията си на терена.“</blockquote></div></figure>
         </div>
         <div class="center"><a class="button" href="#training-form" data-primary-cta data-cta-location="after_reviews">Заяви безплатна тренировка<span aria-hidden="true">↗</span></a></div>
       </div></section>

@@ -74,9 +74,14 @@ test("campaign keeps one concise journey and links each booking CTA to the form"
   assert.doesNotMatch(html, /Дрибъл и скорост/);
   assert.match(html, /Какво споделят играчите и родителите/);
   assert.equal((html.match(/class="quote"/g) || []).length, 3);
-  assert.match(html, /Родител на играч, 13 г\./);
-  assert.match(html, /Албена Георгиева, 16 г\./);
-  assert.match(html, /Иван Трифонов, 17 г\./);
+  assert.match(html, /assets\/slavcho-ahmedov\.jpg/);
+  assert.match(html, /assets\/albena-georgieva\.jpg/);
+  assert.match(html, /assets\/ivan-trifonov\.jpg/);
+  assert.match(html, /Славчо, 7 г\.[\s\S]*Стара Загора/);
+  assert.match(html, /Албена, 16 г\.[\s\S]*София/);
+  assert.match(html, /Иван, 17 г\.[\s\S]*Пловдив/);
+  assert.match(html, /След тренировките започна да се чувства по-уверен с топката/);
+  assert.match(html, /Започнах да играя с по-голяма увереност/);
   assert.match(html, /data-cta-location="after_reviews"/);
   assert.ok(html.indexOf('id="player-results"') > html.indexOf('id="training-video"'));
   assert.ok(html.indexOf('id="player-results"') < html.indexOf('id="how-it-works"'));
