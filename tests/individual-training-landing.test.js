@@ -77,7 +77,7 @@ test("campaign keeps one concise journey and links each booking CTA to the form"
   assert.match(html, /assets\/slavcho-ahmedov\.jpg/);
   assert.match(html, /assets\/albena-georgieva\.jpg/);
   assert.match(html, /assets\/ivan-trifonov\.jpg/);
-  assert.match(html, /Славчо, 7 г\.[\s\S]*Стара Загора/);
+  assert.match(html, /Родител на Славчо, 7 г\.[\s\S]*Стара Загора/);
   assert.match(html, /Албена, 16 г\.[\s\S]*София/);
   assert.match(html, /Иван, 17 г\.[\s\S]*Пловдив/);
   assert.match(html, /След тренировките започна да се чувства по-уверен с топката/);
